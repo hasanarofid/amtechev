@@ -1,19 +1,19 @@
-# Titan Gym Management System
+# Amtech EV Management System
 
-A premium, role-based gym management platform featuring glassmorphism UI, real-time statistics, and seamless member interactions.
+A premium, role-based EV charging management platform featuring glassmorphism UI, real-time statistics, and seamless customer interactions.
 
 ## Features
 
-- **Dynamic Landing Page**: High-end "Cyber-Premium" aesthetic with real-time stats.
-- **Role-Based Access**: Specialized portals for Admins, Staff, and Members.
-- **Member Dashboard**: Personalized progress tracking and session bookings.
-- **Class Scheduling**: Interactive weekly schedule with one-click booking for members.
-- **Membership Management**: Automated provisioning and expiry tracking.
+- **Dynamic Landing Page**: High-end "EV-Premium" aesthetic with real-time stats.
+- **Role-Based Access**: Specialized portals for Admins, Staff, and Customers.
+- **Customer Dashboard**: Personalized installation tracking and session history.
+- **Maintenance Schedule**: Interactive schedule for EV technician visits.
+- **Charger Management**: Automated tracking and status monitoring.
 
 ## Technology Stack
 
-- **Framework**: Laravel 11
-- **Styling**: Tailwind CSS & Custom Vanilla CSS (Premium Glassmorphism)
+- **Framework**: Laravel 12
+- **Styling**: Tailwind CSS & Custom Vanilla CSS (EV Premium Glassmorphism)
 - **Database**: MySQL / SQLite
 - **Frontend**: Blade Templating
 
@@ -29,8 +29,8 @@ A premium, role-based gym management platform featuring glassmorphism UI, real-t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hasanarofid/system-gym.git
-   cd system-gym
+   git clone git@github.com:hasanarofid/amtechev.git
+   cd amtechev
    ```
 
 2. Install dependencies:
@@ -63,5 +63,4 @@ A premium, role-based gym management platform featuring glassmorphism UI, real-t
 
 ## License
 
-The Titan Gym System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# system-gym
+The Amtech EV System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
