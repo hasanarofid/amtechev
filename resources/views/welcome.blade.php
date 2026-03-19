@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Amtech EV Specialist – Leading EV Charging Solutions in Malaysia</title>
+    <title>{{ $settings['site_title'] ?? 'Amtech EV Specialist' }} – Leading EV Charging Solutions in Malaysia</title>
     
     <!-- SEO -->
     <meta name="description" content="Amtech EV Specialist makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Today, enjoy seamless charging!">
@@ -62,10 +62,10 @@
                     <span class="text-[10px] font-black uppercase tracking-[0.2em] text-ev-green">Malaysia's #1 EV Solutions</span>
                 </div>
                 <h2 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
-                    Malaysia's <span class="text-ev-green">Electric Vehicle</span><br>Charger Specialist
+                    {!! $settings['hero_title'] ?? "Malaysia's <span class=\"text-ev-green\">Electric Vehicle</span><br>Charger Specialist" !!}
                 </h2>
                 <p class="text-lg text-gray-300 mb-10 max-w-xl leading-relaxed">
-                    Amtech EV makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Experience the future of mobility today.
+                    {{ $settings['hero_subtitle'] ?? 'Amtech EV makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Experience the future of mobility today.' }}
                 </p>
                 <div class="flex flex-wrap gap-6">
                     <a href="#products" class="btn-ev px-10 py-4">Explore Chargers</a>
@@ -133,16 +133,12 @@
             <h2 class="text-4xl lg:text-6xl font-black mb-20 uppercase">Featured <span class="italic text-ev-green">Chargers</span></h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                @foreach([
-                    ['name' => '11kw Home E1 EV Charger', 'price' => 'RM 2,499'],
-                    ['name' => 'Teltonika 22kw Home EV Charger', 'price' => 'RM 4,200'],
-                    ['name' => '7kw Home E1 EV Charger', 'price' => 'RM 1,899']
-                ] as $charger)
+                @foreach($chargers as $charger)
                 <div class="ev-card p-10 flex flex-col items-center">
-                    <img src="{{ asset('storage/ev_charger_product_1773856128972.png') }}" alt="{{ $charger['name'] }}" class="w-48 h-48 object-contain mb-8 ev-glow">
-                    <h4 class="text-xl font-bold mb-2">{{ $charger['name'] }}</h4>
-                    <span class="text-ev-green font-bold text-lg mb-8">{{ $charger['price'] }}</span>
-                    <a href="#" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:border-ev-green hover:text-ev-green transition-all w-full">View Details</a>
+                    <img src="{{ $charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png') }}" alt="{{ $charger->name }}" class="w-48 h-48 object-contain mb-8 ev-glow">
+                    <h4 class="text-xl font-bold mb-2">{{ $charger->name }}</h4>
+                    <span class="text-ev-green font-bold text-lg mb-8">{{ $charger->price }}</span>
+                    <a href="{{ $charger->link ?: '#' }}" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:border-ev-green hover:text-ev-green transition-all w-full">View Details</a>
                 </div>
                 @endforeach
             </div>
@@ -175,18 +171,18 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                @foreach([
-                    'The installation was incredibly fast and the team was very professional. Highly recommend Amtech EV for home charging!',
-                    'Top-notch service and the charger works perfectly with my Tesla. The green glow looks amazing in my garage!',
-                    'Great support and advice on choosing the right charger. The maintenance service is also very reliable.'
-                ] as $testimonial)
+                @foreach($testimonials as $testimonial)
                 <div class="ev-card p-10">
-                    <p class="text-gray-300 italic mb-8 leading-relaxed">"{{ $testimonial }}"</p>
+                    <p class="text-gray-300 italic mb-8 leading-relaxed">"{{ $testimonial->content }}"</p>
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-ev-green/20 rounded-full"></div>
+                        <div class="w-10 h-10 bg-ev-green/20 rounded-full overflow-hidden">
+                            @if($testimonial->author_image)
+                                <img src="{{ $testimonial->author_image }}" class="w-full h-full object-cover">
+                            @endif
+                        </div>
                         <div>
-                            <p class="font-bold text-sm">Happy Customer</p>
-                            <p class="text-xs text-gray-500">Verified Owner</p>
+                            <p class="font-bold text-sm">{{ $testimonial->author_name }}</p>
+                            <p class="text-xs text-gray-500">{{ $testimonial->author_role }}</p>
                         </div>
                     </div>
                 </div>
@@ -207,17 +203,13 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                @foreach([
-                    ['title' => 'Best Home EV Charger Malaysia 2026 — Complete Buyer\'s Guide', 'image' => '/storage/ev_hero_bg_1773856111374.png'],
-                    ['title' => 'Malacca Emerges as Malaysia’s EV Manufacturing Hub', 'image' => '/storage/ev_hero_bg_1773856111374.png'],
-                    ['title' => 'Analysis on EV Charger Components', 'image' => '/storage/ev_hero_bg_1773856111374.png']
-                ] as $post)
+                @foreach($posts as $post)
                 <div class="group cursor-pointer">
                     <div class="relative aspect-video rounded-3xl overflow-hidden mb-8 border border-white/5">
-                        <img src="{{ asset($post['image']) }}" alt="{{ $post['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="{{ $post->image_url ?: '/storage/ev_hero_bg_1773856111374.png' }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
-                    <h4 class="text-xl font-bold leading-tight group-hover:text-ev-green transition-colors">{{ $post['title'] }}</h4>
+                    <h4 class="text-xl font-bold leading-tight group-hover:text-ev-green transition-colors">{{ $post->title }}</h4>
                 </div>
                 @endforeach
             </div>
@@ -248,8 +240,8 @@
                 </div>
                 <div>
                     <h4 class="text-white font-bold uppercase tracking-widest mb-8">Get Connected</h4>
-                    <p class="text-sm text-gray-400 mb-6">No 1, Jalan Amtech EV, 50000 Kuala Lumpur</p>
-                    <a href="mailto:hello@amtechev.com" class="text-ev-green font-bold">hello@amtechev.com</a>
+                    <p class="text-sm text-gray-400 mb-6">{{ $settings['contact_address'] ?? 'No 1, Jalan Amtech EV, 50000 Kuala Lumpur' }}</p>
+                    <a href="mailto:{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}" class="text-ev-green font-bold">{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}</a>
                 </div>
             </div>
             <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">

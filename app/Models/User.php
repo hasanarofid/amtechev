@@ -51,26 +51,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function membership()
-    {
-        return $this->hasOne(Membership::class);
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function checkIns()
-    {
-        return $this->hasMany(CheckIn::class);
-    }
-
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
-
     public function isAdmin()
     {
         return $this->role === 'admin';

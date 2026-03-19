@@ -7,14 +7,7 @@
                 <p class="text-[11px] text-text-muted font-medium mt-1">Monitor your EV charger specialist metrics.</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('check-ins.create') }}" class="btn-premium px-5 py-2.5 bg-accent shadow-[0_4px_15px_rgba(0,166,81,0.3)] hover:shadow-[0_6px_25px_rgba(0,166,81,0.5)]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    New Session
-                </a>
-                <a href="{{ route('members.create') }}" class="btn-premium px-5 py-2.5 bg-glass border border-glass-border hover:border-accent/40 text-main shadow-none transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                    New Customer
-                </a>
+
             </div>
         </div>
     </x-slot>
@@ -31,13 +24,10 @@
                     +12.5% ↑
                 </div>
             </div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Total Chargers</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Total Customers</h4>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-black text-main">{{ $stats['members_count'] }}</span>
-                <span class="text-[11px] text-text-muted font-medium italic">Installed</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-glass-border">
-                <p class="text-[9px] text-text-muted uppercase font-bold tracking-widest">Growth this month</p>
+                <span class="text-3xl font-black text-main">{{ $stats['total_customers'] }}</span>
+                <span class="text-[11px] text-text-muted font-medium italic">Active</span>
             </div>
         </div>
 
@@ -51,13 +41,10 @@
                     +5.4% ↑
                 </div>
             </div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Monthly Revenue</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Charger Products</h4>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-black text-main">${{ number_format($stats['revenue'], 0) }}</span>
-                <span class="text-[11px] text-text-muted font-medium italic">USD</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-glass-border">
-                <p class="text-[9px] text-text-muted uppercase font-bold tracking-widest">Target: $5,000</p>
+                <span class="text-3xl font-black text-main">{{ $stats['total_chargers'] }}</span>
+                <span class="text-[11px] text-text-muted font-medium italic">Listed</span>
             </div>
         </div>
 
@@ -72,13 +59,10 @@
                     <span class="text-[9px] font-black uppercase tracking-tighter">Live</span>
                 </div>
             </div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Active Sessions</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Testimonials</h4>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-black text-main">{{ $stats['checkins_today'] }}</span>
-                <span class="text-[11px] text-text-muted font-medium italic">Charging</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-glass-border">
-                <p class="text-[9px] text-text-muted uppercase font-bold tracking-widest">Peak load: 6 PM - 10 PM</p>
+                <span class="text-3xl font-black text-main">{{ $stats['total_testimonials'] }}</span>
+                <span class="text-[11px] text-text-muted font-medium italic">Published</span>
             </div>
         </div>
 
@@ -92,13 +76,10 @@
                     {{ now()->format('D') }}
                 </div>
             </div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Pending Maintenance</h4>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Blog Posts</h4>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-black text-main">{{ $stats['active_classes'] }}</span>
-                <span class="text-[11px] text-text-muted font-medium italic">Available</span>
-            </div>
-            <div class="mt-4 pt-4 border-t border-glass-border">
-                <p class="text-[9px] text-text-muted uppercase font-bold tracking-widest">Next: Site Audit (14:00 PM)</p>
+                <span class="text-3xl font-black text-main">{{ $stats['total_blog_posts'] }}</span>
+                <span class="text-[11px] text-text-muted font-medium italic">Insights</span>
             </div>
         </div>
     </div>
@@ -110,51 +91,26 @@
             <div class="glass-card p-8 bg-gradient-to-br from-transparent to-glass/5">
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-xl font-black tracking-tight text-main">Charging Activity</h3>
-                    <a href="{{ route('check-ins.index') }}" class="btn-premium px-4 py-2 bg-glass border border-glass-border hover:border-accent/30 text-[9px]">Full History</a>
                 </div>
                 
                 <div class="space-y-4">
-                    @forelse($recentCheckins as $checkin)
-                        <div class="flex items-center justify-between p-4 bg-glass border border-glass-border rounded-xl hover:bg-glass/10 transition-all group">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-accent/10 text-accent border border-accent/20 rounded-xl flex items-center justify-center text-xs font-black uppercase group-hover:bg-accent group-hover:text-dark transition-all">
-                                    {{ substr($checkin->user->name, 0, 2) }}
-                                </div>
-                                <div>
-                                    <h5 class="text-sm font-black text-main">{{ $checkin->user->name }}</h5>
-                                    <p class="text-[10px] text-text-muted font-bold uppercase tracking-widest">Session at {{ $checkin->checked_at->format('H:i') }}</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="px-3 py-1 bg-ev-green/10 text-ev-green text-[9px] font-black uppercase tracking-widest rounded-lg border border-ev-green/10">Verified</span>
-                                <p class="text-[9px] text-text-muted mt-1">{{ $checkin->checked_at->diffForHumans() }}</p>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="py-12 text-center flex flex-col items-center">
-                            <div class="w-16 h-16 bg-glass rounded-full flex items-center justify-center text-text-muted/30 mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                            </div>
-                            <p class="text-sm text-text-muted italic">Charging sessions haven't started yet. Active presence will appear here.</p>
-                        </div>
-                    @endforelse
+                    <p class="text-sm text-text-muted italic">System ready for EV operations. Manage your landing page sections from the sidebar.</p>
                 </div>
             </div>
         </div>
 
         <!-- Sidebar Insights -->
         <div class="space-y-8">
-            <!-- Peak Times Insight -->
+            <!-- Maintenance Insight -->
             <div class="glass-card p-8 bg-accent group cursor-default overflow-hidden relative">
                 <div class="absolute -right-12 -bottom-12 w-40 h-40 bg-dark/10 rounded-full group-hover:scale-150 transition-all duration-1000"></div>
-                <h4 class="text-dark text-[11px] font-black uppercase tracking-[0.2em] mb-4 relative z-10">Smart Scheduling</h4>
+                <h4 class="text-dark text-[10px] font-black uppercase tracking-[0.2em] mb-4 relative z-10">Maintenance Alert</h4>
                 <p class="text-dark/80 text-xs font-bold leading-relaxed mb-6 relative z-10">
-                    Your busiest location is approaching! We recommend having <strong>2 technicians</strong> on standby for the next hour.
+                    Charger ID #EV-X1 is reporting low voltage. We recommend scheduling an inspection soon.
                 </p>
-                <a href="{{ route('gym-classes.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all relative z-10">
-                    View Schedule
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
+                <div class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl relative z-10">
+                    System Alert active
+                </div>
             </div>
 
             <!-- Health Analytics -->
