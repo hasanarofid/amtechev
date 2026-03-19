@@ -14,7 +14,7 @@
         <!-- Email Address -->
         <div>
             <label for="email" class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Email Address</label>
-            <input id="email" class="premium-input @error('email') border-red-500 @enderror" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="admin@gym.com" />
+            <input id="email" class="premium-input @error('email') border-red-500 @enderror" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="admin@amtechev.com" />
             <x-input-error :messages="$errors->get('email')" class="mt-2 text-[10px] uppercase font-bold text-red-400" />
         </div>
 

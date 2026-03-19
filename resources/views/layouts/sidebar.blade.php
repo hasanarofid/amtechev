@@ -1,6 +1,9 @@
 <aside class="sidebar">
-    <div class="mb-10 px-4">
-        <h1 class="text-2xl font-black tracking-tighter text-accent">TITAN<span class="text-main">GYM</span></h1>
+    <div class="mb-10 px-4 pt-4">
+        <div class="flex items-center gap-3">
+            <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
+            <h1 class="text-xl font-bold tracking-tight text-main">AMTECH <span class="text-ev-green italic tracking-tighter">EV</span></h1>
+        </div>
     </div>
 
     <nav class="flex flex-col gap-2">
@@ -15,15 +18,15 @@
         <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Administration</div>
         <a href="{{ route('members.index') }}" class="nav-link {{ request()->routeIs('members.*') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"></path><path d="M7 21v-2a4 4 0 0 1 3-3.87"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="19" cy="7" r="4"></circle></svg>
-            Manage Members
+            Manage Customers
         </a>
         <a href="{{ route('packages.index') }}" class="nav-link {{ request()->routeIs('packages.*') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            Packages
+            Charger Units
         </a>
         <a href="{{ route('trainers.index') }}" class="nav-link {{ request()->routeIs('trainers.*') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-            Trainers
+            Technicians
         </a>
         @endif
 
@@ -31,11 +34,11 @@
         <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Operations</div>
         <a href="{{ route('check-ins.index') }}" class="nav-link {{ request()->routeIs('check-ins.*') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            Check-in
+            Charging Sessions
         </a>
         <a href="{{ route('gym-classes.index') }}" class="nav-link {{ request()->routeIs('gym-classes.*') ? 'active' : '' }}">
              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            Class Schedule
+            Maintenance Schedule
         </a>
         @endif
 

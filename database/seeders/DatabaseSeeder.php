@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Seed Admin
-        User::updateOrCreate(['email' => 'admin@gym.com'], [
+        User::updateOrCreate(['email' => 'admin@amtech.com'], [
             'name' => 'Master Admin',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -49,15 +49,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Seed Staff (Petugas)
-        User::updateOrCreate(['email' => 'staff@gym.com'], [
-            'name' => 'Gym Staff',
+        User::updateOrCreate(['email' => 'staff@amtech.com'], [
+            'name' => 'amtech Staff',
             'password' => Hash::make('password'),
             'role' => 'staff',
             'status' => true,
         ]);
 
         // 4. Seed Member
-        $memberUser = User::updateOrCreate(['email' => 'member@gym.com'], [
+        $memberUser = User::updateOrCreate(['email' => 'member@amtech.com'], [
             'name' => 'John Member',
             'password' => Hash::make('password'),
             'role' => 'member',

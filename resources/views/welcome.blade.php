@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Titan Gym Evolution | Premium Fitness Management</title>
+    <title>Amtech EV Specialist – Leading EV Charging Solutions in Malaysia</title>
     
     <!-- SEO -->
-    <meta name="description" content="Experience elite fitness management with Titan Gym. Precision coaching, modern facilities, and a dynamic fitness community.">
+    <meta name="description" content="Amtech EV Specialist makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Today, enjoy seamless charging!">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,244 +17,250 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
-        body { font-family: 'Outfit', sans-serif; }
-        .hero-glow {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 100vh;
-            background: radial-gradient(circle at 50% 30%, var(--accent-glow) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+        body { font-family: 'Outfit', sans-serif; background-color: #0a0a0a; color: #ffffff; }
+        .hero-bg {
+            background-image: linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)), url('/storage/ev_hero_bg_1773856111374.png');
+            background-size: cover;
+            background-position: center;
         }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
-    <div class="hero-glow"></div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 px-6 lg:px-14 py-8 flex justify-between items-center bg-transparent backdrop-blur-md border-b border-glass-border">
-        <h1 class="text-2xl font-black tracking-tighter text-accent italic">TITAN<span class="text-main">GYM</span></h1>
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 lg:px-14 py-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
+            <h1 class="text-xl font-bold tracking-tight hidden md:block">AMTECH <span class="text-ev-green italic tracking-tighter">EV</span></h1>
+        </div>
         
-        <div class="flex items-center gap-8">
-            <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">
-                <a href="#stats" class="hover:text-accent transition-colors">Performance</a>
-                <a href="#packages" class="hover:text-accent transition-colors">Memberships</a>
-                <a href="#trainers" class="hover:text-accent transition-colors">Elite Team</a>
-            </div>
+        <div class="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-wider text-gray-300">
+            <a href="#services" class="hover:text-ev-green transition-colors">Services</a>
+            <a href="#products" class="hover:text-ev-green transition-colors">Chargers</a>
+            <a href="#installations" class="hover:text-ev-green transition-colors">Installations</a>
+            <a href="#contact" class="hover:text-ev-green transition-colors">Contact</a>
+        </div>
 
-            <div class="flex items-center gap-4">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="btn-premium">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-[10px] font-black uppercase tracking-[0.2em] text-main hover:text-accent transition-colors">Login</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn-premium">Join Elite</a>
-                        @endif
-                    @endauth
-                @endif
-                
-                <button id="lp-theme-toggle" class="p-2 bg-glass border border-glass-border rounded-lg text-main hover:border-accent/40 transition-all">
-                    <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                    <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
-            </div>
+        <div class="flex items-center gap-4">
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="btn-ev">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest">Login</a>
+                @endauth
+            @endif
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-48 pb-32 px-6 lg:px-14 overflow-hidden">
-        <div class="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div class="relative z-10">
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full mb-8">
-                    <span class="w-2 h-2 bg-accent rounded-full animate-ping"></span>
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Now accepting new members</span>
+    <section class="relative min-h-screen flex items-center pt-24 hero-bg overflow-hidden">
+        <div class="ev-hero-gradient absolute inset-0 pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-14 relative z-10 w-full">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-ev-green/10 border border-ev-green/20 rounded-full mb-8">
+                    <span class="w-2 h-2 bg-ev-green rounded-full animate-pulse-green"></span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-ev-green">Malaysia's #1 EV Solutions</span>
                 </div>
-                <h2 class="text-6xl lg:text-9xl font-black tracking-tighter text-main mb-8 leading-[0.9]">
-                    EVOLVE<br><span class="text-accent italic">BEYOND</span><br>LIMITS
+                <h2 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                    Malaysia's <span class="text-ev-green">Electric Vehicle</span><br>Charger Specialist
                 </h2>
-                <p class="text-lg lg:text-xl text-text-muted mb-12 max-w-xl leading-relaxed font-light">
-                    The ultra-premium gym ecosystem designed for those who demand excellence. Adaptive training, real-time analytics, and an elite community.
+                <p class="text-lg text-gray-300 mb-10 max-w-xl leading-relaxed">
+                    Amtech EV makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Experience the future of mobility today.
                 </p>
                 <div class="flex flex-wrap gap-6">
-                    <a href="{{ route('register') }}" class="btn-premium px-10 py-5 text-xs">Start Your Evolution</a>
-                    <a href="#packages" class="px-10 py-5 bg-glass border border-glass-border text-main text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:border-accent/30 transition-all flex items-center gap-3 group">
-                        Explore Packages
-                        <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="relative lg:h-[700px] flex items-center justify-center">
-                <div class="absolute inset-0 bg-accent/5 rounded-full blur-3xl"></div>
-                <!-- Large Abstract Visual (Glass Card) -->
-                <div class="glass-card p-12 w-full max-w-xl border-accent/20 rotate-3 transform-gpu hover:rotate-0 transition-all duration-700">
-                    <div class="space-y-8">
-                        @foreach(['Bio-Metrics', 'Neural-Sync', 'Peak-Load'] as $metric)
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-end">
-                                <span class="text-xs font-black uppercase tracking-widest text-text-muted italic">{{ $metric }}</span>
-                                <span class="text-accent font-black">9{{ rand(4,9) }}%</span>
-                            </div>
-                            <div class="h-1.5 w-full bg-glass rounded-full overflow-hidden">
-                                <div class="h-full bg-accent animate-pulse" style="width: 9{{ rand(4,9) }}%"></div>
-                            </div>
-                        </div>
-                        @endforeach
-                        <div class="pt-8 border-t border-glass-border flex justify-between">
-                            <div>
-                                <p class="text-[10px] text-text-muted uppercase font-bold tracking-widest mb-1">Status</p>
-                                <p class="text-sm font-black text-main uppercase">System Operational</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] text-text-muted uppercase font-bold tracking-widest mb-1">Tier</p>
-                                <p class="text-sm font-black text-accent uppercase italic">Titan Elite</p>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="#products" class="btn-ev px-10 py-4">Explore Chargers</a>
+                    <a href="#contact" class="px-10 py-4 border border-white/20 rounded-full font-bold hover:bg-white/5 transition-all text-sm uppercase tracking-widest">Consult Now</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section id="stats" class="px-6 lg:px-14 py-32 bg-glass">
-        <div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
-            <div class="text-center group">
-                <h3 class="text-6xl lg:text-8xl font-black text-main mb-4 group-hover:text-accent transition-colors">{{ $stats['members'] }}+</h3>
-                <p class="text-[11px] font-black uppercase tracking-[0.4em] text-text-muted">Active Evolutionary</p>
-            </div>
-            <div class="text-center group">
-                <h3 class="text-6xl lg:text-8xl font-black text-main mb-4 group-hover:text-accent transition-colors">{{ $stats['classes'] }}</h3>
-                <p class="text-[11px] font-black uppercase tracking-[0.4em] text-text-muted">High-Intensity Labs</p>
-            </div>
-            <div class="text-center group">
-                <h3 class="text-6xl lg:text-8xl font-black text-main mb-4 group-hover:text-accent transition-colors">{{ $stats['trainers'] }}</h3>
-                <p class="text-[11px] font-black uppercase tracking-[0.4em] text-text-muted">Elite Architects</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Packages Section -->
-    <section id="packages" class="px-6 lg:px-14 py-32">
-        <div class="max-w-[1280px] mx-auto">
-            <div class="mb-24 text-center max-w-2xl mx-auto">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-accent mb-6">Choose Your path</h3>
-                <h2 class="text-4xl lg:text-6xl font-black tracking-tighter text-main uppercase">Membership <span class="italic text-accent">Tiers</span></h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                @foreach($packages as $package)
-                    @php $isElite = str_contains(strtolower($package->name), 'elite') || str_contains(strtolower($package->name), 'pro'); @endphp
-                    <div class="glass-card p-10 flex flex-col {{ $isElite ? 'border-accent/40 shadow-[0_30px_100px_rgba(0,242,255,0.1)] scale-105 relative z-10' : '' }}">
-                        @if($isElite)
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-dark text-[10px] font-black uppercase tracking-[0.2em] rounded-full">Most Evolutionary</div>
-                        @endif
-                        <h4 class="text-2xl font-black text-main mb-2 uppercase tracking-tight">{{ $package->name }}</h4>
-                        <div class="flex items-baseline gap-1 mb-8">
-                            <span class="text-4xl font-black text-main italic">${{ number_format($package->price, 0) }}</span>
-                            <span class="text-text-muted text-xs uppercase font-bold tracking-widest">/ Month</span>
-                        </div>
-                        
-                        <p class="text-text-muted text-sm leading-relaxed mb-10 pb-10 border-b border-glass-border font-medium">
-                            {{ $package->description ?? 'Full access to our elite facilities and personalized tracking systems.' }}
-                        </p>
-
-                        <ul class="space-y-4 mb-12 flex-grow">
-                            <li class="flex items-center gap-3 text-xs font-bold text-main">
-                                <svg class="text-accent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                24/7 Biometric Access
-                            </li>
-                            <li class="flex items-center gap-3 text-xs font-bold text-main">
-                                <svg class="text-accent" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Advanced AI Tracking
-                            </li>
-                            <li class="flex items-center gap-3 text-xs font-bold text-main opacity-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Recovery Lounge
-                            </li>
-                        </ul>
-
-                        <a href="{{ route('register', ['package' => $package->id]) }}" class="{{ $isElite ? 'btn-premium py-4' : 'px-8 py-4 bg-glass border border-glass-border text-main text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:border-accent/40 transition-all text-center' }}">
-                            Initialize Plan
-                        </a>
+    <!-- Quick Info Section -->
+    <section class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                @foreach([
+                    ['title' => 'Highest Quality Charger', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    ['title' => 'Quick Installations', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+                    ['title' => 'EV Spare Parts', 'icon' => 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v1a2 2 0 114 0V4z'],
+                    ['title' => 'Eco-Friendly Solutions', 'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z']
+                ] as $info)
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-ev-green/10 border border-ev-green/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-ev-green group-hover:text-black transition-all">
+                        <svg class="w-8 h-8 text-ev-green group-hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $info['icon'] }}"></path></svg>
                     </div>
+                    <h4 class="text-sm font-bold uppercase tracking-widest">{{ $info['title'] }}</h4>
+                </div>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <!-- Trainers Showcase -->
-    <section id="trainers" class="max-w-[1280px] mx-auto px-6 lg:px-14 py-32 overflow-hidden border-t border-glass-border">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-            <div class="max-w-xl">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-accent mb-6 text-center md:text-left">Architects of Change</h3>
-                <h2 class="text-4xl lg:text-7xl font-black tracking-tighter text-main mb-6 uppercase leading-none">Elite <span class="text-accent">Coaching</span></h2>
-                <p class="text-text-muted text-lg leading-relaxed font-light">Precision guidance from world-class experts dedicated to your physical evolution.</p>
+    <!-- Empower Section -->
+    <section id="services" class="py-32 bg-ev-dark overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-ev-green/20 blur-3xl rounded-full"></div>
+                    <img src="{{ asset('storage/ev_charger_product_1773856128972.png') }}" alt="EV Charger" class="relative rounded-3xl border border-white/10 shadow-2xl">
+                </div>
+                <div>
+                    <h3 class="text-ev-green font-bold uppercase tracking-[0.3em] mb-4 text-sm">Empower Your EV Journey</h3>
+                    <h2 class="text-4xl lg:text-5xl font-bold mb-8 leading-tight">Reliable & Smart 🔌 Charging Solution</h2>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-10 font-light">
+                        Investing in an EV charging station for your home or business is more than just about charging; it's about convenience, cost-efficiency, and contributing to a greener future.
+                    </p>
+                    <div class="space-y-6">
+                        @foreach(['Home Charging', 'Commercial Solutions', 'Maintenance Services'] as $item)
+                        <div class="flex items-center gap-4">
+                            <div class="w-6 h-6 bg-ev-green/20 rounded-full flex items-center justify-center">
+                                <svg class="text-ev-green w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span class="font-semibold text-gray-200">{{ $item }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                    <a href="#contact" class="inline-block mt-12 btn-ev">Learn More</a>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            @foreach($trainers as $trainer)
-                <div class="group relative aspect-[3/4] rounded-[2rem] overflow-hidden bg-glass border border-glass-border hover:border-accent/40 transition-all duration-700 hover:-translate-y-4">
-                    <div class="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <div class="absolute inset-x-0 bottom-0 p-10 z-10 bg-gradient-to-t from-dark/95 via-dark/70 to-transparent">
-                        <span class="text-accent text-[9px] font-black uppercase tracking-[0.4em] mb-3 block italic">{{ $trainer->specialty }}</span>
-                        <h4 class="text-3xl font-black text-white tracking-tighter uppercase leading-none">{{ $trainer->name }}</h4>
+    <!-- Featured Chargers -->
+    <section id="products" class="py-32 bg-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14 text-center">
+            <h3 class="text-ev-green font-bold uppercase tracking-[0.3em] mb-4 text-sm">Our Selection</h3>
+            <h2 class="text-4xl lg:text-6xl font-black mb-20 uppercase">Featured <span class="italic text-ev-green">Chargers</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                @foreach([
+                    ['name' => '11kw Home E1 EV Charger', 'price' => 'RM 2,499'],
+                    ['name' => 'Teltonika 22kw Home EV Charger', 'price' => 'RM 4,200'],
+                    ['name' => '7kw Home E1 EV Charger', 'price' => 'RM 1,899']
+                ] as $charger)
+                <div class="ev-card p-10 flex flex-col items-center">
+                    <img src="{{ asset('storage/ev_charger_product_1773856128972.png') }}" alt="{{ $charger['name'] }}" class="w-48 h-48 object-contain mb-8 ev-glow">
+                    <h4 class="text-xl font-bold mb-2">{{ $charger['name'] }}</h4>
+                    <span class="text-ev-green font-bold text-lg mb-8">{{ $charger['price'] }}</span>
+                    <a href="#" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:border-ev-green hover:text-ev-green transition-all w-full">View Details</a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="py-32 bg-ev-dark border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14 text-center">
+            <h3 class="text-gray-500 font-bold uppercase tracking-[0.3em] mb-12 text-sm italic">FOR EVERY BRAND & MODEL</h3>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
+                @for($i=0; $i<12; $i++)
+                <div class="h-12 bg-white/10 rounded-lg flex items-center justify-center text-[10px] font-bold uppercase tracking-widest">BRAND {{ $i+1 }}</div>
+                @endfor
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-32 bg-black overflow-hidden border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14">
+            <div class="text-center mb-20">
+                <div class="flex justify-center gap-1 mb-6">
+                    @for($i=0; $i<5; $i++)
+                        <svg class="w-5 h-5 text-ev-green fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    @endfor
+                </div>
+                <h2 class="text-3xl lg:text-5xl font-bold mb-4 italic">EVSifu reviews from owners and experts</h2>
+                <p class="text-gray-500 uppercase tracking-widest text-sm font-bold">EXPERIENCE THE EV SIFU DIFFERENCE TODAY</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @foreach([
+                    'The installation was incredibly fast and the team was very professional. Highly recommend Amtech EV for home charging!',
+                    'Top-notch service and the charger works perfectly with my Tesla. The green glow looks amazing in my garage!',
+                    'Great support and advice on choosing the right charger. The maintenance service is also very reliable.'
+                ] as $testimonial)
+                <div class="ev-card p-10">
+                    <p class="text-gray-300 italic mb-8 leading-relaxed">"{{ $testimonial }}"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-ev-green/20 rounded-full"></div>
+                        <div>
+                            <p class="font-bold text-sm">Happy Customer</p>
+                            <p class="text-xs text-gray-500">Verified Owner</p>
+                        </div>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog / News Section -->
+    <section id="blog" class="py-32 bg-ev-dark border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                <div>
+                    <h3 class="text-ev-green font-bold uppercase tracking-[0.3em] mb-4 text-sm">Insights</h3>
+                    <h2 class="text-4xl lg:text-6xl font-black uppercase">Curious to <span class="italic text-ev-green">learn more?</span></h2>
+                </div>
+                <a href="#" class="btn-ev px-8 py-3 text-sm">View All Posts</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                @foreach([
+                    ['title' => 'Best Home EV Charger Malaysia 2026 — Complete Buyer\'s Guide', 'image' => '/storage/ev_hero_bg_1773856111374.png'],
+                    ['title' => 'Malacca Emerges as Malaysia’s EV Manufacturing Hub', 'image' => '/storage/ev_hero_bg_1773856111374.png'],
+                    ['title' => 'Analysis on EV Charger Components', 'image' => '/storage/ev_hero_bg_1773856111374.png']
+                ] as $post)
+                <div class="group cursor-pointer">
+                    <div class="relative aspect-video rounded-3xl overflow-hidden mb-8 border border-white/5">
+                        <img src="{{ asset($post['image']) }}" alt="{{ $post['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="text-xl font-bold leading-tight group-hover:text-ev-green transition-colors">{{ $post['title'] }}</h4>
+                </div>
+                @endforeach
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="max-w-[1280px] mx-auto px-6 lg:px-14 py-24 border-t border-glass-border">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-16">
-            <h1 class="text-3xl font-black tracking-tighter text-accent italic">TITAN<span class="text-main">GYM</span></h1>
-            
-            <div class="flex flex-wrap justify-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">
-                <a href="#" class="hover:text-accent transition-colors">Neural Policy</a>
-                <a href="#" class="hover:text-accent transition-colors">Term of Ops</a>
-                <a href="#" class="hover:text-accent transition-colors">Evolution Support</a>
+    <footer class="bg-black py-24 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-14">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-8">
+                        <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
+                        <h1 class="text-3xl font-bold tracking-tight">AMTECH <span class="text-ev-green italic tracking-tighter">EV</span></h1>
+                    </div>
+                    <p class="text-gray-400 max-w-sm leading-relaxed">
+                        Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest mb-8">Quick Links</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-ev-green">About Us</a></li>
+                        <li><a href="#" class="hover:text-ev-green">Services</a></li>
+                        <li><a href="#" class="hover:text-ev-green">Chargers</a></li>
+                        <li><a href="#" class="hover:text-ev-green">FAQs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest mb-8">Get Connected</h4>
+                    <p class="text-sm text-gray-400 mb-6">No 1, Jalan Amtech EV, 50000 Kuala Lumpur</p>
+                    <a href="mailto:hello@amtechev.com" class="text-ev-green font-bold">hello@amtechev.com</a>
+                </div>
             </div>
-
-            <div class="flex flex-col items-center md:items-end gap-2 text-right">
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/60">&copy; 2026 TITAN GYM EVOLUTION</p>
-                <p class="text-[9px] font-bold text-accent/40 uppercase tracking-widest">Protocol v4.0.1</p>
+            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-xs text-gray-500 uppercase tracking-widest">&copy; 2026 Amtech EV Malaysia. All rights reserved.</p>
+                <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('lp-theme-toggle');
-            const sun = document.getElementById('sun-icon');
-            const moon = document.getElementById('moon-icon');
-            
-            const updateUI = (theme) => {
-                document.documentElement.setAttribute('data-theme', theme);
-                if (theme === 'light') {
-                    sun.classList.remove('hidden');
-                    moon.classList.add('hidden');
-                } else {
-                    sun.classList.add('hidden');
-                    moon.classList.remove('hidden');
-                }
-            };
-
-            let currentTheme = localStorage.getItem('theme') || 'dark';
-            updateUI(currentTheme);
-
-            btn.addEventListener('click', () => {
-                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                localStorage.setItem('theme', currentTheme);
-                updateUI(currentTheme);
-            });
-        });
-    </script>
 </body>
 </html>

@@ -5,12 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ?? 'Welcome' }} | {{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $title ?? 'Welcome' }} | Amtech EV Specialist</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/css/premium.css', 'resources/js/app.js'])
@@ -21,11 +21,11 @@
             })();
         </script>
     </head>
-    <body class="font-sans antialiased text-main">
+    <body class="font-sans antialiased text-main bg-black">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div class="mb-8">
                 <a href="/">
-                    <h1 class="text-4xl font-black tracking-tighter text-accent">TITAN<span class="text-main">GYM</span></h1>
+                    <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-16 w-auto">
                 </a>
             </div>
 

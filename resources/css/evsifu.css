@@ -1,0 +1,54 @@
+:root {
+    --ev-green: #00a651;
+    --ev-blue: #1e2a5e;
+    --ev-green-glow: rgba(0, 166, 81, 0.3);
+    --ev-dark: #0a0a0a;
+    --ev-card: #1a1a1a;
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+.ev-hero-gradient {
+    background: radial-gradient(circle at 50% 50%, var(--ev-green-glow) 0%, transparent 70%);
+}
+
+.ev-glow {
+    filter: drop-shadow(0 0 10px var(--ev-green));
+}
+
+.ev-card {
+    background: var(--ev-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.ev-card:hover {
+    border-color: var(--ev-green);
+    box-shadow: 0 0 20px var(--ev-green-glow);
+}
+
+.btn-ev {
+    background: var(--ev-green);
+    color: #000;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-ev:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--ev-green-glow);
+}
+
+@keyframes pulse-green {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+.animate-pulse-green {
+    animation: pulse-green 2s infinite;
+}

@@ -12,7 +12,18 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'amtech-green': '#00a651',
+                'amtech-blue': '#1e2a5e',
+                'ev-green': '#00a651',
+                'ev-dark': '#0a0a0a',
+                'ev-card': '#1a1a1a',
+                'accent': '#00a651',
+                'main': '#ffffff',
+                'text-muted': '#888888',
+                'glass-border': 'rgba(255, 255, 255, 0.1)',
             },
         },
     },
