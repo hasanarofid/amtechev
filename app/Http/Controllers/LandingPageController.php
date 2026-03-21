@@ -20,6 +20,6 @@ class LandingPageController extends Controller
         
         $settings = SiteSetting::all()->pluck('value', 'key');
 
-        return view('welcome', compact('chargers', 'testimonials', 'posts', 'settings'));
+        return view('frontend.index', compact('chargers', 'testimonials', 'posts', 'settings'));
     }
 }
