@@ -19,8 +19,13 @@ class LandingPageSeeder extends Seeder
             ['key' => 'hero_badge', 'value' => "Malaysia's #1 EV Solutions", 'group' => 'hero'],
             ['key' => 'contact_email', 'value' => 'hello@amtechev.com', 'group' => 'contact'],
             ['key' => 'contact_address', 'value' => 'No 1, Jalan Amtech EV, 50000 Kuala Lumpur', 'group' => 'contact'],
+            ['key' => 'whatsapp_number', 'value' => '601167686742', 'group' => 'contact'],
+            ['key' => 'whatsapp_bubble_text', 'value' => 'Hi, I want to install an EV charger - Amtech Ev', 'group' => 'contact'],
             ['key' => 'footer_about', 'value' => "Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.", 'group' => 'footer'],
             ['key' => 'footer_copyright', 'value' => '© 2026 Amtech EV Malaysia. All rights reserved.', 'group' => 'footer'],
+            ['key' => 'paypal_client_id', 'value' => '', 'group' => 'payment'],
+            ['key' => 'paypal_secret', 'value' => '', 'group' => 'payment'],
+            ['key' => 'paypal_mode', 'value' => 'sandbox', 'group' => 'payment'],
         ];
 
         foreach ($settings as $setting) {

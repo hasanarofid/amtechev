@@ -95,9 +95,8 @@
                         </div>
                         <div>
                             <p class="text-ev-green font-bold mb-2">Email</p>
-                            <a href="mailto:enquiry@evsifu.com.my" class="text-gray-300 hover:text-white transition-colors">
-                                enquiry@evsifu.com.my
-                            </a>
+                            <a href="mailto:enquiry@amtecthev.com" class="text-gray-300 hover:text-white transition-colors">
+                                enquiry@amtecthev.com                            </a>
                         </div>
                     </div>
                 </div>

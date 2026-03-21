@@ -5,11 +5,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
  
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
- Route::get('/catalog', function () {
-     $chargers = \App\Models\Charger::all();
+ Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'index'])->name('catalog');
+ Route::get('/catalog/{id}', [App\Http\Controllers\CatalogController::class, 'show'])->name('catalog.show');
+ Route::post('/cart/add/{charger}', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+ Route::patch('/cart/update/{id}', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+ Route::delete('/cart/remove/{id}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+
+ Route::get('/checkout', function () {
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
-     return view('frontend.catalog.index', compact('chargers', 'settings'));
- })->name('catalog');
+     $cart = session('cart', []);
+     return view('frontend.checkout', compact('settings', 'cart'));
+ })->name('checkout');
 
  Route::get('/installation', function () {
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');

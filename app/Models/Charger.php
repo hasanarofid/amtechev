@@ -9,5 +9,22 @@ class Charger extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'price', 'image_url', 'is_featured'];
+    protected $fillable = [
+        'name', 
+        'slug',
+        'description', 
+        'price', 
+        'image_url', 
+        'images',
+        'specifications',
+        'product_info',
+        'installation_info',
+        'why_choose_us',
+        'is_featured'
+    ];
+
+    protected $casts = [
+        'images' => 'array',
+        'is_featured' => 'boolean',
+    ];
 }

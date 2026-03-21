@@ -75,20 +75,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                     @foreach($chargers as $charger)
-                    <div class="product-card group cursor-pointer">
+                    <a href="{{ route('catalog.show', $charger->id) }}" class="product-card group cursor-pointer">
                         <div class="aspect-square bg-gray-50 rounded-xl overflow-hidden mb-6 relative">
                             <img src="{{ $charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png') }}" 
                                  alt="{{ $charger->name }}" 
                                  class="w-full h-full object-contain p-8">
                             
-                            <!-- Quick View Overlay (Optional) -->
+                            <!-- Quick View Overlay -->
                             <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <span class="bg-white px-6 py-2 rounded-full text-xs font-bold shadow-lg">View Details</span>
                             </div>
                         </div>
                         <h3 class="text-sm font-medium mb-2 group-hover:underline leading-relaxed">{{ $charger->name }}</h3>
-                        <p class="text-gray-900 font-bold">From {{ $charger->price }}</p>
-                    </div>
+                        <p class="text-gray-900 font-bold">{{ $charger->price }}</p>
+                    </a>
                     @endforeach
                 </div>
             </div>
