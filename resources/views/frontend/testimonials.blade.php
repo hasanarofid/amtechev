@@ -14,11 +14,13 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach($testimonials as $testimonial)
             <div class="ev-card p-10">
-                <p class="text-gray-300 italic mb-8 leading-relaxed">"{{ $testimonial->content }}"</p>
+                <div class="text-gray-300 italic mb-8 leading-relaxed prose prose-sm prose-invert">
+                    {!! $testimonial->content !!}
+                </div>
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 bg-ev-green/20 rounded-full overflow-hidden">
                         @if($testimonial->author_image)
-                            <img src="{{ $testimonial->author_image }}" class="w-full h-full object-cover">
+                            <img src="{{ str_starts_with($testimonial->author_image, 'http') ? $testimonial->author_image : asset('storage/' . $testimonial->author_image) }}" class="w-full h-full object-cover">
                         @endif
                     </div>
                     <div>

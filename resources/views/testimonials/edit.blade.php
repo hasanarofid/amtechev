@@ -5,7 +5,7 @@
     </x-slot>
 
     <div class="max-w-2xl">
-        <form action="{{ route('admin.testimonials.update', $testimonial) }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.testimonials.update', $testimonial) }}" method="POST" class="space-y-8" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -24,7 +24,8 @@
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Testimonial Content</label>
-                    <textarea name="content" required class="premium-input min-h-[120px]">{{ old('content', $testimonial->content) }}</textarea>
+                    <div id="quill-editor" class="bg-glass text-main min-h-[150px] rounded-b-xl border border-glass-border"></div>
+                    <input type="hidden" name="content" id="quill-hidden-input" value="{{ old('content', $testimonial->content) }}">
                     @error('content') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                 </div>
 
@@ -39,9 +40,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Author Image URL</label>
-                    <input type="text" name="author_image" value="{{ old('author_image', $testimonial->author_image) }}" class="premium-input">
-                    @error('author_image') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Upload Author Image (Leave blank to keep current)</label>
+                    <input type="file" name="image_file" accept="image/*" class="premium-input px-4 py-3">
+                    @if($testimonial->author_image)
+                        <div class="mt-4 p-2 bg-glass border border-glass-border rounded-xl inline-block">
+                            <img src="{{ str_starts_with($testimonial->author_image, 'http') || str_starts_with($testimonial->author_image, '/') ? $testimonial->author_image : asset('storage/' . $testimonial->author_image) }}" class="h-20 w-auto rounded-full object-cover">
+                        </div>
+                    @endif
+                    @error('image_file') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                 </div>
             </div>
 
@@ -55,4 +61,48 @@
             </div>
         </form>
     </div>
+    
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+            var oldContent = document.getElementById('quill-hidden-input').value;
+            if(oldContent) {
+                quill.root.innerHTML = oldContent;
+            }
+            quill.on('text-change', function() {
+                var html = quill.root.innerHTML;
+                if(html === '<p><br></p>') html = '';
+                document.getElementById('quill-hidden-input').value = html;
+            });
+        });
+    </script>
+    <style>
+        .ql-toolbar.ql-snow {
+            border-color: var(--glass-border);
+            border-radius: 12px 12px 0 0;
+            background: var(--glass);
+        }
+        .ql-container.ql-snow {
+            border-color: var(--glass-border);
+            border-radius: 0 0 12px 12px;
+        }
+        .ql-editor { font-family: inherit; }
+        .ql-snow .ql-stroke { stroke: var(--text-main); }
+        .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: var(--text-main); }
+        .ql-snow .ql-picker { color: var(--text-main); }
+    </style>
 </x-app-layout>

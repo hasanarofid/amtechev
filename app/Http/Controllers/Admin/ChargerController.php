@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Charger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ChargerController extends Controller
 {
@@ -28,9 +29,13 @@ class ChargerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|string',
-            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'is_featured' => 'boolean',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $validated['image_url'] = $request->file('image_file')->store('chargers', 'public');
+        }
 
         Charger::create($validated);
 
@@ -53,9 +58,16 @@ class ChargerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|string',
-            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'is_featured' => 'boolean',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            if ($charger->image_url && Storage::disk('public')->exists($charger->image_url)) {
+                Storage::disk('public')->delete($charger->image_url);
+            }
+            $validated['image_url'] = $request->file('image_file')->store('chargers', 'public');
+        }
 
         $charger->update($validated);
 

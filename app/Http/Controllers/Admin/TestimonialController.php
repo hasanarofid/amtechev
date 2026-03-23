@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TestimonialController extends Controller
 {
@@ -28,9 +29,13 @@ class TestimonialController extends Controller
             'content' => 'required|string',
             'author_name' => 'required|string|max:255',
             'author_role' => 'nullable|string|max:255',
-            'author_image' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'rating' => 'integer|min:1|max:5',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $validated['author_image'] = $request->file('image_file')->store('testimonials', 'public');
+        }
 
         Testimonial::create($validated);
 
@@ -53,9 +58,16 @@ class TestimonialController extends Controller
             'content' => 'required|string',
             'author_name' => 'required|string|max:255',
             'author_role' => 'nullable|string|max:255',
-            'author_image' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'rating' => 'integer|min:1|max:5',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            if ($testimonial->author_image && Storage::disk('public')->exists($testimonial->author_image)) {
+                Storage::disk('public')->delete($testimonial->author_image);
+            }
+            $validated['author_image'] = $request->file('image_file')->store('testimonials', 'public');
+        }
 
         $testimonial->update($validated);
 

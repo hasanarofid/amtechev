@@ -77,7 +77,7 @@
                     @foreach($chargers as $charger)
                     <a href="{{ route('catalog.show', $charger->id) }}" class="product-card group cursor-pointer">
                         <div class="aspect-square bg-gray-50 rounded-xl overflow-hidden mb-6 relative">
-                            <img src="{{ $charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png') }}" 
+                            <img src="{{ str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url) }}" 
                                  alt="{{ $charger->name }}" 
                                  class="w-full h-full object-contain p-8">
                             

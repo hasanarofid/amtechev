@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -15,18 +16,20 @@ export default {
                 sans: ['Outfit', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                'amtech-green': '#00a651',
+                'amtech-green': 'var(--accent)',
                 'amtech-blue': '#1e2a5e',
-                'ev-green': '#00a651',
-                'ev-dark': '#0a0a0a',
-                'ev-card': '#1a1a1a',
-                'accent': '#00a651',
-                'main': '#ffffff',
-                'text-muted': '#888888',
-                'glass-border': 'rgba(255, 255, 255, 0.1)',
+                'ev-green': 'var(--accent)',
+                'ev-dark': 'var(--bg-color)',
+                'ev-card': 'var(--bg-card)',
+                'accent': 'var(--accent)',
+                'main': 'var(--text-main)',
+                'text-muted': 'var(--text-muted)',
+                'glass-border': 'var(--glass-border)',
+                'glass': 'var(--glass)',
+                'glass-bg': 'var(--glass)',
             },
         },
     },
 
-    plugins: [forms],
+    plugins: [forms, typography],
 };

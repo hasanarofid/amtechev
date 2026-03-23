@@ -20,7 +20,7 @@
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #0a0a0a; color: #ffffff; }
         .hero-bg {
-            background-image: linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)), url('/storage/ev_hero_bg_1773856111374.png');
+            background-image: linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)), url('{{ asset('storage/ev_hero_bg_1773856111374.png') }}');
             background-size: cover;
             background-position: center;
         }

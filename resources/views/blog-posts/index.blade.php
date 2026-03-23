@@ -22,7 +22,7 @@
         @forelse($posts as $post)
             <div class="glass-card overflow-hidden flex flex-col group">
                 <div class="relative aspect-video bg-white/5 overflow-hidden">
-                    <img src="{{ $post->image_url ?: asset('storage/ev_hero_bg_1773856111374.png') }}" alt="{{ $post->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <img src="{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url)) : asset('storage/ev_hero_bg_1773856111374.png') }}" alt="{{ $post->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     @if($post->category)
                         <span class="absolute top-4 left-4 px-2 py-1 bg-black/50 backdrop-blur-md text-[10px] font-black uppercase tracking-widest rounded border border-white/10">{{ $post->category }}</span>
                     @endif

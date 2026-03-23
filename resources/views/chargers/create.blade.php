@@ -5,7 +5,7 @@
     </x-slot>
 
     <div class="max-w-2xl">
-        <form action="{{ route('admin.chargers.store') }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.chargers.store') }}" method="POST" class="space-y-8" enctype="multipart/form-data">
             @csrf
 
             <div class="glass-card p-8 space-y-6">
@@ -23,14 +23,15 @@
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Description</label>
-                    <textarea name="description" class="premium-input min-h-[120px]" placeholder="Brief description of the charger...">{{ old('description') }}</textarea>
+                    <div id="quill-editor" class="bg-glass text-main min-h-[150px] rounded-b-xl border border-glass-border"></div>
+                    <input type="hidden" name="description" id="quill-hidden-input" value="{{ old('description') }}">
                     @error('description') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Image URL (Optional)</label>
-                    <input type="text" name="image_url" value="{{ old('image_url') }}" class="premium-input" placeholder="/storage/ev_charger_product_123.png">
-                    @error('image_url') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Upload Image</label>
+                    <input type="file" name="image_file" accept="image/*" class="premium-input px-4 py-3">
+                    @error('image_file') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="flex items-center gap-4 py-4 border-t border-glass-border">
@@ -52,4 +53,46 @@
             </div>
         </form>
     </div>
+    
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+            var oldContent = document.getElementById('quill-hidden-input').value;
+            if(oldContent) {
+                quill.root.innerHTML = oldContent;
+            }
+            quill.on('text-change', function() {
+                document.getElementById('quill-hidden-input').value = quill.root.innerHTML;
+            });
+        });
+    </script>
+    <style>
+        .ql-toolbar.ql-snow {
+            border-color: var(--glass-border);
+            border-radius: 12px 12px 0 0;
+            background: var(--glass);
+        }
+        .ql-container.ql-snow {
+            border-color: var(--glass-border);
+            border-radius: 0 0 12px 12px;
+        }
+        .ql-editor { font-family: inherit; }
+        .ql-snow .ql-stroke { stroke: var(--text-main); }
+        .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: var(--text-main); }
+        .ql-snow .ql-picker { color: var(--text-main); }
+    </style>
 </x-app-layout>

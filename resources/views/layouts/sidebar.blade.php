@@ -39,51 +39,5 @@
 
 
 
-        <div class="mt-auto pt-6 space-y-4">
-            <button id="theme-toggle" class="nav-link w-full text-left">
-                <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                <span id="theme-text">Theme</span>
-            </button>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="nav-link w-full text-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    Logout
-                </button>
-            </form>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const btn = document.getElementById('theme-toggle');
-                const sun = document.getElementById('sun-icon');
-                const moon = document.getElementById('moon-icon');
-                const text = document.getElementById('theme-text');
-                
-                const updateUI = (theme) => {
-                    if (theme === 'light') {
-                        sun.classList.remove('hidden');
-                        moon.classList.add('hidden');
-                        text.innerText = 'Light Mode';
-                    } else {
-                        sun.classList.add('hidden');
-                        moon.classList.remove('hidden');
-                        text.innerText = 'Dark Mode';
-                    }
-                };
-
-                let currentTheme = localStorage.getItem('theme') || 'dark';
-                updateUI(currentTheme);
-
-                btn.addEventListener('click', () => {
-                    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    document.documentElement.setAttribute('data-theme', currentTheme);
-                    localStorage.setItem('theme', currentTheme);
-                    updateUI(currentTheme);
-                });
-            });
-        </script>
     </nav>
 </aside>

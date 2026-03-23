@@ -51,7 +51,7 @@
             <div class="mb-24">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div class="post-image aspect-[16/10]">
-                        <img src="{{ $featured->image_url ?: asset('storage/ev_hero_bg_1773856111374.png') }}" alt="{{ $featured->title }}" class="w-full h-full object-cover">
+                        <img src="{{ str_starts_with($featured->image_url, 'http') ? $featured->image_url : asset('storage/' . $featured->image_url) }}" alt="{{ $featured->title }}" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <div class="text-ev-green font-bold text-xs uppercase tracking-widest mb-4">Latest Update</div>
@@ -60,7 +60,7 @@
                         <p class="text-gray-600 mb-8 line-clamp-3 leading-relaxed">
                             {{ Str::limit(strip_tags($featured->content), 200) }}
                         </p>
-                        <a href="#" class="btn-read">Read Article</a>
+                        <a href="{{ route('blog.show', $featured->slug) }}" class="btn-read">Read Article</a>
                     </div>
                 </div>
             </div>
@@ -70,14 +70,16 @@
                 @foreach($posts->skip(1) as $post)
                 <div class="post-card">
                     <div class="post-image aspect-[16/10] mb-8">
-                        <img src="{{ $post->image_url ?: asset('storage/ev_charger_product_1773856128972.png') }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                        <img src="{{ str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
                     </div>
                     <div class="text-gray-400 text-xs mb-3">{{ $post->created_at ? $post->created_at->format('M d, Y') : 'Mar 21, 2026' }}</div>
-                    <h3 class="text-xl font-bold mb-4 line-clamp-2 hover:text-ev-green transition-colors cursor-pointer">{{ $post->title }}</h3>
+                    <a href="{{ route('blog.show', $post->slug) }}">
+                        <h3 class="text-xl font-bold mb-4 line-clamp-2 hover:text-ev-green transition-colors cursor-pointer">{{ $post->title }}</h3>
+                    </a>
                     <p class="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">
                         {{ Str::limit(strip_tags($post->content), 120) }}
                     </p>
-                    <a href="#" class="inline-flex items-center gap-2 text-ev-green font-bold text-sm group">
+                    <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center gap-2 text-ev-green font-bold text-sm group">
                         Read more
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7-7 7M3 12h18"></path></svg>
                     </a>

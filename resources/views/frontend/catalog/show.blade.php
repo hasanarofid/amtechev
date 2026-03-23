@@ -31,7 +31,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <!-- Image Gallery -->
-            <div class="flex flex-col-reverse md:flex-row gap-4" x-data="{ activeImage: '{{ $charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png') }}' }">
+            <div class="flex flex-col-reverse md:flex-row gap-4" x-data="{ activeImage: '{{ str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url) }}' }">
                 <!-- Thumbnails -->
                 <div class="flex md:flex-col gap-4 w-full md:w-20 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
                     @php
@@ -41,7 +41,7 @@
                     <div @click="activeImage = '{{ $image }}'" 
                          :class="activeImage === '{{ $image }}' ? 'border-ev-green' : 'border-gray-100'"
                          class="aspect-square bg-gray-50 rounded-lg overflow-hidden border cursor-pointer hover:border-ev-green transition-colors p-2 shrink-0 w-20 h-20">
-                        <img src="{{ $image }}" class="w-full h-full object-contain">
+                        <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}" class="w-full h-full object-contain">
                     </div>
                     @endforeach
                 </div>
@@ -124,60 +124,14 @@
             </div>
         </div>
 
-        <!-- Product Details Sections -->
-        <div class="mt-24 space-y-16 max-w-4xl bg-gray-50/50 rounded-3xl p-8 md:p-12 border border-gray-100">
-            <section>
-                <h2 class="text-sm font-bold uppercase tracking-widest text-ev-green mb-6">
-                    ⚡ The E1 11kw Home Charger Installation
-                </h2>
-                <div class="space-y-4 text-sm text-gray-600 leading-relaxed">
-                    <p>• <strong>Hassle-Free Setup:</strong> Transparent pricing and easy scheduling. Just sit back and relax.</p>
-                    <p>• <strong>Standard Installation Fee:</strong> From RM1,350, including materials, up to 10 meters of distance from the electric panel to the car porch, and labor costs.</p>
-                    <p>• <strong>Additional Fees:</strong> May apply for phase upgrades, voltage changes, long-distance installations, or other challenges. Contact us for a detailed quote.</p>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="text-sm font-bold uppercase tracking-widest text-ev-green mb-6">
-                    🔍 Product Information
-                </h2>
-                <div class="space-y-4 text-sm text-gray-600 leading-relaxed">
-                    <p>• <strong>Compatibility:</strong> Works with any EV model in Malaysia from BYD, Tesla, Porsche, Lotus, Proton & More</p>
-                    <p>• <strong>Waterproof Grade:</strong> IP55</p>
-                    <p>• <strong>Compact Design:</strong> Small size, easy to transport.</p>
-                    <p>• <strong>Advanced Protection:</strong> Overvoltage, lightning, residual current device (Type A 30mA+DC 6mA RCD), overload, short circuit, earth leakage, over-temperature.</p>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="text-sm font-bold uppercase tracking-widest text-ev-green mb-6">
-                    🔧 Specifications
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                    <p>• <strong>AC Power Supply:</strong> Three Phase</p>
-                    <p>• <strong>Max Output Current:</strong> 68A, 36A.</p>
-                    <p>• <strong>Plug Type:</strong> Type 2</p>
-                    <p>• <strong>Cable Length:</strong> 5m, 7m, or 10m</p>
-                    <p>• <strong>Communication Options:</strong> Bluetooth, WiFi, Cellular</p>
-                    <p>• <strong>Start Mode:</strong> Plug & Charge / RFID Card / Mobile App</p>
-                    <p>• <strong>Certification:</strong> CE</p>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="text-sm font-bold uppercase tracking-widest text-ev-green mb-6">
-                    ✨ Why Choose Us?
-                </h2>
-                <div class="space-y-4 text-sm text-gray-600 leading-relaxed">
-                    <p>• 🏆 <strong>Expert Installation:</strong> Over 500+ Installations Done.</p>
-                    <p>• 🛡️ <strong>Advanced Technology:</strong> Cutting-edge features for Safety & Long-lasting.</p>
-                    <li>😊 <strong>Customer Satisfaction:</strong> Best after-sales dedicated support on WhatsApp.</li>
-                </div>
-            </section>
-
-            <a href="{{ $waLink ?? '#' }}" class="inline-flex items-center gap-2 text-sm font-black text-[#3BB77E] hover:underline uppercase tracking-widest">
-                📞 Get Installation Quote or Chat Now
-            </a>
+        <div class="mt-24 max-w-4xl bg-gray-50/50 rounded-3xl p-8 md:p-12 border border-gray-100 prose prose-lg prose-green prose-headings:font-black prose-headings:tracking-tight">
+            {!! $charger->description !!}
+            
+            <div class="mt-12 not-prose">
+                <a href="{{ $waLink ?? '#' }}" class="inline-flex items-center gap-2 text-sm font-black text-[#3BB77E] hover:underline uppercase tracking-widest">
+                    📞 Get Installation Quote or Chat Now
+                </a>
+            </div>
         </div>
     </main>
 

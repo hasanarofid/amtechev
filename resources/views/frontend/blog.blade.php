@@ -13,7 +13,7 @@
             @foreach($posts as $post)
             <div class="group cursor-pointer">
                 <div class="relative aspect-video rounded-3xl overflow-hidden mb-8 border border-white/5">
-                    <img src="{{ $post->image_url ?: '/storage/ev_hero_bg_1773856111374.png' }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="{{ str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url) }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </div>
                 <h4 class="text-xl font-bold leading-tight group-hover:text-ev-green transition-colors">{{ $post->title }}</h4>

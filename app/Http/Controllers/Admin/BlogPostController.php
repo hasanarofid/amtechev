@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller
 {
@@ -28,11 +29,15 @@ class BlogPostController extends Controller
             'title' => 'required|string|max:255',
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
-            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'category' => 'nullable|string',
             'author_name' => 'required|string',
             'published_at' => 'nullable|date',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $validated['image_url'] = $request->file('image_file')->store('blog-posts', 'public');
+        }
 
         $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']) . '-' . rand(100, 999);
 
@@ -57,11 +62,18 @@ class BlogPostController extends Controller
             'title' => 'required|string|max:255',
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
-            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|max:2048',
             'category' => 'nullable|string',
             'author_name' => 'required|string',
             'published_at' => 'nullable|date',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            if ($blogPost->image_url && Storage::disk('public')->exists($blogPost->image_url)) {
+                Storage::disk('public')->delete($blogPost->image_url);
+            }
+            $validated['image_url'] = $request->file('image_file')->store('blog-posts', 'public');
+        }
 
         $blogPost->update($validated);
 

@@ -22,11 +22,8 @@ use App\Http\Controllers\DashboardController;
      return view('frontend.installation.index', compact('settings'));
  })->name('installation');
 
- Route::get('/blog', function () {
-     $posts = \App\Models\BlogPost::latest()->get();
-     $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
-     return view('frontend.blog.index', compact('posts', 'settings'));
- })->name('blog');
+  Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog');
+  Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
  Route::get('/contact', function () {
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
