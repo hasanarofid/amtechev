@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $post->title }} – {{ $settings['site_title'] ?? 'Amtech EV' }}</title>
+    <title>{{ $post->title }} – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -76,7 +76,6 @@
         @endif
     </main>
 
-    @include('frontend.header') <!-- Using header as footer or should use footer? -->
     @include('frontend.footer')
 
 </body>

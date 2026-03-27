@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact Us – {{ $settings['site_title'] ?? 'Amtech EV' }}</title>
+    <title>Contact Us – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -49,7 +49,7 @@
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">We're here to help</p>
             <h1 class="text-5xl font-black mb-8">Connect with us!</h1>
             <p class="text-gray-500 leading-relaxed mb-4">
-                Get in touch with the {{ $settings['site_title'] ?? 'Amtech EV' }} team to discuss your needs, ask questions, or request a consultation. We're always here to help and look forward to connecting with you.
+                Get in touch with the {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} team to discuss your needs, ask questions, or request a consultation. We're always here to help and look forward to connecting with you.
             </p>
             <p class="font-bold text-gray-700">Whats app Us at +60128873023</p>
         </div>

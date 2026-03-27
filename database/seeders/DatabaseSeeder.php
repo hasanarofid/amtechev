@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Seed Admin
-        User::updateOrCreate(['email' => 'admin@amtech.com'], [
+        User::updateOrCreate(['email' => 'admin@amtechev.com'], [
             'name' => 'Master Admin',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Seed Staff
-        User::updateOrCreate(['email' => 'staff@amtech.com'], [
+        User::updateOrCreate(['email' => 'staff@amtechev.com'], [
             'name' => 'Amtech Staff',
             'password' => Hash::make('password'),
             'role' => 'staff',
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Seed Member / Customer
-        User::updateOrCreate(['email' => 'member@amtech.com'], [
+        User::updateOrCreate(['email' => 'member@amtechev.com'], [
             'name' => 'John Customer',
             'password' => Hash::make('password'),
             'role' => 'member',

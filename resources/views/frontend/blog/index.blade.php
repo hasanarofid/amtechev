@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blogs – {{ $settings['site_title'] ?? 'Amtech EV' }}</title>
+    <title>Blogs – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     

@@ -12,7 +12,13 @@
                 <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-8 md:h-9 w-auto relative">
             </div>
             <h1 class="text-base md:text-lg font-bold tracking-tighter text-white">
-                AMTECH <span class="text-ev-green italic">EV</span>
+                @php
+                    $siteName = $settings['site_name'] ?? 'AMTECH EV';
+                    $parts = explode(' ', $siteName);
+                    $firstPart = $parts[0] ?? 'AMTECH';
+                    $secondPart = $parts[1] ?? 'EV';
+                @endphp
+                {{ $firstPart }} <span class="text-ev-green italic">{{ $secondPart }}</span>
             </h1>
         </a>
         

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $settings['site_title'] ?? 'Amtech EV Specialist' }} – Leading EV Charging Solutions in Malaysia</title>
+    <title>{{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} – Leading EV Charging Solutions in Malaysia</title>
     
     <!-- SEO -->
     <meta name="description" content="Amtech EV Specialist makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Today, enjoy seamless charging!">

@@ -5,7 +5,15 @@
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center gap-3 mb-8">
                     <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
-                    <h1 class="text-3xl font-bold tracking-tight">AMTECH <span class="text-ev-green italic tracking-tighter">EV</span></h1>
+                    <h1 class="text-3xl font-bold tracking-tight">
+                        @php
+                            $siteName = $settings['site_name'] ?? 'AMTECH EV';
+                            $parts = explode(' ', $siteName);
+                            $firstPart = $parts[0] ?? 'AMTECH';
+                            $secondPart = $parts[1] ?? 'EV';
+                        @endphp
+                        {{ $firstPart }} <span class="text-ev-green italic tracking-tighter">{{ $secondPart }}</span>
+                    </h1>
                 </div>
                 <p class="text-gray-400 max-w-sm leading-relaxed">
                     Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.
