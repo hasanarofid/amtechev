@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Contact Us – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
     
+    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -51,7 +53,7 @@
             <p class="text-gray-500 leading-relaxed mb-4">
                 Get in touch with the {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} team to discuss your needs, ask questions, or request a consultation. We're always here to help and look forward to connecting with you.
             </p>
-            <p class="font-bold text-gray-700">Whats app Us at +60128873023</p>
+            <p class="font-bold text-gray-700">Whats app Us at +60 11-6768 6742</p>
         </div>
     </section>
 
@@ -89,14 +91,14 @@
                         <div>
                             <p class="text-ev-green font-bold mb-2">Address</p>
                             <p class="text-gray-300 leading-relaxed">
-                                54 Ground Floor Medan Idaman Business Centre Setapak<br>
-                                53100 Kl Selangor
+                                13A 22 Go Wise Box Menara Dquince Damansara Perdana<br>
+                                47820 Selangor
                             </p>
                         </div>
                         <div>
                             <p class="text-ev-green font-bold mb-2">Email</p>
-                            <a href="mailto:enquiry@amtecthev.com" class="text-gray-300 hover:text-white transition-colors">
-                                enquiry@amtecthev.com                            </a>
+                            <a href="mailto:enquiry@amtechev.com" class="text-gray-300 hover:text-white transition-colors">
+                                enquiry@amtechev.com                            </a>
                         </div>
                     </div>
                 </div>

@@ -25,26 +25,26 @@ class LandingPageSeeder extends Seeder
             ['key' => 'site_name', 'value' => 'AMTECH EV', 'group' => 'general'],
             ['key' => 'site_title', 'value' => 'AMTECH EV Specialist - Malaysia’s EV Charger Installation Specialist', 'group' => 'general'],
             ['key' => 'hero_title', 'value' => "Malaysia’s <span class=\"text-ev-green\">EV Charger</span><br>Installation Specialist", 'group' => 'hero'],
-            ['key' => 'hero_subtitle', 'value' => 'Best value EV charger installation with FREE site visit in Selangor & Kuala Lumpur. No hidden charges, no pressure — we guide you from consultation to full installation (A–Z).', 'group' => 'hero'],
-            ['key' => 'hero_badge', 'value' => "Best Value • Professional Workmanship", 'group' => 'hero'],
+            ['key' => 'hero_subtitle', 'value' => 'Enjoy a hassle-free EV charger installation with a FREE site visit across Selangor & Kuala Lumpur. No Hidden Charge. No Pressure. Transparent pricing, expert consultation, and clean, precise installation — done right from start to finish.', 'group' => 'hero'],
+            ['key' => 'hero_badge', 'value' => "BEST VALUE • EXPERT WORKMANSHIP", 'group' => 'hero'],
             ['key' => 'hero_cta_main', 'value' => 'WhatsApp Now', 'group' => 'hero'],
             ['key' => 'hero_cta_secondary', 'value' => 'Get Free Site Visit', 'group' => 'hero'],
             ['key' => 'hero_cta_small', 'value' => 'Fast response • No obligation consultation', 'group' => 'hero'],
             
             // About Us
             ['key' => 'about_title', 'value' => 'Why Choose Amtech EVC Specialist?', 'group' => 'about'],
-            ['key' => 'about_content', 'value' => 'At Amtech EVC Specialist, we provide the best value EV charger installation in Malaysia with a trusted and experienced team. We take pride in clean and kemas workmanship — every installation is done professionally, and we will adjust until you are fully satisfied. We don’t just install — we guide you from A to Z.', 'group' => 'about'],
+            ['key' => 'about_content', 'value' => 'At Amtech EVC Specialist, we provide the best value EV charger installation in Malaysia with a trusted and experienced team. We take pride in clean, precise workmanship — every installation is done with attention to detail, ensuring a neat and professional finish. Installation is just one part - We take care of the full process.', 'group' => 'about'],
             
             // Quality
             ['key' => 'quality_title', 'value' => 'Built with Quality & Safety in Mind', 'group' => 'quality'],
-            ['key' => 'quality_content', 'value' => 'We use premium-grade components from trusted brands in Japan, France, and Switzerland — ensuring every installation is safe, reliable, and built to last. Your safety and long-term performance are our top priorities.', 'group' => 'quality'],
+            ['key' => 'quality_content', 'value' => 'We use premium-grade components from trusted brands like Terasaki, Schneider, and ABB — ensuring every installation is safe, reliable, and built to last. Your safety and long-term performance are our top priorities.', 'group' => 'quality'],
             
             // Mission
             ['key' => 'mission_title', 'value' => 'Supporting Malaysia’s EV Future', 'group' => 'mission'],
-            ['key' => 'mission_content', 'value' => 'Our mission is to make EV charging simple, safe, and accessible for everyone in Malaysia. From consultation to installation, we handle everything — so you can enjoy a seamless EV experience.', 'group' => 'mission'],
+            ['key' => 'mission_content', 'value' => 'Our mission is to make EV charging simple, safe, and accessible for everyone in Malaysia with fair, transparent pricing and no bullshit pricing.', 'group' => 'mission'],
 
-            ['key' => 'contact_email', 'value' => 'hello@amtechev.com', 'group' => 'contact'],
-            ['key' => 'contact_address', 'value' => 'Selangor & Kuala Lumpur, Malaysia', 'group' => 'contact'],
+            ['key' => 'contact_email', 'value' => 'enquiry@amtechev.com', 'group' => 'contact'],
+            ['key' => 'contact_address', 'value' => '13A 22 Go Wise Box Menara Dquince Damansara Perdana 47820 Selangor.', 'group' => 'contact'],
             ['key' => 'whatsapp_number', 'value' => '601167686742', 'group' => 'contact'],
             ['key' => 'whatsapp_bubble_text', 'value' => 'Hi, I want to install an EV charger - AMTECH EV', 'group' => 'contact'],
             ['key' => 'footer_about', 'value' => "Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.", 'group' => 'footer'],

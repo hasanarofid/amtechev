@@ -8,7 +8,7 @@
             </div>
             <div>
                 <h3 class="text-ev-green font-bold uppercase tracking-[0.3em] mb-4 text-sm">Our Expertise</h3>
-                <h2 class="text-4xl lg:text-5xl font-bold mb-8 leading-tight">Professional 🔌 EV Charging Services</h2>
+                <h2 class="text-4xl lg:text-5xl font-bold mb-8 leading-tight">Expert EV Charging Specialist</h2>
                 <p class="text-gray-400 text-lg leading-relaxed mb-10 font-light">
                     We provide comprehensive EV charging solutions tailored to your needs, ensuring a seamless experience from start to finish.
                 </p>

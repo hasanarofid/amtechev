@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} – Leading EV Charging Solutions in Malaysia</title>
     
+    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
+    
     <!-- SEO -->
     <meta name="description" content="Amtech EV Specialist makes EV charging accessible in Malaysia with high-quality products and services. Best value EV charger installation with FREE site visit.">
     
@@ -20,7 +22,7 @@
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #030303; color: #ffffff; }
         .hero-bg {
-            background-image: linear-gradient(rgba(3, 3, 3, 0.4), rgba(3, 3, 3, 0.95)), url('{{ asset('storage/ev_hero_bg_1773856111374.png') }}');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('{{ asset('amtechawal.jpeg') }}');
             background-size: cover;
             background-position: center;
         }
@@ -84,7 +86,6 @@
 
     <main>
         @include('frontend.hero')
-        @include('frontend.features')
         @include('frontend.about')
         @include('frontend.services')
         @include('frontend.quality')

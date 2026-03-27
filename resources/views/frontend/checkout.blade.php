@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Checkout – {{ $settings['site_title'] ?? 'Amtech EV Specialist' }}</title>
     
+    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

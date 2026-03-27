@@ -5,13 +5,14 @@
         <div class="max-w-3xl">
             <div class="inline-flex items-center gap-2 px-4 py-2 bg-ev-green/10 border border-ev-green/20 rounded-full mb-8">
                 <span class="w-2 h-2 bg-ev-green rounded-full animate-pulse-green"></span>
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-ev-green">{{ $settings['hero_badge'] ?? "Malaysia's #1 EV Solutions" }}</span>
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-ev-green">{{ $settings['hero_badge'] ?? "BEST VALUE • EXPERT WORKMANSHIP" }}</span>
             </div>
             <h2 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
                 {!! $settings['hero_title'] ?? "Malaysia's <span class=\"text-ev-green\">Electric Vehicle</span><br>Charger Specialist" !!}
             </h2>
+            <p class="text-2xl font-black text-ev-green mb-8 ev-glow">Starting from RM898.00</p>
             <p class="text-lg text-gray-300 mb-10 max-w-xl leading-relaxed">
-                {{ $settings['hero_subtitle'] ?? 'Amtech EV makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Experience the future of mobility today.' }}
+                {{ $settings['hero_subtitle'] ?? 'Enjoy a hassle-free EV charger installation with a FREE site visit across Selangor & Kuala Lumpur. No Hidden Charge. No Pressure. Transparent pricing, expert consultation, and clean, precise installation — done right from start to finish.' }}
             </p>
             <div class="flex flex-col gap-4">
                 <div class="flex flex-wrap gap-6">

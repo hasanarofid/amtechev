@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $charger->name }} – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
     
+    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

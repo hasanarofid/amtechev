@@ -12,10 +12,10 @@
                         At Amtech EVC Specialist, we provide the best value EV charger installation in Malaysia with a trusted and experienced team.
                     </p>
                     <p>
-                        We take pride in clean and <span class="text-white font-semibold italic">kemas</span> workmanship — every installation is done professionally, and we will adjust until you are fully satisfied.
+                        We take pride in clean, precise workmanship — every installation is done with attention to detail, ensuring a neat and professional finish.
                     </p>
                     <p class="text-ev-green font-bold">
-                        We don’t just install — we guide you from A to Z.
+                        Installation is just one part - We take care of the full process.
                     </p>
                 </div>
             </div>

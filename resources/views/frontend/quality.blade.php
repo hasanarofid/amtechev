@@ -13,12 +13,12 @@
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach([
-                ['country' => 'Japan', 'desc' => 'Precision engineering and reliable electronics.'],
-                ['country' => 'France', 'desc' => 'Innovative electrical components and safety standards.'],
-                ['country' => 'Switzerland', 'desc' => 'High-performance connectivity and durability.']
+                ['brand' => 'Terasaki', 'desc' => 'Precision engineering and reliable electronics for safety.'],
+                ['brand' => 'Schneider', 'desc' => 'Innovative electrical components and global safety standards.'],
+                ['brand' => 'ABB', 'desc' => 'High-performance connectivity and industrial-grade durability.']
             ] as $origin)
             <div class="p-8 rounded-3xl bg-black/40 border border-white/5 hover:border-ev-green/20 transition-all group">
-                <div class="text-ev-green font-black text-2xl mb-4 tracking-tighter">{{ $origin['country'] }}</div>
+                <div class="text-ev-green font-black text-2xl mb-4 tracking-tighter">{{ $origin['brand'] }}</div>
                 <p class="text-gray-400 font-light">{{ $origin['desc'] }}</p>
             </div>
             @endforeach
