@@ -42,8 +42,9 @@ use App\Http\Controllers\DashboardController;
          Route::resource('chargers', App\Http\Controllers\Admin\ChargerController::class);
          Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
          Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
-         Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
-     });
+        Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
+        Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
+    });
  
      Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
      Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

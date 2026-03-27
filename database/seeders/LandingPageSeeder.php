@@ -23,12 +23,28 @@ class LandingPageSeeder extends Seeder
         // 1. Site Settings
         $settings = [
             ['key' => 'site_name', 'value' => 'AMTECH EV', 'group' => 'general'],
-            ['key' => 'site_title', 'value' => 'AMTECH EV Specialist', 'group' => 'general'],
-            ['key' => 'hero_title', 'value' => "Malaysia's <span class=\"text-ev-green\">Electric Vehicle</span><br>Charger Specialist", 'group' => 'hero'],
-            ['key' => 'hero_subtitle', 'value' => 'AMTECH EV makes EV charging accessible in Malaysia with high-quality products and services for homes and businesses. Experience the future of mobility today.', 'group' => 'hero'],
-            ['key' => 'hero_badge', 'value' => "Malaysia's #1 EV Solutions", 'group' => 'hero'],
+            ['key' => 'site_title', 'value' => 'AMTECH EV Specialist - Malaysia’s EV Charger Installation Specialist', 'group' => 'general'],
+            ['key' => 'hero_title', 'value' => "Malaysia’s <span class=\"text-ev-green\">EV Charger</span><br>Installation Specialist", 'group' => 'hero'],
+            ['key' => 'hero_subtitle', 'value' => 'Best value EV charger installation with FREE site visit in Selangor & Kuala Lumpur. No hidden charges, no pressure — we guide you from consultation to full installation (A–Z).', 'group' => 'hero'],
+            ['key' => 'hero_badge', 'value' => "Best Value • Professional Workmanship", 'group' => 'hero'],
+            ['key' => 'hero_cta_main', 'value' => 'WhatsApp Now', 'group' => 'hero'],
+            ['key' => 'hero_cta_secondary', 'value' => 'Get Free Site Visit', 'group' => 'hero'],
+            ['key' => 'hero_cta_small', 'value' => 'Fast response • No obligation consultation', 'group' => 'hero'],
+            
+            // About Us
+            ['key' => 'about_title', 'value' => 'Why Choose Amtech EVC Specialist?', 'group' => 'about'],
+            ['key' => 'about_content', 'value' => 'At Amtech EVC Specialist, we provide the best value EV charger installation in Malaysia with a trusted and experienced team. We take pride in clean and kemas workmanship — every installation is done professionally, and we will adjust until you are fully satisfied. We don’t just install — we guide you from A to Z.', 'group' => 'about'],
+            
+            // Quality
+            ['key' => 'quality_title', 'value' => 'Built with Quality & Safety in Mind', 'group' => 'quality'],
+            ['key' => 'quality_content', 'value' => 'We use premium-grade components from trusted brands in Japan, France, and Switzerland — ensuring every installation is safe, reliable, and built to last. Your safety and long-term performance are our top priorities.', 'group' => 'quality'],
+            
+            // Mission
+            ['key' => 'mission_title', 'value' => 'Supporting Malaysia’s EV Future', 'group' => 'mission'],
+            ['key' => 'mission_content', 'value' => 'Our mission is to make EV charging simple, safe, and accessible for everyone in Malaysia. From consultation to installation, we handle everything — so you can enjoy a seamless EV experience.', 'group' => 'mission'],
+
             ['key' => 'contact_email', 'value' => 'hello@amtechev.com', 'group' => 'contact'],
-            ['key' => 'contact_address', 'value' => 'No 1, Jalan AMTECH EV, 50000 Kuala Lumpur', 'group' => 'contact'],
+            ['key' => 'contact_address', 'value' => 'Selangor & Kuala Lumpur, Malaysia', 'group' => 'contact'],
             ['key' => 'whatsapp_number', 'value' => '601167686742', 'group' => 'contact'],
             ['key' => 'whatsapp_bubble_text', 'value' => 'Hi, I want to install an EV charger - AMTECH EV', 'group' => 'contact'],
             ['key' => 'footer_about', 'value' => "Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.", 'group' => 'footer'],
