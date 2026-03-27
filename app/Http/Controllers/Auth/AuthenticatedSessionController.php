@@ -14,8 +14,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+        
+        if ($request->routeIs('user.login')) {
+            return view('frontend.auth.login', compact('settings'));
+        }
+        
         return view('auth.login');
     }
 
@@ -31,11 +37,9 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
         if ($user->role === 'admin') {
             return redirect()->intended(route('dashboard'));
-        } elseif ($user->role === 'staff') {
-            return redirect()->intended(route('dashboard')); // Staff might have same dashboard for now
-        } else {
-            return redirect()->intended(route('member.dashboard'));
         }
+        
+        return redirect()->intended(route('user.dashboard'));
     }
 
     /**

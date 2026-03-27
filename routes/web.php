@@ -30,7 +30,15 @@ use App\Http\Controllers\DashboardController;
      return view('frontend.contact.index', compact('settings'));
  })->name('contact');
  
- Route::middleware(['auth', 'verified'])->group(function () {
+ // User Auth Routes
+ Route::get('/user/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('user.login');
+ Route::get('/user/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('user.register');
+
+ Route::middleware(['auth', 'member'])->prefix('user')->as('user.')->group(function () {
+     Route::get('/dashboard', [App\Http\Controllers\Frontend\UserDashboardController::class, 'index'])->name('dashboard');
+ });
+
+ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
      Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
      
 
