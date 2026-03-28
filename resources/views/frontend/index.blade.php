@@ -22,9 +22,12 @@
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #030303; color: #ffffff; }
         .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('{{ asset('amtechawal.jpeg') }}');
+            background-image: 
+                linear-gradient(to bottom, rgba(3, 3, 3, 0.7) 0%, rgba(3, 3, 3, 0.4) 50%, rgba(3, 3, 3, 0.9) 100%),
+                url("{{ asset('technical_analysis.jpg') }}");
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
         }
         .btn-ev {
             padding: 1rem 2.5rem;
@@ -56,24 +59,36 @@
             background-color: #111111;
         }
         .ev-hero-gradient {
-            background: radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.2) 0%, transparent 60%),
-                        radial-gradient(circle at 90% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 60%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
         }
         .ev-glow {
-            filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.3));
+            filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.4));
         }
         .glassmorphism {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .text-ev-green { color: #22c55e; }
         .bg-ev-green { background-color: #22c55e; }
         .bg-ev-dark { background-color: #050505; }
         
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .animate-reveal {
+            animation: reveal 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        .animation-delay-200 { animation-delay: 200ms; }
+        .animation-delay-400 { animation-delay: 400ms; }
+        .animation-delay-600 { animation-delay: 600ms; }
+
         @keyframes pulse-green {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
+            50% { opacity: 0.5; transform: scale(1.2); }
         }
         .animate-pulse-green {
             animation: pulse-green 2s infinite;

@@ -14,9 +14,9 @@ class BrandSeeder extends Seeder
     public function run(): void
     {
         $brands = [
-            ['name' => 'BYD', 'logo' => 'brands/byd.png', 'sort_order' => 1],
-            ['name' => 'Tesla', 'logo' => 'brands/tesla.png', 'sort_order' => 2],
-            ['name' => 'E.MAS', 'logo' => 'brands/emas.png', 'sort_order' => 3],
+            ['name' => 'Terasaki', 'logo' => 'brands/terasaki.png', 'sort_order' => 1],
+            ['name' => 'Schneider', 'logo' => 'brands/schneider.png', 'sort_order' => 2],
+            ['name' => 'ABB', 'logo' => 'brands/abb.png', 'sort_order' => 3],
         ];
 
         foreach ($brands as $brand) {

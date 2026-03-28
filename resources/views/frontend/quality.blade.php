@@ -13,13 +13,18 @@
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach([
-                ['brand' => 'Terasaki', 'desc' => 'Precision engineering and reliable electronics for safety.'],
-                ['brand' => 'Schneider', 'desc' => 'Innovative electrical components and global safety standards.'],
-                ['brand' => 'ABB', 'desc' => 'High-performance connectivity and industrial-grade durability.']
+                ['brand' => 'Terasaki', 'desc' => 'Precision engineering and reliable electronics for safety.', 'logo' => 'brands/terasaki.png'],
+                ['brand' => 'Schneider', 'desc' => 'Innovative electrical components and global safety standards.', 'logo' => 'brands/schneider.png'],
+                ['brand' => 'ABB', 'desc' => 'High-performance connectivity and industrial-grade durability.', 'logo' => 'brands/abb.png']
             ] as $origin)
-            <div class="p-8 rounded-3xl bg-black/40 border border-white/5 hover:border-ev-green/20 transition-all group">
-                <div class="text-ev-green font-black text-2xl mb-4 tracking-tighter">{{ $origin['brand'] }}</div>
-                <p class="text-gray-400 font-light">{{ $origin['desc'] }}</p>
+            <div class="p-8 rounded-3xl bg-black/40 border border-white/5 hover:border-ev-green/20 transition-all group flex items-start justify-between">
+                <div class="flex-1 pr-4">
+                    <div class="text-ev-green font-black text-2xl mb-4 tracking-tighter">{{ $origin['brand'] }}</div>
+                    <p class="text-gray-400 font-light text-sm">{{ $origin['desc'] }}</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <img src="{{ asset('storage/' . $origin['logo']) }}" alt="{{ $origin['brand'] }}" class="h-14 w-auto object-contain transition-all duration-300 transform group-hover:scale-110">
+                </div>
             </div>
             @endforeach
         </div>
