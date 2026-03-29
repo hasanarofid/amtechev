@@ -7,7 +7,7 @@
         </div>
         
         <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-            @foreach(range(1, 9) as $i)
+            @foreach(range(1, 11) as $i)
             <div class="break-inside-avoid relative group overflow-hidden rounded-3xl border border-white/10">
                 <img src="{{ asset('galery/galeri' . $i . '.jpeg') }}" alt="Gallery {{ $i }}" class="w-full transform group-hover:scale-110 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
