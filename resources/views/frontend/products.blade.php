@@ -10,7 +10,7 @@
                 <img src="{{ str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url) }}" alt="{{ $charger->name }}" class="w-48 h-48 object-contain mb-8 ev-glow">
                 <h4 class="text-xl font-bold mb-2">{{ $charger->name }}</h4>
                 <span class="text-ev-green font-bold text-lg mb-8">{{ $charger->price }}</span>
-                <a href="{{ $charger->link ?: '#' }}" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:border-ev-green hover:text-ev-green transition-all w-full text-center">View Details</a>
+                <a href="{{ route('catalog.show', $charger->id) }}" class="px-8 py-3 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:border-ev-green hover:text-ev-green transition-all w-full text-center">View Details</a>
             </div>
             @endforeach
         </div>

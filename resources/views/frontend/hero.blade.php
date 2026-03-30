@@ -37,7 +37,7 @@
                     <span class="relative uppercase tracking-widest text-sm">{{ $settings['hero_cta_main'] ?? 'WhatsApp Now' }}</span>
                 </a>
                 
-                <a href="#contact" class="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 active:scale-95 backdrop-blur-sm">
+                <a href="{{ route('contact') }}" class="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 active:scale-95 backdrop-blur-sm">
                     <span class="relative uppercase tracking-widest text-sm">{{ $settings['hero_cta_secondary'] ?? 'Get Free Site Visit' }}</span>
                 </a>
                 
