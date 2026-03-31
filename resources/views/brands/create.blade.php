@@ -4,7 +4,7 @@
         Add New Brand
     </x-slot>
 
-    <div class="max-w-4xl">
+    <div class="w-full">
         <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data" class="glass-card p-10">
             @csrf
             

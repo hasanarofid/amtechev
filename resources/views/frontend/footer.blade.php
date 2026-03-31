@@ -4,10 +4,10 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center gap-3 mb-8">
-                    <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
-                    <h1 class="text-3xl font-bold tracking-tight">
-                        @php
-                            $siteName = $settings['site_name'] ?? 'AMTECH EV';
+                <img src="{{ (isset($settings['site_logo']) && $settings['site_logo']) ? (Str::startsWith($settings['site_logo'], 'logo/') ? asset($settings['site_logo']) : asset('storage/' . $settings['site_logo'])) : asset('logo/amtech-removebg.png') }}" alt="Amtech EV Logo" class="h-10 w-auto">
+                <h1 class="text-3xl font-bold tracking-tight">
+                    @php
+                        $siteName = $settings['site_title'] ?? 'AMTECH EV';
                             $parts = explode(' ', $siteName);
                             $firstPart = $parts[0] ?? 'AMTECH';
                             $secondPart = $parts[1] ?? 'EV';
@@ -16,7 +16,7 @@
                     </h1>
                 </div>
                 <p class="text-gray-400 max-w-sm leading-relaxed">
-                    Leading the charge in Malaysia's EV revolution. Quality, reliability, and innovation in every connection.
+                    {{ $settings['footer_about'] ?? 'Leading the charge in Malaysia\'s EV revolution. Quality, reliability, and innovation in every connection.' }}
                 </p>
             </div>
             <div>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-xs text-gray-500 uppercase tracking-widest">&copy; 2026 Amtech EV Malaysia. All rights reserved.</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{{ $settings['footer_copyright'] ?? '© 2026 AMTECH EV Specialist. All rights reserved.' }}</p>
             <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-500">
                 <a href="#" class="hover:text-white">Privacy Policy</a>
                 <a href="#" class="hover:text-white">Terms of Service</a>

@@ -51,6 +51,14 @@ use App\Http\Controllers\DashboardController;
          Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
          Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
         Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
+        Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
+        Route::resource('quality-brands', App\Http\Controllers\Admin\QualityBrandController::class);
+        Route::resource('gallery-items', App\Http\Controllers\Admin\GalleryItemController::class);
+        Route::resource('video-testimonials', App\Http\Controllers\Admin\VideoTestimonialController::class);
+        
+        Route::get('site-settings/hero', [App\Http\Controllers\Admin\SiteSettingController::class, 'hero'])->name('site-settings.hero');
+        Route::get('site-settings/about', [App\Http\Controllers\Admin\SiteSettingController::class, 'about'])->name('site-settings.about');
+        Route::get('site-settings/mission', [App\Http\Controllers\Admin\SiteSettingController::class, 'mission'])->name('site-settings.mission');
         Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
     });
  

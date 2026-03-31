@@ -4,7 +4,7 @@
         Landing Page Settings
     </x-slot>
 
-    <div class="max-w-4xl">
+    <div class="w-full">
         <form action="{{ route('admin.site-settings.update', 0) }}" method="POST" class="space-y-12">
             @csrf
             @method('PUT')

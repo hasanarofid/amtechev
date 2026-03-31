@@ -24,7 +24,7 @@
         .hero-bg {
             background-image: 
                 linear-gradient(to bottom, rgba(3, 3, 3, 0.7) 0%, rgba(3, 3, 3, 0.4) 50%, rgba(3, 3, 3, 0.9) 100%),
-                url("{{ asset('technical_analysis.jpg') }}");
+                url("{{ (isset($settings['hero_image']) && $settings['hero_image']) ? (Str::startsWith($settings['hero_image'], 'settings/') ? asset('storage/' . $settings['hero_image']) : asset($settings['hero_image'])) : asset('technical_analysis.jpg') }}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -109,6 +109,7 @@
         @include('frontend.mission')
         @include('frontend.brands')
         @include('frontend.testimonials')
+        @include('frontend.video-testimonials')
         @include('frontend.blog')
     </main>
 

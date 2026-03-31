@@ -4,7 +4,7 @@
         Create Post
     </x-slot>
 
-    <div class="max-w-4xl">
+    <div class="w-full">
         <form action="{{ route('admin.blog-posts.store') }}" method="POST" class="space-y-8" enctype="multipart/form-data">
             @csrf
 

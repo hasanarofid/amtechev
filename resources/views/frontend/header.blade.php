@@ -9,11 +9,11 @@
         <a href="{{ route('home') }}" class="flex items-center gap-2 md:gap-3 group cursor-pointer">
             <div class="relative">
                 <div class="absolute -inset-2 bg-ev-green/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-8 md:h-9 w-auto relative">
+                <img src="{{ (isset($settings['site_logo']) && $settings['site_logo']) ? (Str::startsWith($settings['site_logo'], 'logo/') ? asset($settings['site_logo']) : asset('storage/' . $settings['site_logo'])) : asset('logo/amtech-removebg.png') }}" alt="Amtech EV Logo" class="h-8 md:h-9 w-auto relative">
             </div>
             <h1 class="text-base md:text-lg font-bold tracking-tighter text-white">
                 @php
-                    $siteName = $settings['site_name'] ?? 'AMTECH EV';
+                    $siteName = $settings['site_title'] ?? 'AMTECH EV';
                     $parts = explode(' ', $siteName);
                     $firstPart = $parts[0] ?? 'AMTECH';
                     $secondPart = $parts[1] ?? 'EV';
