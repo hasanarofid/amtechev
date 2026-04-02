@@ -50,11 +50,33 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 ml-1">Password</label>
-                        <input type="password" name="password" required class="input-ev" placeholder="••••••••">
+                        <div class="relative" x-data="{ show: false }">
+                            <input :type="show ? 'text' : 'password'" name="password" required class="input-ev pr-10" placeholder="••••••••">
+                            <button type="button" @click="show = !show" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ev-green focus:outline-none transition-colors">
+                                <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.399 8.049 8 4 12 4s8.601 4.049 9.964 8.322a1.012 1.012 0 010 .644C20.601 15.951 16 20 12 20s-8.601-4.049-9.964-8.322z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <svg x-show="show" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4" style="display: none;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 20 12 20c1.912 0 3.685-.604 5.12-1.632M17.644 17.644l-11.288-11.288m1.407-1.407A10.477 10.477 0 0112 4c4.756 0 8.774 3.662 10.065 8a10.477 10.477 0 01-2.046 3.774M9.414 9.414a3 3 0 114.242 4.242" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 ml-1">Confirm</label>
-                        <input type="password" name="password_confirmation" required class="input-ev" placeholder="••••••••">
+                        <div class="relative" x-data="{ show: false }">
+                            <input :type="show ? 'text' : 'password'" name="password_confirmation" required class="input-ev pr-10" placeholder="••••••••">
+                            <button type="button" @click="show = !show" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ev-green focus:outline-none transition-colors">
+                                <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.399 8.049 8 4 12 4s8.601 4.049 9.964 8.322a1.012 1.012 0 010 .644C20.601 15.951 16 20 12 20s-8.601-4.049-9.964-8.322z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <svg x-show="show" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4" style="display: none;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 20 12 20c1.912 0 3.685-.604 5.12-1.632M17.644 17.644l-11.288-11.288m1.407-1.407A10.477 10.477 0 0112 4c4.756 0 8.774 3.662 10.065 8a10.477 10.477 0 01-2.046 3.774M9.414 9.414a3 3 0 114.242 4.242" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
