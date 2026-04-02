@@ -28,11 +28,12 @@ class GalleryItemController extends Controller
             'sort_order' => 'nullable|integer',
         ]);
 
+        $data = $request->except('image_file');
         if ($request->hasFile('image_file')) {
-            $validated['image_path'] = $request->file('image_file')->store('gallery', 'public');
+            $data['image_path'] = $request->file('image_file')->store('gallery', 'public');
         }
 
-        GalleryItem::create($validated);
+        GalleryItem::create($data);
 
         return redirect()->route('admin.gallery-items.index')->with('success', 'Gallery item added successfully.');
     }
@@ -50,14 +51,15 @@ class GalleryItemController extends Controller
             'sort_order' => 'nullable|integer',
         ]);
 
+        $data = $request->except('image_file');
         if ($request->hasFile('image_file')) {
             if ($galleryItem->image_path && Storage::disk('public')->exists($galleryItem->image_path)) {
                 Storage::disk('public')->delete($galleryItem->image_path);
             }
-            $validated['image_path'] = $request->file('image_file')->store('gallery', 'public');
+            $data['image_path'] = $request->file('image_file')->store('gallery', 'public');
         }
 
-        $galleryItem->update($validated);
+        $galleryItem->update($data);
 
         return redirect()->route('admin.gallery-items.index')->with('success', 'Gallery item updated successfully.');
     }
