@@ -107,8 +107,9 @@
                         
                         @if(isset($settings['whatsapp_number']))
                             @php
+                                $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '');
                                 $waText = urlencode("Looking For " . $charger->name . " Installation " . ($settings['site_name'] ?? 'AMTECH EV'));
-                                $waLink = "https://api.whatsapp.com/send/?phone=" . $settings['whatsapp_number'] . "&text=" . $waText . "&type=phone_number&app_absent=0";
+                                $waLink = "https://wa.me/" . $waNumber . "?text=" . $waText;
                             @endphp
                             <a href="{{ $waLink }}" target="_blank" class="w-full border border-[#3BB77E] text-[#3BB77E] hover:bg-[#3BB77E] hover:text-white font-bold py-4 rounded-xl transition-all text-sm tracking-widest uppercase text-center">
                                 Get Instant Quote

@@ -249,7 +249,7 @@
     @if(isset($settings['whatsapp_number']) && $settings['whatsapp_number'])
     <div x-data="{ whatsappOpen: false }" class="fixed bottom-8 right-8 z-[60]">
         <!-- Mobile WhatsApp Bubble Backdrop -->
-        <div x-show="whatsappOpen" @click="whatsappOpen = false" class="fixed inset-0 bg-black/20 z-[55] md:hidden" style="display: none;"></div>
+        <div x-show="whatsappOpen" @click="whatsappOpen = false" class="fixed inset-0 bg-black/20 z-[90] md:hidden" style="display: none;"></div>
         
         <!-- Bubble Button -->
         <button @click="whatsappOpen = !whatsappOpen" class="bg-[#25D366] hover:bg-[#128C7E] text-white p-4 rounded-full shadow-2xl transition-all hover:scale-110 group relative border-4 border-white">
@@ -263,7 +263,7 @@
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-y-10 scale-95"
              x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-             class="absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100"
+             class="absolute bottom-20 right-0 w-[calc(100vw-2rem)] sm:w-80 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 z-[100]"
              style="display: none;">
             <!-- Popup Header -->
             <div class="bg-[#075E54] p-6 text-white text-center">
@@ -276,17 +276,18 @@
             
             <!-- Popup Body -->
             <div class="p-4 bg-[#e5ddd5] min-h-[150px] relative overflow-hidden">
-                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');"></div>
-                <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm relative z-10 max-w-[90%]">
-                    <p class="text-xs text-gray-800">{{ $settings['whatsapp_bubble_text'] ?? 'Hi, I want to install an EV charger - Amtech EV' }}</p>
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Cpath d=\'M30.5 15.5l-1.1 2c-.2.4-.6.6-1 .6H25c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h2.4c.4 0 .8.2 1 .6l1.1 2c.6 1.1 2.3 1.1 2.9 0l1.1-2c.2-.4.6-.6 1-.6H35c1.1 0 2-.9 2-2v-3c0-1.1-.9-2-2-2h-2.4c-.4 0-.8-.2-1-.6l-1.1-2c-.6-1.1-2.3-1.1-2.9 0z\' fill=\'%23000\' fill-opacity=\'.1\'/%3E%3C/svg%3E');"></div>
+                <div class="bg-white p-4 rounded-lg rounded-tl-none shadow-sm relative z-10 max-w-[90%]">
+                    <p class="text-sm text-gray-800">{{ $settings['whatsapp_bubble_text'] ?? 'Hi, I want to install an EV charger - Amtech EV' }}</p>
                 </div>
             </div>
 
             <!-- Popup Footer -->
             <div class="p-4 bg-white">
                 @php
+                    $waNumber = preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '');
                     $waText = urlencode($settings['whatsapp_bubble_text'] ?? 'Hi, I want to install an EV charger - Amtech EV');
-                    $waLink = "https://api.whatsapp.com/send/?phone=" . $settings['whatsapp_number'] . "&text=" . $waText . "&type=phone_number&app_absent=0";
+                    $waLink = "https://wa.me/" . $waNumber . "?text=" . $waText;
                 @endphp
                 <a href="{{ $waLink }}" target="_blank" class="flex items-center justify-between bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-3 rounded-full font-bold text-sm transition-colors">
                     Send message

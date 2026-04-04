@@ -42,7 +42,7 @@
             </p>
             <div class="flex gap-4">
                 <a href="#quote" class="px-8 py-3 bg-ev-green text-black font-bold rounded-full hover:scale-105 transition-all">Get a Free Quote</a>
-                <a href="https://wa.me/yourwhatsapp" class="px-8 py-3 border border-white/20 rounded-full font-bold hover:bg-white/5 transition-all">Contact Expert</a>
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode($settings['whatsapp_bubble_text'] ?? 'Hi, I want to install an EV charger') }}" target="_blank" class="px-8 py-3 border border-white/20 rounded-full font-bold hover:bg-white/5 transition-all">Contact Expert</a>
             </div>
         </div>
     </section>
