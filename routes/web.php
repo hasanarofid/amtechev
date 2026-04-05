@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Frontend\ContactInquiryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
  
@@ -29,6 +30,8 @@ use App\Http\Controllers\DashboardController;
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
      return view('frontend.contact.index', compact('settings'));
  })->name('contact');
+
+Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController::class, 'store'])->name('contact.store');
  
  // User Auth Routes
  Route::get('/user/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('user.login');
@@ -71,6 +74,8 @@ use App\Http\Controllers\DashboardController;
          Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
          Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
         Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
+        Route::resource('contact-inquiries', App\Http\Controllers\Admin\ContactInquiryController::class);
+        Route::post('contact-inquiries/{contact_inquiry}/reply', [App\Http\Controllers\Admin\ContactInquiryController::class, 'reply'])->name('contact-inquiries.reply');
         Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
         Route::resource('quality-brands', App\Http\Controllers\Admin\QualityBrandController::class);
         Route::resource('gallery-items', App\Http\Controllers\Admin\GalleryItemController::class);

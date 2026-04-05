@@ -53,20 +53,41 @@
             <p class="text-gray-500 leading-relaxed mb-4">
                 Get in touch with the {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} team to discuss your needs, ask questions, or request a consultation. We're always here to help and look forward to connecting with you.
             </p>
-            <p class="font-bold text-gray-700">Whats app Us at {{ $settings['contact_phone'] ?? '+60 11-6768 6742' }}</p>
+            <p class="font-bold text-gray-700 mb-8">Whats app Us at {{ $settings['contact_phone'] ?? '+60 11-6768 6742' }}</p>
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode($settings['whatsapp_bubble_text'] ?? 'Hi, I want to speak to an EV Charging Specialist') }}" target="_blank" class="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-8 py-4 rounded-full font-bold shadow-xl transition-all hover:scale-105 group">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                WhatsApp Us
+            </a>
         </div>
     </section>
 
     <!-- Contact Form Section -->
     <section class="contact-form-section">
         <div class="max-w-4xl mx-auto px-6">
-            <form action="#" method="POST" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" placeholder="Name" class="input-ev">
-                    <input type="email" placeholder="Email *" required class="input-ev">
+            @if(session('success'))
+                <div class="mb-10 p-6 bg-ev-green/10 border border-ev-green/20 rounded-2xl text-ev-green font-bold text-center animate-bounce-subtle">
+                    {{ session('success') }}
                 </div>
-                <input type="tel" placeholder="Phone number" class="input-ev">
-                <textarea placeholder="Comment" rows="6" class="input-ev"></textarea>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-10 p-6 bg-red-50 border border-red-100 rounded-2xl text-red-500 text-sm">
+                    <ul class="list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" name="name" placeholder="Name" required class="input-ev" value="{{ old('name') }}">
+                    <input type="email" name="email" placeholder="Email *" required class="input-ev" value="{{ old('email') }}">
+                </div>
+                <input type="tel" name="phone_number" placeholder="Phone number" class="input-ev" value="{{ old('phone_number') }}">
+                <textarea name="comment" placeholder="Comment" rows="6" required class="input-ev">{{ old('comment') }}</textarea>
                 <div>
                     <button type="submit" class="btn-send">Send</button>
                 </div>
@@ -96,8 +117,8 @@
                         </div>
                         <div>
                             <p class="text-ev-green font-bold mb-2">Email</p>
-                            <a href="mailto:{{ $settings['contact_email'] ?? 'enquiry@amtechev.com' }}" class="text-gray-300 hover:text-white transition-colors">
-                                {{ $settings['contact_email'] ?? 'enquiry@amtechev.com' }}
+                            <a href="mailto:{{ $settings['contact_email'] ?? 'info@amtechev.com' }}" class="text-gray-300 hover:text-white transition-colors">
+                                {{ $settings['contact_email'] ?? 'info@amtechev.com' }}
                             </a>
                         </div>
                     </div>
