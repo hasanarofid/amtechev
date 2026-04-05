@@ -37,7 +37,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
-    
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -71,6 +71,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->isAdmin();
+    }
+
+    public function hasVerifiedEmail()
+    {
+        return $this->isAdmin() || parent::hasVerifiedEmail();
     }
 
     public function orders()
