@@ -34,7 +34,9 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $route = $request->user()->isMember() ? 'user.profile.edit' : 'profile.edit_global';
+
+        return Redirect::route($route)->with('status', 'profile-updated');
     }
 
     /**

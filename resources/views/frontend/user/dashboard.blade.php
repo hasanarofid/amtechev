@@ -1,133 +1,105 @@
-<!-- resources/views/frontend/user/dashboard.blade.php -->
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User Dashboard – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
-    
-    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #0a0a0a; color: #ffffff; }
-        .sidebar-link { display: flex; items-center: center; gap: 12px; padding: 12px 20px; border-radius: 12px; color: #9ca3af; transition: all 0.3s ease; }
-        .sidebar-link:hover { background-color: rgba(255,255,255,0.05); color: #ffffff; }
-        .sidebar-link.active { background-color: #22c55e; color: #000000; font-weight: 700; }
-        .stat-card { background-color: #141414; border: 1px solid rgba(255,255,255,0.05); padding: 24px; border-radius: 20px; }
-    </style>
-</head>
-<body class="antialiased">
+<x-app-layout>
+    <x-slot:title>Member Dashboard</x-slot:title>
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-72 border-r border-white/5 bg-black p-8 fixed h-full hidden lg:block">
-            <div class="mb-12">
-                <a href="/">
-                    <img src="{{ asset('logo/amtech-removebg.png') }}" alt="Logo" class="h-8 w-auto">
-                </a>
+    <div class="p-4 sm:p-8 max-w-7xl mx-auto space-y-10">
+        <!-- Welcome Section -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-4xl font-black tracking-tight text-main leading-tight mb-2">Welcome Back, <span class="text-accent underline decoration-accent/20 decoration-4 underline-offset-8">{{ Auth::user()->name }}</span>!</h1>
+                <p class="text-text-muted font-medium tracking-wide uppercase text-[10px] opacity-80 flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 bg-accent rounded-full animate-pulse"></span>
+                    Ready to power up your EV experience today?
+                </p>
             </div>
-
-            <nav class="space-y-4">
-                <a href="{{ route('user.dashboard') }}" class="sidebar-link active">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    Dashboard
-                </a>
-                <a href="#" class="sidebar-link">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                    My Orders
-                </a>
-                <a href="#" class="sidebar-link">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Services
-                </a>
-                <a href="#" class="sidebar-link">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    My Profile
-                </a>
-                <a href="#" class="sidebar-link">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Settings
-                </a>
-            </nav>
-
-            <div class="absolute bottom-8 left-8 right-8">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full sidebar-link text-red-400 hover:bg-red-500/10 hover:text-red-500">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4-4H7m6 4v1h3v1h-3v1h3v1h-3v1h3v1h-3v1h3v1h-3v1h3v1h-3v1h3Z"></path></svg>
-                        Sign Out
-                    </button>
-                </form>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 lg:ml-72 bg-black min-h-screen">
-            <!-- Header -->
-            <header class="p-8 border-b border-white/5 flex justify-between items-center">
+            <div class="flex items-center gap-3 bg-glass border border-glass-border px-5 py-3 rounded-2xl backdrop-blur-md">
+                <div class="h-10 w-10 bg-accent/10 rounded-xl flex items-center justify-center text-accent">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 00-2 2z"></path></svg>
+                </div>
                 <div>
-                    <h2 class="text-2xl font-black tracking-tight">Welcome, {{ Auth::user()->name }}!</h2>
-                    <p class="text-sm text-gray-500 mt-1">Ready to power up your EV today?</p>
+                    <p class="text-[9px] font-black uppercase text-text-muted">Today's Date</p>
+                    <p class="text-xs font-bold text-main">{{ now()->format('D, M d Y') }}</p>
                 </div>
-                <div class="flex items-center gap-6">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-bold uppercase tracking-widest text-ev-green">Premium Member</p>
-                        <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">{{ Auth::user()->email }}</p>
-                    </div>
-                    <div class="h-12 w-12 rounded-2xl bg-ev-green/10 flex items-center justify-center text-ev-green font-black">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
-                </div>
-            </header>
+            </div>
+        </div>
 
-            <div class="p-8">
-                <!-- Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <div class="stat-card">
-                        <p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Ongoing Orders</p>
-                        <div class="flex items-end justify-between">
-                            <h3 class="text-4xl font-black">0</h3>
-                            <span class="text-xs font-bold text-ev-green py-1 px-3 bg-ev-green/10 rounded-full">Tracking</span>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div class="glass-card overflow-hidden group">
+                <div class="p-6 flex items-start justify-between relative">
+                    <div class="space-y-4">
+                        <div class="h-12 w-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent group-hover:scale-110 transition-transform duration-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-black text-main">0</h3>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Ongoing Orders</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Total Spending</p>
-                        <div class="flex items-end justify-between">
-                            <h3 class="text-4xl font-black">RM 0.00</h3>
-                            <span class="text-xs font-bold text-gray-400 py-1 px-3 bg-white/5 rounded-full">Secure</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Support Tickets</p>
-                        <div class="flex items-end justify-between">
-                            <h3 class="text-4xl font-black">0</h3>
-                            <a href="#" class="text-xs font-bold text-ev-green hover:underline">Get Help</a>
-                        </div>
-                    </div>
+                    <span class="text-[9px] font-black text-accent py-1 px-3 bg-accent/10 rounded-lg uppercase tracking-widest border border-accent/20">Active</span>
                 </div>
+            </div>
 
-                <!-- Recent Activity -->
-                <div>
-                    <div class="flex items-center justify-between mb-8">
-                        <h3 class="text-xl font-bold">Recent Installations</h3>
-                        <a href="#" class="text-sm font-bold text-ev-green hover:underline">View All</a>
-                    </div>
-                    <div class="bg-[#141414] rounded-3xl border border-white/5 p-12 text-center">
-                        <div class="mb-6 h-16 w-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto text-gray-600">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <div class="glass-card overflow-hidden group">
+                <div class="p-6 flex items-start justify-between relative">
+                    <div class="space-y-4">
+                        <div class="h-12 w-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform duration-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h4 class="text-lg font-bold mb-2">No installations found</h4>
-                        <p class="text-gray-500 text-sm max-w-sm mx-auto">You haven't ordered any installation services yet. Ready to switch to EV charging?</p>
-                        <a href="{{ route('catalog') }}" class="mt-8 inline-block px-8 py-3 bg-ev-green text-black font-bold rounded-full hover:scale-105 transition-transform">Browse Catalog</a>
+                        <div>
+                            <h3 class="text-3xl font-black text-main">RM 0.00</h3>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Total Spending</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
+
+            <div class="glass-card overflow-hidden group">
+                <div class="p-6 flex items-start justify-between relative">
+                    <div class="space-y-4">
+                        <div class="h-12 w-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform duration-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-black text-main">0</h3>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Active Tickets</p>
+                        </div>
+                    </div>
+                    <a href="#" class="text-[9px] font-black text-purple-500 hover:scale-105 transition-transform uppercase tracking-widest border border-purple-500/20 py-1 px-3 bg-purple-500/10 rounded-lg">Support</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Installations Section -->
+        <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-glass-border pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="h-8 w-1 bg-accent rounded-full"></div>
+                    <h2 class="text-xl font-black text-main uppercase tracking-tight">Recent Installations</h2>
+                </div>
+                <a href="{{ route('user.orders') }}" class="text-[10px] font-black text-accent hover:underline uppercase tracking-widest flex items-center gap-2 group transition-all">
+                    View All Orders 
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-accent/10 to-blue-500/10 rounded-[36px] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative bg-glass border border-glass-border rounded-[32px] p-20 text-center backdrop-blur-2xl">
+                    <div class="mb-8 relative inline-block">
+                        <div class="h-24 w-24 bg-accent/5 rounded-[40px] flex items-center justify-center mx-auto text-accent shadow-inner animate-bounce-slow">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                            </svg>
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 h-8 w-8 bg-accent rounded-full border-4 border-[var(--bg-card)] flex items-center justify-center text-black font-black text-xs shadow-lg">?</div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-main mb-3">Your power history is empty</h3>
+                    <p class="text-text-muted text-sm max-w-sm mx-auto leading-relaxed mb-10">You haven't ordered any installation services yet. AMTECH EV specialized solutions are waiting to upgrade your setup.</p>
+                    <a href="{{ route('installation') }}" class="inline-flex items-center gap-3 px-12 py-4 bg-accent text-black font-black rounded-2xl hover:scale-105 transition-all shadow-2xl shadow-accent/20 uppercase tracking-widest text-xs group">
+                        <span>Get Started Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-
-</body>
-</html>
+</x-app-layout>

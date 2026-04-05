@@ -36,6 +36,23 @@ use App\Http\Controllers\DashboardController;
 
  Route::middleware(['auth', 'member'])->prefix('user')->as('user.')->group(function () {
      Route::get('/dashboard', [App\Http\Controllers\Frontend\UserDashboardController::class, 'index'])->name('dashboard');
+     
+     // Member Profile
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+     // Member CRUDs
+     Route::get('/orders', [App\Http\Controllers\Frontend\MyOrderController::class, 'index'])->name('orders');
+     Route::get('/services', [App\Http\Controllers\Frontend\MemberServiceController::class, 'index'])->name('services');
+     Route::get('/settings', [App\Http\Controllers\Frontend\MemberSettingsController::class, 'index'])->name('settings');
+ });
+
+ Route::middleware(['auth'])->group(function () {
+     // Global/Admin profile (fallthrough or default)
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit_global');
+     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
  });
 
  Route::middleware(['auth', 'verified', 'admin'])->group(function () {
@@ -47,6 +64,9 @@ use App\Http\Controllers\DashboardController;
  
      // Landing Page Management
      Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+         Route::get('/', function () {
+             return redirect()->route('dashboard');
+         });
          Route::resource('chargers', App\Http\Controllers\Admin\ChargerController::class);
          Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
          Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
@@ -61,10 +81,6 @@ use App\Http\Controllers\DashboardController;
         Route::get('site-settings/mission', [App\Http\Controllers\Admin\SiteSettingController::class, 'mission'])->name('site-settings.mission');
         Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
     });
- 
-     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
  });
  
  require __DIR__.'/auth.php';

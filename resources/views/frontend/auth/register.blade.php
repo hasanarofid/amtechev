@@ -89,7 +89,7 @@
             </form>
 
             <div class="mt-8 pt-8 border-t border-white/5 text-center">
-                <p class="text-gray-400 text-sm">Already have an account? <a href="{{ route('login') }}" class="text-ev-green font-bold hover:underline">Log In</a></p>
+                <p class="text-gray-400 text-sm">Already have an account? <a href="{{ route('user.login') }}" class="text-ev-green font-bold hover:underline">Log In</a></p>
             </div>
         </div>
         

@@ -18,7 +18,6 @@
                     {{ $settings['mission_content'] ?? 'Our mission is to make EV charging simple, safe, and accessible for everyone in Malaysia with fair, transparent pricing and no bullshit pricing.' }}
                 </p>
                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode($settings['mission_cta_text'] ?? 'Speak to an EV Charging Specialist') }}" 
-                   target="_blank" 
                    class="flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2.5rem] bg-ev-green text-black group/cta hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 cursor-pointer shadow-lg hover:shadow-ev-green/20 relative overflow-hidden">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-500"></div>
                     <div class="p-4 bg-black/10 rounded-2xl group-hover/cta:bg-black/20 transition-colors shrink-0">

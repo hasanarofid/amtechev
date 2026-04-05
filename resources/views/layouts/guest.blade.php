@@ -23,7 +23,17 @@
             })();
         </script>
     </head>
-    <body class="font-sans antialiased text-main bg-black">
+    <body class="font-sans antialiased text-main bg-black min-h-screen relative overflow-x-hidden">
+        <!-- Dynamic Background -->
+        <div class="fixed inset-0 z-[-1] transition-all duration-1000">
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000" 
+                 style="background-image: url('{{ $background ?? asset('bg/member-login.png') }}');">
+            </div>
+            <!-- Overlay to ensure readability and "brightness" as requested -->
+            <div class="absolute inset-0 bg-white/20 backdrop-blur-[2px]"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+        </div>
+
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div class="mb-8">
                 <a href="/">

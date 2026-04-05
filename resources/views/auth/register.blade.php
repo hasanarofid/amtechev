@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="mt-8 flex items-center justify-between">
-                    <a class="text-xs font-bold text-text-muted hover:text-main uppercase tracking-widest transition-colors" href="{{ route('login') }}">
+                    <a class="text-xs font-bold text-text-muted hover:text-main uppercase tracking-widest transition-colors" href="{{ route('user.login') }}">
                         Already TITAN? Login
                     </a>
 
