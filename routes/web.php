@@ -37,7 +37,7 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
  Route::get('/user/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('user.login');
  Route::get('/user/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('user.register');
 
- Route::middleware(['auth', 'member'])->prefix('user')->as('user.')->group(function () {
+ Route::middleware(['auth', 'verified', 'member'])->prefix('user')->as('user.')->group(function () {
      Route::get('/dashboard', [App\Http\Controllers\Frontend\UserDashboardController::class, 'index'])->name('dashboard');
      
      // Member Profile
