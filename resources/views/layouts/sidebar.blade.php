@@ -1,9 +1,15 @@
-<aside class="sidebar">
-    <div class="mb-10 px-4 pt-4">
+<aside 
+    class="sidebar"
+    :class="{ 'open': sidebarOpen }"
+>
+    <div class="mb-10 px-4 pt-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-10 w-auto">
             <h1 class="text-xl font-bold tracking-tight text-main">AMTECH <span class="text-ev-green italic tracking-tighter">EV</span></h1>
         </div>
+        <button @click="sidebarOpen = false" class="lg:hidden p-2 text-text-muted hover:text-accent transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
     </div>
 
     <nav class="flex flex-col gap-2">
