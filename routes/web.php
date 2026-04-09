@@ -84,6 +84,9 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::resource('gallery-items', App\Http\Controllers\Admin\GalleryItemController::class);
         Route::resource('video-testimonials', App\Http\Controllers\Admin\VideoTestimonialController::class);
         
+        Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+        Route::resource('installation-packages', App\Http\Controllers\Admin\InstallationPackageController::class);
+        
         Route::get('site-settings/hero', [App\Http\Controllers\Admin\SiteSettingController::class, 'hero'])->name('site-settings.hero');
         Route::get('site-settings/about', [App\Http\Controllers\Admin\SiteSettingController::class, 'about'])->name('site-settings.about');
         Route::get('site-settings/mission', [App\Http\Controllers\Admin\SiteSettingController::class, 'mission'])->name('site-settings.mission');
