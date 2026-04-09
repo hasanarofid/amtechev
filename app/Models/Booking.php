@@ -11,13 +11,15 @@ class Booking extends Model
         'phone_number',
         'email',
         'address',
-        'installation_package_id',
+        'preferred_date',
         'status',
+        'total_price',
         'notes',
     ];
 
-    public function installationPackage()
+
+    public function items()
     {
-        return $this->belongsTo(InstallationPackage::class);
+        return $this->hasMany(BookingItem::class);
     }
 }

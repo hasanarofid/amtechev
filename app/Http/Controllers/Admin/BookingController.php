@@ -10,7 +10,7 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with('package')->latest()->paginate(20);
+        $bookings = Booking::with(['items.installationPackage'])->latest()->paginate(20);
         return view('admin.bookings.index', compact('bookings'));
     }
 

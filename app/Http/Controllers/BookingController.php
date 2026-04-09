@@ -28,12 +28,39 @@ class BookingController extends Controller
             'phone_number' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string',
-            'installation_package_id' => 'required|exists:installation_packages,id',
+            'preferred_date' => 'required|date|after:today',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:installation_packages,id',
+            'items.*.quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string',
         ]);
 
-        Booking::create($validated);
+        $booking = Booking::create([
+            'customer_name' => $validated['customer_name'],
+            'phone_number' => $validated['phone_number'],
+            'email' => $validated['email'],
+            'address' => $validated['address'],
+            'preferred_date' => $validated['preferred_date'],
+            'notes' => $validated['notes'],
+            'status' => 'Pending',
+        ]);
 
-        return back()->with('success', 'Thank you! Your booking request has been submitted successfully. Our team will contact you soon.');
+        $totalPrice = 0;
+        foreach ($validated['items'] as $itemData) {
+            $package = InstallationPackage::find($itemData['id']);
+            $price = $package->price * $itemData['quantity'];
+            
+            $booking->items()->create([
+                'installation_package_id' => $package->id,
+                'quantity' => $itemData['quantity'],
+                'price_at_booking' => $package->price,
+            ]);
+            
+            $totalPrice += $price;
+        }
+
+        $booking->update(['total_price' => $totalPrice]);
+
+        return back()->with('success', 'Thank you! Your booking request for RM' . number_format($totalPrice, 2) . ' has been submitted successfully.');
     }
 }

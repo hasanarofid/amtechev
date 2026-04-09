@@ -21,7 +21,8 @@
                     <tr class="border-b border-glass-border bg-white/5">
                         <th class="px-6 py-4 font-black">Date</th>
                         <th class="px-6 py-4 font-black">Customer</th>
-                        <th class="px-6 py-4 font-black">Package</th>
+                        <th class="px-6 py-4 font-black">Items</th>
+                        <th class="px-6 py-4 font-black text-right">Total</th>
                         <th class="px-6 py-4 font-black text-center">Status</th>
                         <th class="px-6 py-4 font-black text-right">Actions</th>
                     </tr>
@@ -37,7 +38,11 @@
                                 <div class="text-[10px] text-text-muted lowercase tracking-normal">{{ $booking->phone_number }}</div>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="text-main font-bold">{{ $booking->package->name ?? 'N/A' }}</span>
+                                <span class="text-main font-bold">{{ $booking->items->count() }} items</span>
+                                <div class="text-[10px] text-text-muted italic">{{ $booking->items->first()->installationPackage->name ?? 'N/A' }}...</div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="text-ev-green font-bold">RM{{ number_format($booking->total_price, 2) }}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex justify-center">
