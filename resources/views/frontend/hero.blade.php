@@ -31,14 +31,19 @@
             </div>
 
             <!-- CTAs -->
-            <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center animate-reveal animation-delay-600">
+            <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center animate-reveal animation-delay-600">
                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode($settings['whatsapp_bubble_text'] ?? 'Hi, I want to install an EV charger') }}" 
-                   class="group relative inline-flex items-center justify-center px-10 py-5 font-black text-black transition-all duration-300 bg-ev-green rounded-full hover:bg-white hover:scale-105 active:scale-95 shadow-2xl shadow-ev-green/20">
-                    <span class="relative uppercase tracking-widest text-sm">{{ $settings['hero_cta_main'] ?? 'WhatsApp Now' }}</span>
+                   class="group relative inline-flex items-center justify-center px-8 py-4 font-black text-black transition-all duration-300 bg-ev-green rounded-full hover:bg-white hover:scale-105 active:scale-95 shadow-2xl shadow-ev-green/20">
+                    <span class="relative uppercase tracking-widest text-xs">{{ $settings['hero_cta_main'] ?? 'WhatsApp Now' }}</span>
                 </a>
                 
-                <a href="{{ route('contact') }}" class="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 active:scale-95 backdrop-blur-sm">
-                    <span class="relative uppercase tracking-widest text-sm">{{ $settings['hero_cta_secondary'] ?? 'Get Free Site Visit' }}</span>
+                <a href="{{ route('booking.index') }}" 
+                   class="group relative inline-flex items-center justify-center px-8 py-4 font-black text-white transition-all duration-300 bg-white/10 border border-white/20 rounded-full hover:bg-ev-green hover:text-black hover:border-ev-green hover:scale-105 active:scale-95 backdrop-blur-sm">
+                    <span class="relative uppercase tracking-widest text-xs">Book Installation</span>
+                </a>
+
+                <a href="{{ route('contact') }}" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 active:scale-95 backdrop-blur-sm">
+                    <span class="relative uppercase tracking-widest text-xs">{{ $settings['hero_cta_secondary'] ?? 'Get Free Site Visit' }}</span>
                 </a>
                 
                 <div class="hidden lg:block ml-4 pl-8 border-l border-white/10">

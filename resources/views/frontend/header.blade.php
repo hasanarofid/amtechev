@@ -26,6 +26,9 @@
             <a href="{{ route('home') }}" class="transition-all duration-300 {{ request()->routeIs('home') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
                 Home
             </a>
+            <a href="{{ route('booking.index') }}" class="transition-all duration-300 {{ request()->routeIs('booking.index') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
+                Booking
+            </a>
             <a href="{{ route('catalog') }}" class="transition-all duration-300 {{ request()->routeIs('catalog') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
                 EV Chargers Catalogue
             </a>
@@ -116,6 +119,9 @@
             <div class="flex flex-col gap-6 text-center">
                 <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('home') ? 'text-ev-green' : 'text-white' }}">
                     Home
+                </a>
+                <a href="{{ route('booking.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('booking.index') ? 'text-ev-green' : 'text-white' }}">
+                    Booking
                 </a>
                 <a href="{{ route('catalog') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('catalog') ? 'text-ev-green' : 'text-white' }}">
                     EV Chargers Catalogue

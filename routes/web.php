@@ -26,10 +26,13 @@ use App\Http\Controllers\DashboardController;
   Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog');
   Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
- Route::get('/contact', function () {
-     $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
-     return view('frontend.contact.index', compact('settings'));
- })->name('contact');
+  Route::get('/contact', function () {
+      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+      return view('frontend.contact.index', compact('settings'));
+  })->name('contact');
+
+  Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking.index');
+  Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
 
 Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController::class, 'store'])->name('contact.store');
  
