@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Book Installation - AMTECH EV Specialist')
+@section('title', 'Price Estimator - AMTECH EV Specialist')
 
 @section('content')
 <div class="pt-32 pb-20 px-6 lg:px-14" x-data="bookingForm()">
@@ -8,10 +8,11 @@
         <!-- Header -->
         <div class="mb-16 text-center lg:text-left">
             <h1 class="text-5xl lg:text-7xl font-black tracking-tighter mb-6 leading-none">
-                Installation <span class="text-ev-green font-outline-2">Booking</span>
+                EVC Installation   <span class="text-ev-green font-outline-2">Price Estimator</span>
             </h1>
             <p class="text-xl text-gray-400 max-w-2xl font-light">
-                Professional EV charger installation service for your home or business. Select a package and add-ons below.
+                Customize your installation and see your estimated cost instantly.
+                <!-- Professional EV charger installation service for your home or business. Select a package and add-ons below. -->
             </p>
         </div>
 
@@ -33,7 +34,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-ev-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
-                        Main Packages
+                        Select Package to Get Your Estimate.
                     </h2>
                     <div class="grid grid-cols-1 gap-6">
                         @foreach($packages->where('category', 'Standard Package') as $package)

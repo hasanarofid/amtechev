@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\InstallationPackage;
 use App\Models\Booking;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\BookingNotification;
 
 class BookingController extends Controller
 {
@@ -60,6 +63,19 @@ class BookingController extends Controller
         }
 
         $booking->update(['total_price' => $totalPrice]);
+
+        // Send Email Notification
+        try {
+            $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
+            $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
+
+            Mail::to($toEmail)
+                ->cc($ccEmails)
+                ->send(new BookingNotification($booking));
+        } catch (\Exception $e) {
+            // Log the error but don't break the user experience
+            Log::error('Booking Email failed: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Thank you! Your booking request for RM' . number_format($totalPrice, 2) . ' has been submitted successfully.');
     }
