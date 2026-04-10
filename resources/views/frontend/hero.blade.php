@@ -39,7 +39,7 @@
                 
                 <a href="{{ route('booking.index') }}" 
                    class="group relative inline-flex items-center justify-center px-8 py-4 font-black text-white transition-all duration-300 bg-white/10 border border-white/20 rounded-full hover:bg-ev-green hover:text-black hover:border-ev-green hover:scale-105 active:scale-95 backdrop-blur-sm">
-                    <span class="relative uppercase tracking-widest text-xs">Book Installation</span>
+                    <span class="relative uppercase tracking-widest text-xs">Price Estimator</span>
                 </a>
 
                 <a href="{{ route('contact') }}" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 active:scale-95 backdrop-blur-sm">
