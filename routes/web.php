@@ -33,6 +33,7 @@ use App\Http\Controllers\DashboardController;
 
   Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking.index');
   Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
+  Route::get('/api/booking-availability', [App\Http\Controllers\BookingAvailabilityController::class, 'index'])->name('api.booking-availability');
 
 Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController::class, 'store'])->name('contact.store');
  
@@ -84,6 +85,7 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::resource('gallery-items', App\Http\Controllers\Admin\GalleryItemController::class);
         Route::resource('video-testimonials', App\Http\Controllers\Admin\VideoTestimonialController::class);
         
+        Route::get('bookings/calendar', [App\Http\Controllers\Admin\BookingController::class, 'calendar'])->name('bookings.calendar');
         Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
         Route::resource('installation-packages', App\Http\Controllers\Admin\InstallationPackageController::class);
         

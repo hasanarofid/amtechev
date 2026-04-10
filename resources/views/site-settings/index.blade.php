@@ -16,9 +16,11 @@
                     <div class="glass-card p-8 space-y-8">
                         @foreach($groupSettings as $setting)
                             <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">{{ str_replace('_', ' ', $setting->key) }}</label>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">{{ ucwords(str_replace('_', ' ', $setting->key)) }}</label>
                                 @if(Str::contains($setting->key, ['content', 'subtitle', 'title', 'about', 'address']))
                                     <textarea name="{{ $setting->key }}" class="premium-input min-h-[100px]">{{ $setting->value }}</textarea>
+                                @elseif($setting->type === 'number' || Str::contains($setting->key, 'limit'))
+                                    <input type="number" name="{{ $setting->key }}" value="{{ $setting->value }}" class="premium-input">
                                 @else
                                     <input type="text" name="{{ $setting->key }}" value="{{ $setting->value }}" class="premium-input">
                                 @endif

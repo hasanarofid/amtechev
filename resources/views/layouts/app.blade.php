@@ -16,6 +16,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/css/premium.css', 'resources/js/app.js'])
+        @stack('styles')
         <script>
             (function() {
                 const theme = localStorage.getItem('theme') || 'dark';
@@ -114,5 +115,6 @@
                 });
             });
         </script>
+        @stack('scripts')
     </body>
 </html>

@@ -212,13 +212,26 @@
                                 @error('address') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
-                            <div class="group">
-                                <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2 group-focus-within:text-ev-green transition-colors">Preferred Installation Date</label>
-                                <input type="date" name="preferred_date" required min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-ev-green focus:ring-1 focus:ring-ev-green transition-all appearance-none cursor-pointer"
-                                    value="{{ old('preferred_date') }}">
+                            <div class="group" wire:ignore>
+                                <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-4 group-focus-within:text-ev-green transition-colors">Select Installation Date</label>
+                                <div id="calendar-container" class="flatpickr-dark">
+                                    <input type="text" name="preferred_date" id="preferred_date" required 
+                                        class="hidden"
+                                        x-model="selectedDate">
+                                    <div id="booking-calendar"></div>
+                                </div>
                                 @error('preferred_date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                                <p class="text-[10px] text-gray-500 mt-2 italic">* Please select a date at least 24 hours from today.</p>
+                                
+                                <div class="mt-4 flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-gray-500">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded-full bg-ev-green"></span>
+                                        Available
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded-full bg-red-500/50"></span>
+                                        Full Slot
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="group">
@@ -229,9 +242,9 @@
                                 @error('notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
-                            <button type="submit" :disabled="selectedItems.length === 0"
+                            <button type="submit" :disabled="selectedItems.length === 0 || !selectedDate"
                                 class="w-full group relative inline-flex items-center justify-center px-10 py-5 font-black text-black transition-all duration-300 bg-ev-green rounded-full hover:bg-white hover:scale-[1.02] active:scale-95 shadow-2xl shadow-ev-green/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
-                                <span class="relative uppercase tracking-widest text-sm">Submit Booking Request</span>
+                                <span class="relative uppercase tracking-widest text-sm" x-text="selectedDate ? 'Submit Booking Request' : 'Select a Date First'"></span>
                             </button>
                         </form>
                     </div>
@@ -241,11 +254,167 @@
     </div>
 </div>
 
+<style>
+    /* Custom Flatpickr Dark Theme for EV Specialist */
+    .flatpickr-calendar {
+        background: #0a0a0a !important;
+        border: 1px solid rgba(34, 197, 94, 0.2) !important;
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8) !important;
+        border-radius: 32px !important;
+        color: white !important;
+        font-family: 'Outfit', sans-serif !important;
+        margin-top: 15px !important;
+        overflow: hidden !important;
+        width: 315px !important;
+        padding-bottom: 8px !important;
+    }
+    .flatpickr-innerContainer, .flatpickr-days, .dayContainer, .flatpickr-calendar.inline {
+        background: transparent !important;
+    }
+    .flatpickr-months {
+        background: transparent !important;
+        padding: 20px 10px 10px !important;
+    }
+    .flatpickr-month {
+        color: white !important;
+        height: 40px !important;
+    }
+    .flatpickr-current-month {
+        font-size: 1.1rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.1em !important;
+        color: white !important;
+        padding: 0 !important;
+    }
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+        font-weight: 900 !important;
+    }
+    .flatpickr-current-month input.cur-year {
+        font-weight: 300 !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+    .flatpickr-months .flatpickr-prev-month, 
+    .flatpickr-months .flatpickr-next-month {
+        color: #22c55e !important;
+        fill: #22c55e !important;
+        top: 20px !important;
+        padding: 10px !important;
+        border-radius: 12px !important;
+        background: rgba(34, 197, 94, 0.1) !important;
+        transition: all 0.3s ease !important;
+    }
+    .flatpickr-months .flatpickr-prev-month:hover, 
+    .flatpickr-months .flatpickr-next-month:hover {
+        background: #22c55e !important;
+        color: black !important;
+        fill: black !important;
+    }
+    .flatpickr-calendar .flatpickr-innerContainer .flatpickr-weekdays,
+    .flatpickr-weekdays {
+        background: transparent !important;
+        padding: 0 10px !important;
+        border: none !important;
+    }
+    .flatpickr-weekday {
+        color: #22c55e !important;
+        font-weight: 900 !important;
+        text-transform: uppercase !important;
+        font-size: 11px !important;
+        letter-spacing: 0.1em !important;
+        padding-bottom: 10px !important;
+    }
+    .flatpickr-day {
+        color: white !important;
+        border-radius: 14px !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        margin: 2px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        transition: all 0.2s ease !important;
+        border: 1px solid transparent !important;
+    }
+    .flatpickr-day.today {
+        border-color: #22c55e !important;
+        color: #22c55e !important;
+        background: rgba(34, 197, 94, 0.05) !important;
+    }
+    .flatpickr-day.selected, .flatpickr-day.selected:hover {
+        background: #22c55e !important;
+        border-color: #22c55e !important;
+        color: black !important;
+        box-shadow: 0 8px 20px -4px rgba(34, 197, 94, 0.5) !important;
+        transform: scale(1.1);
+    }
+    .flatpickr-day:hover {
+        background: rgba(34, 197, 94, 0.1) !important;
+        border-color: rgba(34, 197, 94, 0.3) !important;
+    }
+    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
+        color: rgba(255, 255, 255, 0.1) !important;
+        background: transparent !important;
+    }
+    .flatpickr-day.is-full {
+        background: rgba(239, 68, 68, 0.1) !important;
+        color: #ef4444 !important;
+        text-decoration: line-through !important;
+        border-color: rgba(239, 68, 68, 0.2) !important;
+    }
+    .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay {
+        color: rgba(255, 255, 255, 0.15) !important;
+    }
+</style>
+
 <script>
     function bookingForm() {
         return {
             selectedItems: [],
             totalPrice: 0,
+            selectedDate: '',
+            availability: {},
+            flatpickrInstance: null,
+
+            init() {
+                this.fetchAvailability();
+            },
+
+            async fetchAvailability() {
+                try {
+                    const response = await fetch('{{ route("api.booking-availability") }}');
+                    const result = await response.json();
+                    this.availability = result.data;
+                    this.initCalendar();
+                } catch (error) {
+                    console.error('Failed to fetch availability', error);
+                    this.initCalendar();
+                }
+            },
+
+            initCalendar() {
+                const self = this;
+                this.flatpickrInstance = flatpickr("#booking-calendar", {
+                    inline: true,
+                    minDate: new Date().fp_incr(1), // Tomorrow
+                    dateFormat: "Y-m-d",
+                    disable: [
+                        function(date) {
+                            const dateStr = date.toISOString().split('T')[0];
+                            return self.availability[dateStr]?.is_full || false;
+                        }
+                    ],
+                    onDayCreate: function(dObj, dStr, fp, dayElem) {
+                        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+                        if (self.availability[dateStr]?.is_full) {
+                            dayElem.classList.add("is-full");
+                            dayElem.title = "Slots Full";
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr) {
+                        self.selectedDate = dateStr;
+                    }
+                });
+            },
 
             isSelected(id) {
                 return this.selectedItems.some(item => item.id === id);

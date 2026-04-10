@@ -63,6 +63,9 @@
             animation: reveal 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
     </style>
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     @stack('styles')
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-black">
@@ -74,6 +77,9 @@
     </main>
 
     @include('frontend.footer')
+
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     @stack('scripts')
 </body>
