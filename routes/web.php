@@ -32,7 +32,7 @@ use App\Http\Controllers\DashboardController;
   })->name('contact');
 
   Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking.index');
-  Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
+  Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store')->middleware('throttle:3,1');
   Route::get('/api/booking-availability', [App\Http\Controllers\BookingAvailabilityController::class, 'index'])->name('api.booking-availability');
 
 Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController::class, 'store'])->name('contact.store');

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} – Leading EV Charging Solutions in Malaysia</title>
+    <title>{{ $settings['site_title'] ?? 'AMTECH EV Specialist' }} – Best Value EV Charging Solutions in Malaysia</title>
     
     <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
     

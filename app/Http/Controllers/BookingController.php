@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 use App\Models\InstallationPackage;
 use App\Models\Booking;
@@ -26,14 +27,23 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        // Check honeypot field. If filled, it's a bot.
+        if ($request->filled('_website_url')) {
+            Log::warning('Spam attempt blocked via honeypot', ['ip' => $request->ip(), 'data' => $request->all()]);
+            return back()->with('error', 'Spam detected. Your request has been blocked.');
+        }
+
         $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
+            'customer_name' => 'required|string|min:3|max:255',
+            'phone_number' => 'required|string|min:10|max:20',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string|min:10',
             'preferred_date' => 'required|date|after:today',
             'items' => 'required|array',
-            'items.*.id' => 'required|exists:installation_packages,id',
+            'items.*.id' => [
+                'required',
+                Rule::exists('installation_packages', 'id')->whereNull('deleted_at'),
+            ],
             'items.*.quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string',
         ]);
