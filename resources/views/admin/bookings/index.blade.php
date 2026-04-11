@@ -67,7 +67,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span class="text-main font-bold">{{ $booking->items->count() }} items</span>
-                                <div class="text-[10px] text-text-muted italic">{{ $booking->items->first()->installationPackage->name ?? 'N/A' }}...</div>
+                                <div class="text-[10px] text-text-muted italic">{{ $booking->items->first()?->installationPackage?->name ?? 'N/A' }}...</div>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <span class="text-ev-green font-bold">RM{{ number_format($booking->total_price, 2) }}</span>

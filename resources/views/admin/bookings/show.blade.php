@@ -83,8 +83,8 @@
                         @foreach($booking->items as $item)
                         <tr class="text-xs font-bold">
                             <td class="py-4">
-                                {{ $item->installationPackage->name ?? 'Deleted Package' }}
-                                <span class="block text-[10px] font-normal text-text-muted mt-1 uppercase tracking-tighter">{{ $item->installationPackage->category }}</span>
+                                {{ $item->installationPackage?->name ?? 'Deleted Package' }}
+                                <span class="block text-[10px] font-normal text-text-muted mt-1 uppercase tracking-tighter">{{ $item->installationPackage?->category ?? 'N/A' }}</span>
                             </td>
                             <td class="py-4 text-center">{{ $item->quantity }}</td>
                             <td class="py-4 text-right">RM{{ number_format($item->price_at_booking, 2) }}</td>

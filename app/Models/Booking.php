@@ -15,8 +15,8 @@ class Booking extends Model
         'status',
         'total_price',
         'notes',
+        'label',
     ];
-
 
     public function items()
     {

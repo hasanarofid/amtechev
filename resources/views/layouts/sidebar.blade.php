@@ -103,6 +103,11 @@
             Manage Packages
         </a>
 
+        <a href="{{ route('admin.slots.index') }}" class="nav-link {{ request()->routeIs('admin.slots.*') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"></path><path d="M18.4 4.6a9 9 0 1 1-12.8 0"></path></svg>
+            Manage Slots
+        </a>
+
         <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Configuration</div>
         
         <a href="{{ route('admin.contact-inquiries.index') }}" class="nav-link {{ request()->routeIs('admin.contact-inquiries.*') ? 'active' : '' }}">

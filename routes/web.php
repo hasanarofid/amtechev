@@ -32,6 +32,7 @@ use App\Http\Controllers\DashboardController;
   })->name('contact');
 
   Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking.index');
+  Route::get('/check-slot', [App\Http\Controllers\CheckSlotController::class, 'index'])->name('check-slot.index');
   Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store')->middleware('throttle:3,1');
   Route::get('/api/booking-availability', [App\Http\Controllers\BookingAvailabilityController::class, 'index'])->name('api.booking-availability');
 
@@ -88,6 +89,9 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::get('bookings/calendar', [App\Http\Controllers\Admin\BookingController::class, 'calendar'])->name('bookings.calendar');
         Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
         Route::resource('installation-packages', App\Http\Controllers\Admin\InstallationPackageController::class);
+        
+        Route::post('slots/update-global', [App\Http\Controllers\Admin\SlotController::class, 'updateGlobal'])->name('slots.update-global');
+        Route::resource('slots', App\Http\Controllers\Admin\SlotController::class);
         
         Route::get('site-settings/hero', [App\Http\Controllers\Admin\SiteSettingController::class, 'hero'])->name('site-settings.hero');
         Route::get('site-settings/about', [App\Http\Controllers\Admin\SiteSettingController::class, 'about'])->name('site-settings.about');
