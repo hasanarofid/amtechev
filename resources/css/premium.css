@@ -15,16 +15,21 @@
 }
 
 [data-theme="light"] {
-    --bg-color: #f8f9fa;
+    --bg-color: #f4f5f7;
     --bg-card: #ffffff;
     --bg-sidebar: #ffffff;
-    --accent: #00a651; 
+    --accent: #00a651;
     --accent-glow: rgba(0, 166, 81, 0.15);
     --text-main: #1c1c1e;
-    --text-muted: #636366;
-    --glass: rgba(0, 0, 0, 0.02);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --border-color: rgba(0, 0, 0, 0.05);
+    --text-muted: #6b7280;
+    --glass: rgba(0, 0, 0, 0.03);
+    --glass-border: rgba(0, 0, 0, 0.09);
+    --border-color: rgba(0, 0, 0, 0.07);
+
+    /* Force light backgrounds on calendar/booking pages */
+    .slot-page, .booking-page {
+        background: var(--bg-color);
+    }
 }
 
 body {

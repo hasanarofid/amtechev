@@ -5,13 +5,13 @@
     <!-- Overlay for Cart Drawer Background -->
     <div x-show="cartOpen" @click="cartOpen = false" class="fixed inset-0 bg-black/40 z-[90] backdrop-blur-sm" style="display: none;"></div>
 
-    <nav class="fixed top-0 left-0 w-full z-50 px-4 md:px-14 py-4 md:py-5 flex justify-between items-center bg-black/60 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 md:px-14 py-4 md:py-5 flex justify-between items-center bg-white/80 dark:bg-black/60 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-300">
         <a href="{{ route('home') }}" class="flex items-center gap-2 md:gap-3 group cursor-pointer">
             <div class="relative">
                 <div class="absolute -inset-2 bg-ev-green/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <img src="{{ (isset($settings['site_logo']) && $settings['site_logo']) ? (Str::startsWith($settings['site_logo'], 'logo/') ? asset($settings['site_logo']) : asset('storage/' . $settings['site_logo'])) : asset('logo/amtech-removebg.png') }}" alt="Amtech EV Logo" class="h-8 md:h-9 w-auto relative">
             </div>
-            <h1 class="text-base md:text-lg font-bold tracking-tighter text-white">
+            <h1 class="text-base md:text-lg font-bold tracking-tighter text-gray-900 dark:text-white">
                 @php
                     $siteName = $settings['site_title'] ?? 'AMTECH EV';
                     $parts = explode(' ', $siteName);
@@ -22,7 +22,7 @@
             </h1>
         </a>
         
-        <div class="hidden md:flex gap-8 items-center text-sm font-medium text-gray-300">
+        <div class="hidden md:flex gap-8 items-center text-sm font-medium text-gray-700 dark:text-gray-300">
             <a href="{{ route('home') }}" class="transition-all duration-300 {{ request()->routeIs('home') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
                 Home
             </a>
@@ -46,9 +46,35 @@
             </a>
         </div>
     
-        <div class="flex items-center gap-3 md:gap-6">
+        <div class="flex items-center gap-3 md:gap-6" x-data="{
+            isDark: document.documentElement.classList.contains('dark'),
+            toggleTheme() {
+                this.isDark = !this.isDark;
+                if (this.isDark) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.theme = 'dark';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.theme = 'light';
+                }
+            }
+        }">
+            <!-- Theme Toggle -->
+            <button @click="toggleTheme()" class="text-gray-700 dark:text-white hover:text-ev-green dark:hover:text-ev-green transition-colors focus:outline-none">
+                <!-- Sun Icon -->
+                <svg x-show="isDark" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+                <!-- Moon Icon -->
+                <svg x-show="!isDark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+            </button>
+
             <!-- Search Icon -->
-            <button class="text-white hover:text-ev-green transition-colors">
+            <button class="text-gray-700 dark:text-white hover:text-ev-green dark:hover:text-ev-green transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -58,16 +84,16 @@
             @if (Route::has('login'))
                 @auth
                     @if(Auth::user()->role === 'member')
-                        <a href="{{ route('user.dashboard') }}" class="text-white hover:text-ev-green transition-colors">
+                        <a href="{{ route('user.dashboard') }}" class="text-gray-700 dark:text-white hover:text-ev-green transition-colors">
                     @else
-                        <a href="{{ url('/dashboard') }}" class="text-white hover:text-ev-green transition-colors">
+                        <a href="{{ url('/dashboard') }}" class="text-gray-700 dark:text-white hover:text-ev-green transition-colors">
                     @endif
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 md:w-8 md:h-8">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12c0 2.754 1.144 5.241 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg>
                     </a>
                 @else
-                    <a href="{{ route('user.login') }}" class="text-white hover:text-ev-green transition-colors">
+                    <a href="{{ route('user.login') }}" class="text-gray-700 dark:text-white hover:text-ev-green transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 md:w-8 md:h-8">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12c0 2.754 1.144 5.241 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg>
@@ -76,7 +102,7 @@
             @endif
     
             <!-- Cart Icon -->
-            <button @click="cartOpen = !cartOpen" class="text-white hover:text-ev-green transition-colors relative group/cart focus:outline-none">
+            <button @click="cartOpen = !cartOpen" class="text-gray-700 dark:text-white hover:text-ev-green transition-colors relative group/cart focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                 </svg>
@@ -91,7 +117,7 @@
             </button>
 
             <!-- Mobile Menu Toggle -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white hover:text-ev-green transition-colors focus:outline-none">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 dark:text-white hover:text-ev-green transition-colors focus:outline-none">
                 <svg x-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
@@ -115,34 +141,34 @@
         style="display: none;"
     >
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="mobileMenuOpen = false"></div>
+        <div class="absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-md" @click="mobileMenuOpen = false"></div>
         
         <!-- Menu Content -->
-        <div class="relative bg-black/90 border-b border-white/10 pt-24 pb-10 px-6">
+        <div class="relative bg-white/95 dark:bg-black/90 border-b border-gray-200 dark:border-white/10 pt-24 pb-10 px-6">
             <div class="flex flex-col gap-6 text-center">
-                <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('home') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('home') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Home
                 </a>
-                <a href="{{ route('booking.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('booking.index') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('booking.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('booking.index') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Price Estimator
                 </a>
-                <a href="{{ route('check-slot.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('check-slot.index') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('check-slot.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('check-slot.index') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Check & Book Slot
                 </a>
-                <a href="{{ route('catalog') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('catalog') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('catalog') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('catalog') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     EV Chargers Catalogue
                 </a>
-                <a href="{{ route('installation') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('installation') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('installation') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('installation') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     EV Charger Installation
                 </a>
-                <a href="{{ route('blog') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('blog') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('blog') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('blog') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Blogs
                 </a>
-                <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('contact') ? 'text-ev-green' : 'text-white' }}">
+                <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('contact') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Contact Us
                 </a>
 
-                <div class="pt-6 border-t border-white/10">
+                <div class="pt-6 border-t border-gray-200 dark:border-white/10">
                     @auth
                         @if(Auth::user()->role === 'member')
                             <a href="{{ route('user.dashboard') }}" @click="mobileMenuOpen = false" class="text-xl font-bold text-ev-green tracking-tight">

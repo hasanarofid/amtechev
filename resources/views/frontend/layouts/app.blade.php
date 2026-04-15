@@ -15,8 +15,20 @@
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
+    <script>
+        // Check local storage for theme preference or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+
+    
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #030303; color: #ffffff; }
+        body { font-family: 'Outfit', sans-serif; }
         .hero-bg {
             background-image: 
                 linear-gradient(to bottom, rgba(3, 3, 3, 0.7) 0%, rgba(3, 3, 3, 0.4) 50%, rgba(3, 3, 3, 0.9) 100%),
@@ -68,7 +80,7 @@
     
     @stack('styles')
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-black">
+<body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-white dark:selection:text-black bg-gray-50 dark:bg-[#030303] text-gray-900 dark:text-white transition-colors duration-300">
 
     @include('frontend.header')
 

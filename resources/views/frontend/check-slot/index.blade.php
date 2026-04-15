@@ -2,19 +2,269 @@
 
 @section('title', 'Check & Book Slot - AMTECH EV Specialist')
 
+@push('styles')
+<style>
+    /* ── Page Layout ─────────────────────────────────────────── */
+    .slot-page {
+        padding-top: 7rem;
+        padding-bottom: 5rem;
+        min-height: 100vh;
+        background: var(--bg-color);
+        transition: background 0.3s ease;
+    }
+
+    /* ── Calendar Card ───────────────────────────────────────── */
+    .cal-card {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* ── Calendar Header Navigation ──────────────────────────── */
+    .cal-nav-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid var(--glass-border);
+        background: var(--glass);
+        color: var(--text-main);
+    }
+    .cal-nav-btn:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+    }
+
+    /* ── Day-of-week Headers ─────────────────────────────────── */
+    .cal-dow {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        text-align: center;
+        padding: 0.5rem 0;
+    }
+
+    /* ── Individual Day Cell ─────────────────────────────────── */
+    .cal-day {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.5rem 0.25rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 4.5rem;
+        gap: 0.25rem;
+        border: 1px solid transparent;
+    }
+    .cal-day:hover:not(.cal-day--disabled):not(.cal-day--full) {
+        background: rgba(0, 166, 81, 0.08);
+        border-color: rgba(0, 166, 81, 0.3);
+    }
+    .cal-day--today {
+        background: rgba(0, 166, 81, 0.06);
+        border-color: rgba(0, 166, 81, 0.25);
+    }
+    .cal-day--selected {
+        background: var(--accent) !important;
+        border-color: var(--accent) !important;
+    }
+    .cal-day--selected .cal-day__num {
+        color: #000 !important;
+        font-weight: 900;
+    }
+    .cal-day--disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+    .cal-day--full {
+        cursor: default;
+    }
+    .cal-day--other-month {
+        opacity: 0.3;
+    }
+
+    /* ── Day Number ──────────────────────────────────────────── */
+    .cal-day__num {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+        line-height: 1;
+    }
+    .cal-day--today .cal-day__num {
+        color: var(--accent);
+    }
+
+    /* ── Status Pill ─────────────────────────────────────────── */
+    .cal-day__badge {
+        font-size: 0.55rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.15rem 0.4rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cal-day__badge--available {
+        background: rgba(0, 166, 81, 0.15);
+        color: var(--accent);
+    }
+    .cal-day__badge--full {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+    }
+    .cal-day__badge--book {
+        background: rgba(0, 166, 81, 0.1);
+        color: var(--accent);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .cal-day:hover .cal-day__badge--book {
+        opacity: 1;
+    }
+
+    /* ── "Today" tag ─────────────────────────────────────────── */
+    .today-tag {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        font-size: 0.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: var(--accent);
+        color: #000;
+        padding: 0.1rem 0.3rem;
+        border-radius: 999px;
+        letter-spacing: 0.05em;
+    }
+
+    /* ── Month Separator ─────────────────────────────────────── */
+    .cal-month-sep {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0 0.5rem;
+    }
+    .cal-month-sep__line {
+        height: 1px;
+        background: var(--glass-border);
+    }
+    .cal-month-sep__text {
+        font-size: 0.7rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--text-muted);
+    }
+
+    /* ── Info Sidebar ────────────────────────────────────────── */
+    .info-card {
+        background: var(--bg-card);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        padding: 1.75rem;
+        transition: background 0.3s ease;
+    }
+    .info-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+        background: rgba(0, 166, 81, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--accent);
+    }
+
+    /* ── Legend Items ────────────────────────────────────────── */
+    .legend-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 0.25rem;
+        flex-shrink: 0;
+    }
+
+    /* ── CTA Button ──────────────────────────────────────────── */
+    .cta-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: var(--accent);
+        color: #000;
+        font-weight: 900;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        border-radius: 999px;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 24px rgba(0, 166, 81, 0.3);
+        text-decoration: none;
+    }
+    .cta-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0, 166, 81, 0.45);
+        filter: brightness(1.08);
+    }
+
+    /* ── Loading Skeleton ────────────────────────────────────── */
+    .skeleton {
+        background: linear-gradient(90deg, var(--glass) 25%, var(--glass-border) 50%, var(--glass) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 0.5rem;
+    }
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+        .cal-card { padding: 1rem; }
+        .cal-day { min-height: 3.5rem; padding: 0.35rem 0.1rem; }
+        .cal-day__num { font-size: 0.75rem; }
+        .cal-day__badge { display: none; }
+        .today-tag { display: none; }
+    }
+</style>
+@endpush
+
 @section('content')
 <script>
     function slotChecker() {
         return {
-            selectedDate: '',
             availability: {},
-            calendarWeeks: [],
+            calendarDays: [],
             todayStr: '',
             isLoading: true,
+            currentMonth: new Date().getMonth(),
+            currentYear: new Date().getFullYear(),
+            monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+            dayNames: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
-                this.generateCalendar();
+                this.buildCalendar();
                 this.fetchAvailability();
             },
 
@@ -28,226 +278,287 @@
             async fetchAvailability() {
                 this.isLoading = true;
                 try {
-                    const response = await fetch('{{ route("api.booking-availability") }}');
-                    const result = await response.json();
-                    this.availability = result.data || {};
-                } catch (error) {
-                    console.error('Failed to fetch availability', error);
+                    const res = await fetch('{{ route("api.booking-availability") }}');
+                    const data = await res.json();
+                    this.availability = data.data || {};
+                } catch(e) {
+                    console.error('Failed to fetch availability', e);
                 } finally {
                     this.isLoading = false;
                 }
             },
 
-            generateCalendar() {
-                const weeks = [];
-                const start = new Date();
-                start.setDate(1); // Start from beginning of current month
-                start.setHours(0, 0, 0, 0);
-                
-                let current = new Date(start);
-                const dayOfWeek = current.getDay();
-                const diff = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-                current.setDate(current.getDate() - diff);
+            buildCalendar() {
+                const days = [];
+                const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                const lastDay  = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const today    = new Date(); today.setHours(0,0,0,0);
 
-                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                let lastMonth = -1;
+                // Pad start (Mon=0 ... Sun=6)
+                let startPad = firstDay.getDay() - 1;
+                if (startPad < 0) startPad = 6;
 
-                // Generate 8 weeks from start of current month
-                for (let w = 0; w < 12; w++) {
-                    const weekDays = [];
-                    let monthHeader = null;
-
-                    for (let d = 0; d < 7; d++) {
-                        const dateStr = this.formatYMD(current);
-                        const month = current.getMonth();
-                        
-                        if (month !== lastMonth && d === 0) {
-                            monthHeader = monthNames[month];
-                        }
-
-                        weekDays.push({
-                            dateStr: dateStr,
-                            dayNum: current.getDate(),
-                            disabled: current < new Date().setHours(0,0,0,0),
-                            isOtherMonth: current.getMonth() !== new Date().getMonth() && w < 2 // Simplistic month check
-                        });
-                        
-                        lastMonth = month;
-                        current.setDate(current.getDate() + 1);
-                    }
-                    weeks.push({
-                        days: weekDays,
-                        monthHeader: monthHeader
-                    });
+                for (let i = startPad - 1; i >= 0; i--) {
+                    const d = new Date(firstDay);
+                    d.setDate(firstDay.getDate() - i - 1);
+                    days.push({ dateStr: this.formatYMD(d), dayNum: d.getDate(), isOtherMonth: true, disabled: d < today });
                 }
-                this.calendarWeeks = weeks;
-            },
 
-            handleDateClick(dateStr) {
-                const day = this.calendarWeeks.flatMap(w => w.days).find(d => d.dateStr === dateStr);
-                if (day && day.disabled) return;
-                
-                if (!this.availability[dateStr]?.is_full) {
-                    window.location.href = `{{ route('booking.index') }}?date=${dateStr}`;
+                for (let i = 1; i <= lastDay.getDate(); i++) {
+                    const d = new Date(this.currentYear, this.currentMonth, i);
+                    days.push({ dateStr: this.formatYMD(d), dayNum: i, isOtherMonth: false, disabled: d < today });
                 }
+
+                // Pad end to fill 6 rows
+                const remaining = 42 - days.length;
+                for (let i = 1; i <= remaining; i++) {
+                    const d = new Date(lastDay);
+                    d.setDate(lastDay.getDate() + i);
+                    days.push({ dateStr: this.formatYMD(d), dayNum: d.getDate(), isOtherMonth: true, disabled: true });
+                }
+
+                this.calendarDays = days;
             },
 
-            isToday(dateStr) {
-                return dateStr === this.todayStr;
+            prevMonth() {
+                if (this.currentMonth === 0) { this.currentMonth = 11; this.currentYear--; }
+                else { this.currentMonth--; }
+                this.buildCalendar();
             },
 
-            formatDate(dateStr) {
-                if (!dateStr) return '';
-                const parts = dateStr.split('-');
-                const date = new Date(parts[0], parts[1]-1, parts[2]);
-                return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            nextMonth() {
+                if (this.currentMonth === 11) { this.currentMonth = 0; this.currentYear++; }
+                else { this.currentMonth++; }
+                this.buildCalendar();
+            },
+
+            canGoPrev() {
+                const now = new Date();
+                return !(this.currentYear === now.getFullYear() && this.currentMonth === now.getMonth());
+            },
+
+            handleDateClick(day) {
+                if (day.disabled || day.isOtherMonth) return;
+                if (this.availability[day.dateStr]?.is_full) return;
+                window.location.href = `{{ route('booking.index') }}?date=${day.dateStr}`;
+            },
+
+            isToday(dateStr) { return dateStr === this.todayStr; },
+
+            isFull(dateStr) { return !!this.availability[dateStr]?.is_full; },
+
+            hasBooking(dateStr) {
+                return !this.isFull(dateStr) && (this.availability[dateStr]?.bookings?.length > 0);
+            },
+
+            get monthLabel() {
+                return `${this.monthNames[this.currentMonth]} ${this.currentYear}`;
             }
         }
     }
 </script>
 
-<div class="pt-32 pb-20 px-6 lg:px-14" x-data="slotChecker()">
+<div class="slot-page px-4 md:px-6 lg:px-14" x-data="slotChecker()">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="mb-16 text-center lg:text-left">
-            <h1 class="text-5xl lg:text-7xl font-black tracking-tighter mb-6 leading-none uppercase">
-                Installation <span class="text-ev-green font-outline-2">Schedule</span>
+
+        {{-- ── Page Header ──────────────────────────────────────── --}}
+        <div class="mb-10 animate-reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(0,166,81,0.15);">
+                    <svg class="w-5 h-5" style="color: var(--accent);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="text-xs font-black uppercase tracking-[0.3em]" style="color: var(--accent);">Schedule &amp; Availability</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none mb-4" style="color: var(--text-main);">
+                Installation
+                <span class="font-outline-green">Schedule</span>
             </h1>
-            <p class="text-xl text-gray-400 max-w-2xl font-light">
-                Check our availability and book your preferred installation slot.
+            <p class="text-base md:text-lg max-w-xl font-light" style="color: var(--text-muted);">
+                Browse available dates below and click any open slot to book your EV charger installation.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <!-- Left: Calendar -->
-            <div class="lg:col-span-8">
-                <div class="ev-card glassmorphism p-8 border-white/10">
-                    <!-- Calendar Header -->
-                    <div class="grid grid-cols-7 gap-1 mb-8">
-                        <template x-for="day in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']">
-                            <div class="text-xs font-black text-gray-500 text-center py-2" x-text="day"></div>
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+            {{-- ── Calendar Panel ───────────────────────────────── --}}
+            <div class="xl:col-span-2">
+                <div class="cal-card">
+
+                    {{-- Calendar Nav Header --}}
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-xl font-black" style="color: var(--text-main);" x-text="monthLabel"></h2>
+                            <p class="text-xs font-medium mt-0.5" style="color: var(--text-muted);">Click an available date to book</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="cal-nav-btn" @click="prevMonth()" :class="{'opacity-30 cursor-not-allowed': !canGoPrev()}" :disabled="!canGoPrev()">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            <button class="cal-nav-btn" @click="nextMonth()">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Day-of-week labels --}}
+                    <div class="grid grid-cols-7 gap-1 mb-2">
+                        <template x-for="d in dayNames" :key="d">
+                            <div class="cal-dow" x-text="d"></div>
                         </template>
                     </div>
 
-                    <!-- Calendar Grid -->
-                    <div class="space-y-6">
-                        <template x-for="(week, weekIndex) in calendarWeeks" :key="weekIndex">
-                            <div>
-                                <template x-if="week.monthHeader">
-                                    <div class="flex items-center gap-4 py-6">
-                                        <div class="h-px bg-white/10 flex-grow"></div>
-                                        <span class="text-sm font-black uppercase tracking-[0.3em] text-white" x-text="week.monthHeader"></span>
-                                        <div class="h-px bg-white/10 flex-grow"></div>
-                                    </div>
+                    {{-- Calendar Grid --}}
+                    <div class="grid grid-cols-7 gap-1" x-show="!isLoading">
+                        <template x-for="(day, idx) in calendarDays" :key="day.dateStr">
+                            <div
+                                class="cal-day"
+                                :class="{
+                                    'cal-day--today':        isToday(day.dateStr) && !day.isOtherMonth,
+                                    'cal-day--disabled':     day.disabled && !day.isOtherMonth,
+                                    'cal-day--full':         isFull(day.dateStr),
+                                    'cal-day--other-month':  day.isOtherMonth
+                                }"
+                                @click="handleDateClick(day)"
+                            >
+                                {{-- Today tag --}}
+                                <template x-if="isToday(day.dateStr) && !day.isOtherMonth">
+                                    <span class="today-tag">Today</span>
                                 </template>
-                                
-                                <div class="grid grid-cols-7 gap-1 min-h-[120px]">
-                                    <template x-for="day in week.days" :key="day.dateStr">
-                                        <div class="relative flex flex-col p-2 border border-white/5 transition-all duration-300 group min-h-[120px]"
-                                            :class="{
-                                                'bg-white/[0.02] cursor-pointer hover:bg-white/[0.05]': !day.disabled,
-                                                'bg-black/20 opacity-40 grayscale': day.disabled,
-                                                'border-ev-green/20': isToday(day.dateStr)
-                                            }"
-                                            @click="handleDateClick(day.dateStr)"
-                                        >
-                                            <div class="flex justify-between items-start mb-2">
-                                                <span class="text-sm font-bold" 
-                                                    :class="isToday(day.dateStr) ? 'text-ev-green' : 'text-gray-400'" 
-                                                    x-text="day.dayNum"></span>
-                                                <template x-if="isToday(day.dateStr)">
-                                                    <span class="text-[8px] font-black uppercase tracking-tighter text-ev-green bg-ev-green/10 px-1.5 py-0.5 rounded">Today</span>
-                                                </template>
-                                            </div>
 
-                                            <!-- Bookings / Labels -->
-                                            <div class="space-y-1 overflow-hidden">
-                                                <template x-for="booking in (availability[day.dateStr]?.bookings || [])">
-                                                    <div class="text-[9px] leading-tight p-1.5 rounded bg-ev-green/10 text-ev-green font-bold border border-ev-green/20 truncate" 
-                                                        x-text="booking.label"></div>
-                                                </template>
-                                                
-                                                <template x-if="availability[day.dateStr]?.is_full">
-                                                    <div class="text-[9px] leading-tight p-1.5 rounded bg-red-500/10 text-red-500 font-black border border-red-500/20 text-center uppercase">Full Slot</div>
-                                                </template>
-                                                
-                                                <template x-if="!day.disabled && !availability[day.dateStr]?.is_full">
-                                                    <div class="opacity-0 group-hover:opacity-100 transition-opacity text-[9px] text-center text-gray-500 font-bold uppercase py-2">Click to Book</div>
-                                                </template>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
+                                <span class="cal-day__num" x-text="day.dayNum"></span>
+
+                                {{-- Full badge --}}
+                                <template x-if="isFull(day.dateStr) && !day.disabled && !day.isOtherMonth">
+                                    <span class="cal-day__badge cal-day__badge--full">Full</span>
+                                </template>
+
+                                {{-- Booking badge (has bookings but not full) --}}
+                                <template x-if="hasBooking(day.dateStr) && !isFull(day.dateStr) && !day.disabled && !day.isOtherMonth">
+                                    <span class="cal-day__badge cal-day__badge--available" x-text="availability[day.dateStr].bookings.length + ' booked'"></span>
+                                </template>
+
+                                {{-- Available / hover hint --}}
+                                <template x-if="!isFull(day.dateStr) && !day.disabled && !day.isOtherMonth && !hasBooking(day.dateStr)">
+                                    <span class="cal-day__badge cal-day__badge--book">Book</span>
+                                </template>
                             </div>
                         </template>
                     </div>
+
+                    {{-- Loading skeleton --}}
+                    <div class="grid grid-cols-7 gap-1" x-show="isLoading">
+                        <template x-for="i in 35" :key="i">
+                            <div class="skeleton" style="height: 4.5rem; border-radius: 0.75rem;"></div>
+                        </template>
+                    </div>
+
+                    {{-- Legend --}}
+                    <div class="flex flex-wrap items-center gap-4 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
+                        <div class="flex items-center gap-2">
+                            <div class="legend-dot" style="background: rgba(0,166,81,0.15); border: 1px solid rgba(0,166,81,0.4);"></div>
+                            <span class="text-xs font-semibold" style="color: var(--text-muted);">Available</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="legend-dot" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4);"></div>
+                            <span class="text-xs font-semibold" style="color: var(--text-muted);">Fully Booked</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="legend-dot" style="background: rgba(0,166,81,0.08); border: 1px solid rgba(0,166,81,0.3);"></div>
+                            <span class="text-xs font-semibold" style="color: var(--text-muted);">Today</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="legend-dot" style="background: var(--glass); border: 1px solid var(--glass-border); opacity: 0.4;"></div>
+                            <span class="text-xs font-semibold" style="color: var(--text-muted);">Unavailable</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right: Info -->
-            <div class="lg:col-span-4">
-                <div class="sticky top-32 space-y-8">
-                    <div class="ev-card glassmorphism p-8 border-t-4 border-t-ev-green">
-                        <h2 class="text-2xl font-black mb-6">Booking Info</h2>
-                        <div class="space-y-6">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-ev-green/10 flex items-center justify-center shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ev-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-white leading-tight">Fast Service</h3>
-                                    <p class="text-sm text-gray-500">Typical installation takes 2-4 hours depending on complexity.</p>
-                                </div>
-                            </div>
+            {{-- ── Sidebar ───────────────────────────────────────── --}}
+            <div class="space-y-6 xl:sticky xl:top-32">
 
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-ev-green/10 flex items-center justify-center shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ev-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-white leading-tight">Certified Installers</h3>
-                                    <p class="text-sm text-gray-500">All works are performed by Suruhanjaya Tenaga certified wiremen.</p>
-                                </div>
+                {{-- Info Card --}}
+                <div class="info-card" style="border-top: 3px solid var(--accent);">
+                    <h3 class="text-lg font-black mb-5" style="color: var(--text-main);">Booking Info</h3>
+
+                    <div class="space-y-5">
+                        <div class="flex items-start gap-3">
+                            <div class="info-icon">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-main);">Fast Service</h4>
+                                <p class="text-xs leading-relaxed" style="color: var(--text-muted);">Typical installation takes 2–4 hours depending on complexity.</p>
                             </div>
                         </div>
-
-                        <div class="mt-10 pt-8 border-t border-white/10">
-                            <h4 class="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Legend</h4>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-3 h-3 rounded bg-ev-green/20 border border-ev-green/40"></div>
-                                    <span class="text-xs font-bold text-gray-400">Scheduled Task</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-3 h-3 rounded bg-red-500/20 border border-red-500/40"></div>
-                                    <span class="text-xs font-bold text-gray-400">Fully Booked</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-3 h-3 rounded border border-white/20 bg-white/5"></div>
-                                    <span class="text-xs font-bold text-gray-400">Available Date</span>
-                                </div>
+                        <div class="flex items-start gap-3">
+                            <div class="info-icon">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-main);">Certified Installers</h4>
+                                <p class="text-xs leading-relaxed" style="color: var(--text-muted);">All works performed by Suruhanjaya Tenaga certified wiremen.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="info-icon">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-main);">Nationwide Coverage</h4>
+                                <p class="text-xs leading-relaxed" style="color: var(--text-muted);">We serve residential and commercial clients across Malaysia.</p>
                             </div>
                         </div>
                     </div>
-
-                    <a href="{{ route('booking.index') }}" 
-                        class="w-full group relative inline-flex items-center justify-center px-8 py-5 font-black text-black transition-all duration-300 bg-ev-green rounded-full hover:bg-white hover:scale-[1.02] shadow-xl shadow-ev-green/20">
-                        <span class="relative uppercase tracking-widest text-xs">Estimate & Book Now</span>
-                    </a>
                 </div>
+
+                {{-- Quick Tip --}}
+                <div class="info-card" style="background: rgba(0,166,81,0.06); border-color: rgba(0,166,81,0.2);">
+                    <div class="flex items-start gap-3">
+                        <div class="mt-0.5">
+                            <svg class="w-5 h-5" style="color: var(--accent);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <p class="text-xs leading-relaxed font-medium" style="color: var(--text-muted);">
+                            <strong style="color: var(--accent);">Tip:</strong> Click on any available date to go to the booking page and complete your reservation. Fully booked dates are not clickable.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- CTA --}}
+                <a href="{{ route('booking.index') }}" class="cta-btn">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Estimate &amp; Book Now
+                </a>
             </div>
+
         </div>
     </div>
 </div>
 
 <style>
-    .font-outline-2 {
-        -webkit-text-stroke: 1px #22c55e;
+    .font-outline-green {
+        -webkit-text-stroke: 1.5px var(--accent);
         color: transparent;
+    }
+    @keyframes reveal {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-reveal {
+        animation: reveal 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
     }
 </style>
 @endsection
