@@ -643,6 +643,7 @@
                             <input type="tel" name="phone_number" class="book-input" placeholder="WhatsApp Number" required value="{{ old('phone_number') }}">
                             <input type="email" name="email" class="book-input" placeholder="Email Address" required value="{{ old('email') }}">
                             <textarea name="address" class="book-input" placeholder="Installation Address..." rows="2" required>{{ old('address') }}</textarea>
+                            <textarea name="notes" class="book-input" placeholder="Additional Notes (Optional)..." rows="2">{{ old('notes') }}</textarea>
 
                             <button type="submit"
                                 class="book-btn"

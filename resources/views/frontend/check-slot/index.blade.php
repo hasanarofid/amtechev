@@ -137,6 +137,17 @@
         opacity: 1;
     }
 
+    /* ── Mobile-only Dot Indicator ───────────────────────────── */
+    .cal-day__dot {
+        display: none;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin-top: 2px;
+    }
+    .cal-day__dot--full { background: #ef4444; }
+    .cal-day__dot--today { background: var(--accent); }
+
     /* ── "Today" tag ─────────────────────────────────────────── */
     .today-tag {
         position: absolute;
@@ -241,10 +252,31 @@
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 768px) {
         .cal-card { padding: 1rem; }
-        .cal-day { min-height: 3.5rem; padding: 0.35rem 0.1rem; }
-        .cal-day__num { font-size: 0.75rem; }
-        .cal-day__badge { display: none; }
-        .today-tag { display: none; }
+        .cal-day { min-height: 3.5rem; padding: 0.35rem 0.1rem; justify-content: center; }
+        .cal-day__num { font-size: 0.8rem; }
+        
+        /* Show badges but make them ultra-compact */
+        .cal-day__badge { 
+            font-size: 0.45rem; 
+            padding: 0.1rem 0.25rem;
+            margin-top: 0;
+        }
+        
+        /* Indicators for mobile if space is too tight for text */
+        .cal-day__badge--full { font-size: 0.4rem; }
+        .cal-day__badge--book { display: none !important; } /* Hide hover hint on mobile */
+        
+        .today-tag { 
+            position: relative;
+            top: 0;
+            right: 0;
+            font-size: 0.45rem;
+            margin-bottom: 2px;
+            padding: 0.05rem 0.25rem;
+        }
+
+        /* Show dots as extra visual hint */
+        .cal-day__dot { display: block; }
     }
 </style>
 @endpush
@@ -424,8 +456,38 @@
                             >
                                 {{-- Today tag --}}
                                 <template x-if="isToday(day.dateStr) && !day.isOtherMonth">
-                                    <span class="today-tag">Today</span>
+                                    <div class="flex flex-col items-center">
+                                        <span class="today-tag">Today</span>
+                                        <div class="cal-day__dot cal-day__dot--today"></div>
+                                    </div>
                                 </template>
+
+                                <span class="cal-day__num" x-text="day.dayNum"></span>
+
+                                {{-- Full badge --}}
+                                <template x-if="isFull(day.dateStr) && !day.disabled && !day.isOtherMonth">
+                                    <div class="flex flex-col items-center">
+                                        <span class="cal-day__badge cal-day__badge--full">Full</span>
+                                        <div class="cal-day__dot cal-day__dot--full"></div>
+                                    </div>
+                                </template>
+
+                                {{-- Booking badge (has bookings but not full) --}}
+                                <template x-if="hasBooking(day.dateStr) && !isFull(day.dateStr) && !day.disabled && !day.isOtherMonth">
+                                    <div class="flex flex-col items-center">
+                                        <span class="cal-day__badge cal-day__badge--available" x-text="availability[day.dateStr].bookings.length + ' booked'"></span>
+                                    </div>
+                                </template>
+
+                                {{-- Available / hover hint --}}
+                                <template x-if="!isFull(day.dateStr) && !day.disabled && !day.isOtherMonth && !hasBooking(day.dateStr)">
+                                    <div class="flex flex-col items-center">
+                                        <span class="cal-day__badge cal-day__badge--book">Book</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
 
                                 <span class="cal-day__num" x-text="day.dayNum"></span>
 

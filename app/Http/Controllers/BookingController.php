@@ -54,7 +54,7 @@ class BookingController extends Controller
             'email' => $validated['email'],
             'address' => $validated['address'],
             'preferred_date' => $validated['preferred_date'],
-            'notes' => $validated['notes'],
+            'notes' => $validated['notes'] ?? null,
             'status' => 'Pending',
         ]);
 
