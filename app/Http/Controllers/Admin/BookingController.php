@@ -75,4 +75,38 @@ class BookingController extends Controller
 
         return view('admin.bookings.calendar', compact('bookings'));
     }
+
+    public function generateDummy(Request $request)
+    {
+        // Find existing "Client Amtech X" names
+        $lastBooking = Booking::where('customer_name', 'LIKE', 'Client Amtech %')
+            ->get()
+            ->filter(function ($b) {
+                return preg_match('/Client Amtech (\d+)/', $b->customer_name);
+            })
+            ->sortByDesc(function ($b) {
+                preg_match('/Client Amtech (\d+)/', $b->customer_name, $matches);
+                return (int) $matches[1];
+            })
+            ->first();
+
+        $nextNumber = 1;
+        if ($lastBooking) {
+            preg_match('/Client Amtech (\d+)/', $lastBooking->customer_name, $matches);
+            $nextNumber = (int) $matches[1] + 1;
+        }
+
+        $booking = Booking::create([
+            'customer_name' => "Client Amtech {$nextNumber}",
+            'phone_number' => '08123456789',
+            'email' => "client.amtech{$nextNumber}@example.com",
+            'address' => 'Dummy Address',
+            'preferred_date' => $request->input('date', now()->toDateString()),
+            'status' => 'Pending',
+            'total_price' => 0,
+            'notes' => 'Auto-generated dummy booking for calendar marking.',
+        ]);
+
+        return redirect()->route('admin.bookings.calendar')->with('success', "Booking for Client {$nextNumber} on {$booking->preferred_date} generated successfully.");
+    }
 }

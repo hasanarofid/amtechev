@@ -84,7 +84,7 @@
 
             <div class="relative group">
                 <div class="absolute -inset-1 bg-gradient-to-r from-accent/10 to-blue-500/10 rounded-[36px] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-                <div class="relative bg-glass border border-glass-border rounded-[32px] p-20 text-center backdrop-blur-2xl">
+                <div class="relative bg-glass border border-glass-border rounded-[32px] p-10 sm:p-20 text-center backdrop-blur-2xl">
                     <div class="mb-8 relative inline-block">
                         <div class="h-24 w-24 bg-accent/5 rounded-[40px] flex items-center justify-center mx-auto text-accent shadow-inner animate-bounce-slow">
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">

@@ -4,11 +4,11 @@
         Add Charger
     </x-slot>
 
-    <div class="max-w-2xl">
-        <form action="{{ route('admin.chargers.store') }}" method="POST" class="space-y-8" enctype="multipart/form-data">
+    <div class="max-w-2xl mx-auto lg:mx-0">
+        <form action="{{ route('admin.chargers.store') }}" method="POST" class="space-y-6 lg:space-y-8" enctype="multipart/form-data">
             @csrf
 
-            <div class="glass-card p-8 space-y-6">
+            <div class="glass-card p-5 sm:p-8 space-y-6">
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Charger Name</label>
                     <input type="text" name="name" value="{{ old('name') }}" required class="premium-input" placeholder="e.g. 11kw Home E1 EV Charger">

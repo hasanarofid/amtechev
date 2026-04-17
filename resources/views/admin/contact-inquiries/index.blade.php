@@ -15,7 +15,7 @@
     @endif
 
     <div class="glass-card overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="table-responsive">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-glass-border bg-white/5">

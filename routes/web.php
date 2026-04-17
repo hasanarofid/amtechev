@@ -4,13 +4,23 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Frontend\ContactInquiryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
- 
+use Illuminate\Support\Facades\Artisan;
+
+ Route::get('/clear-cache', function() {
+    Artisan::call('optimize:clear');
+    return "Cache cleared!";
+});
+
+
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
  Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'index'])->name('catalog');
  Route::get('/catalog/{id}', [App\Http\Controllers\CatalogController::class, 'show'])->name('catalog.show');
  Route::post('/cart/add/{charger}', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
  Route::patch('/cart/update/{id}', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
  Route::delete('/cart/remove/{id}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+
+
+
 
  Route::get('/checkout', function () {
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
@@ -87,6 +97,7 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::resource('video-testimonials', App\Http\Controllers\Admin\VideoTestimonialController::class);
         
         Route::get('bookings/calendar', [App\Http\Controllers\Admin\BookingController::class, 'calendar'])->name('bookings.calendar');
+        Route::post('bookings/generate-dummy', [App\Http\Controllers\Admin\BookingController::class, 'generateDummy'])->name('bookings.generate-dummy');
         Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
         Route::resource('installation-packages', App\Http\Controllers\Admin\InstallationPackageController::class);
         

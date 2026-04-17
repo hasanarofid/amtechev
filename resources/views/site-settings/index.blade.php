@@ -13,7 +13,7 @@
                 <div class="space-y-6">
                     <h3 class="text-xs font-black uppercase tracking-[0.3em] text-ev-green border-b border-ev-green/20 pb-4">{{ strtoupper($group) }} SECTION</h3>
                     
-                    <div class="glass-card p-8 space-y-8">
+                    <div class="glass-card p-5 sm:p-8 space-y-8">
                         @foreach($groupSettings as $setting)
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">{{ ucwords(str_replace('_', ' ', $setting->key)) }}</label>

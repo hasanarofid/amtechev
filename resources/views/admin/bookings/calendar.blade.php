@@ -5,28 +5,51 @@
     </x-slot>
 
     <div class="w-full space-y-6">
-        <div class="flex justify-between items-center border-b border-ev-green/20 pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-ev-green/20 pb-4 gap-4">
             <h3 class="text-xs font-black uppercase tracking-[0.3em] text-ev-green">VISUAL MONITORING</h3>
-            <div class="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-text-muted">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-amber-400"></span>
-                    Pending
+            <div class="flex flex-wrap items-center gap-6">
+                <!-- Legend -->
+                <div class="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-text-muted">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        Pending
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-ev-green"></span>
+                        Confirmed
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                        Completed
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-ev-green"></span>
-                    Confirmed
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                    Completed
-                </div>
+
+                <!-- Generate Client Button -->
+                <form action="{{ route('admin.bookings.generate-dummy') }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn-premium py-2 px-6 text-[10px] tracking-widest bg-blue-500/20 text-blue-500 border border-blue-500/30 hover:bg-blue-500 hover:text-white shadow-none">
+                        GENERATE CLIENT
+                    </button>
+                </form>
             </div>
         </div>
+
+        @if(session('success'))
+            <div class="p-4 glass-card border-ev-green/30 text-ev-green animate-fade-in text-sm font-medium">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <div class="glass-card p-8">
             <div id="calendar" data-bookings="{{ json_encode($bookings) }}" class="min-h-[700px]"></div>
         </div>
     </div>
+
+    <!-- Hidden form for date-specific generation -->
+    <form id="generate-date-form" action="{{ route('admin.bookings.generate-dummy') }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="date" id="generate-date-input">
+    </form>
 
     @push('styles')
     <style>
@@ -43,7 +66,7 @@
         [data-theme="dark"] {
             --fc-button-text-color: #94a3b8;
             --fc-title-color: #ffffff;
-            --fc-header-color: #64748b;
+            --fc-header_color: #64748b;
             --fc-day-number-color: #94a3b8;
         }
 
@@ -52,7 +75,7 @@
             --fc-border-color: rgba(0, 0, 0, 0.1);
             --fc-button-text-color: #475569;
             --fc-title-color: #0f172a;
-            --fc-header-color: #64748b;
+            --fc-header_color: #64748b;
             --fc-day-number-color: #475569;
             --fc-neutral-bg-color: rgba(0, 0, 0, 0.02);
         }
@@ -96,7 +119,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: var(--fc-header-color);
+            color: var(--fc-header_color);
             padding: 1.5rem 0;
         }
 
@@ -134,6 +157,15 @@
             border-radius: 20px;
             overflow: hidden;
         }
+
+        /* Clickable Cursor */
+        .fc-daygrid-day {
+            cursor: copy;
+            transition: background 0.2s ease;
+        }
+        .fc-daygrid-day:hover {
+            background: rgba(34, 197, 94, 0.05) !important;
+        }
     </style>
     @endpush
 
@@ -154,6 +186,12 @@
                     if (info.event.url) {
                         info.jsEvent.preventDefault();
                         window.location.href = info.event.url;
+                    }
+                },
+                dateClick: function(info) {
+                    if (confirm('Generate dummy client for this date (' + info.dateStr + ')?')) {
+                        document.getElementById('generate-date-input').value = info.dateStr;
+                        document.getElementById('generate-date-form').submit();
                     }
                 },
                 height: 'auto',

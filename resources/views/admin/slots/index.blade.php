@@ -79,42 +79,44 @@
             <div class="p-6 border-b border-glass-border bg-white/5">
                 <h3 class="text-xs font-black uppercase tracking-[0.3em] text-main">Active Date Overrides</h3>
             </div>
-            <table class="w-full text-left text-xs uppercase tracking-widest">
-                <thead>
-                    <tr class="border-b border-glass-border bg-white/[0.02]">
-                        <th class="px-6 py-4 font-black">Date</th>
-                        <th class="px-6 py-4 font-black">Capacity</th>
-                        <th class="px-6 py-4 font-black text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-glass-border">
-                    @forelse($slots as $slot)
-                        <tr class="hover:bg-white/5 transition-colors">
-                            <td class="px-6 py-4 text-main font-bold">
-                                {{ \Carbon\Carbon::parse($slot->date)->format('d M Y') }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 font-black">
-                                    {{ $slot->capacity }} Armada
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <form action="{{ route('admin.slots.destroy', $slot) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 font-bold hover:underline" onclick="return confirm('Remove this override?')">Remove</button>
-                                </form>
-                            </td>
+            <div class="table-responsive">
+                <table class="w-full text-left text-xs uppercase tracking-widest">
+                    <thead>
+                        <tr class="border-b border-glass-border bg-white/[0.02]">
+                            <th class="px-6 py-4 font-black">Date</th>
+                            <th class="px-6 py-4 font-black">Capacity</th>
+                            <th class="px-6 py-4 font-black text-right">Actions</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="px-6 py-12 text-center text-text-muted">
-                                No custom date overrides set.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="divide-y divide-glass-border">
+                        @forelse($slots as $slot)
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 text-main font-bold whitespace-nowrap">
+                                    {{ \Carbon\Carbon::parse($slot->date)->format('d M Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 font-black">
+                                        {{ $slot->capacity }} Armada
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                    <form action="{{ route('admin.slots.destroy', $slot) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 font-bold hover:underline" onclick="return confirm('Remove this override?')">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-12 text-center text-text-muted">
+                                    No custom date overrides set.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
             @if($slots->hasPages())
                 <div class="p-6 border-t border-glass-border">
                     {{ $slots->links() }}

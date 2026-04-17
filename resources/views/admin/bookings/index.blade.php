@@ -44,61 +44,63 @@
         @endif
 
         <div class="glass-card overflow-hidden">
-            <table class="w-full text-left text-xs uppercase tracking-widest">
-                <thead>
-                    <tr class="border-b border-glass-border bg-white/5">
-                        <th class="px-6 py-4 font-black">Date</th>
-                        <th class="px-6 py-4 font-black">Customer</th>
-                        <th class="px-6 py-4 font-black">Items</th>
-                        <th class="px-6 py-4 font-black text-right">Total</th>
-                        <th class="px-6 py-4 font-black text-center">Status</th>
-                        <th class="px-6 py-4 font-black text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-glass-border">
-                    @forelse($bookings as $booking)
-                        <tr class="hover:bg-white/5 transition-colors">
-                            <td class="px-6 py-4 text-text-muted">
-                                {{ $booking->created_at->format('d M Y') }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-main">{{ $booking->customer_name }}</div>
-                                <div class="text-[10px] text-text-muted lowercase tracking-normal">{{ $booking->phone_number }}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-main font-bold">{{ $booking->items->count() }} items</span>
-                                <div class="text-[10px] text-text-muted italic">{{ $booking->items->first()?->installationPackage?->name ?? 'N/A' }}...</div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <span class="text-ev-green font-bold">RM{{ number_format($booking->total_price, 2) }}</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center">
-                                    <span class="px-3 py-1 rounded-full text-[9px] font-black tracking-widest
-                                        @if($booking->status == 'Pending') bg-amber-500/10 text-amber-500 border border-amber-500/20
-                                        @elseif($booking->status == 'Confirmed') bg-ev-green/10 text-ev-green border border-ev-green/20
-                                        @elseif($booking->status == 'Completed') bg-blue-500/10 text-blue-500 border border-blue-500/20
-                                        @else bg-red-500/10 text-red-500 border border-red-500/20 @endif">
-                                        {{ $booking->status }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-4">
-                                    <a href="{{ route('admin.bookings.show', $booking) }}" class="text-ev-green font-bold hover:underline">View Details</a>
-                                    <a href="{{ route('admin.bookings.edit', $booking) }}" class="text-text-muted font-bold hover:underline">Manage</a>
-                                </div>
-                            </td>
+            <div class="table-responsive">
+                <table class="w-full text-left text-xs uppercase tracking-widest">
+                    <thead>
+                        <tr class="border-b border-glass-border bg-white/5 text-[10px]">
+                            <th class="px-6 py-4 font-black">Date</th>
+                            <th class="px-6 py-4 font-black">Customer</th>
+                            <th class="px-6 py-4 font-black">Items</th>
+                            <th class="px-6 py-4 font-black text-right">Total</th>
+                            <th class="px-6 py-4 font-black text-center">Status</th>
+                            <th class="px-6 py-4 font-black text-right">Actions</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-20 text-center text-text-muted">
-                                No bookings found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="divide-y divide-glass-border">
+                        @forelse($bookings as $booking)
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 text-text-muted whitespace-nowrap">
+                                    {{ $booking->created_at->format('d M Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="font-bold text-main">{{ $booking->customer_name }}</div>
+                                    <div class="text-[10px] text-text-muted lowercase tracking-normal">{{ $booking->phone_number }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-main font-bold">{{ $booking->items->count() }} items</span>
+                                    <div class="text-[10px] text-text-muted italic">{{ $booking->items->first()?->installationPackage?->name ?? 'N/A' }}...</div>
+                                </td>
+                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                    <span class="text-ev-green font-bold">RM{{ number_format($booking->total_price, 2) }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex justify-center">
+                                        <span class="px-3 py-1 rounded-full text-[9px] font-black tracking-widest whitespace-nowrap
+                                            @if($booking->status == 'Pending') bg-amber-500/10 text-amber-500 border border-amber-500/20
+                                            @elseif($booking->status == 'Confirmed') bg-ev-green/10 text-ev-green border border-ev-green/20
+                                            @elseif($booking->status == 'Completed') bg-blue-500/10 text-blue-500 border border-blue-500/20
+                                            @else bg-red-500/10 text-red-500 border border-red-500/20 @endif">
+                                            {{ $booking->status }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                    <div class="flex justify-end gap-3">
+                                        <a href="{{ route('admin.bookings.show', $booking) }}" class="text-[10px] font-black uppercase tracking-widest text-ev-green hover:underline">View</a>
+                                        <a href="{{ route('admin.bookings.edit', $booking) }}" class="text-[10px] font-black uppercase tracking-widest text-text-muted hover:underline">Manage</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-20 text-center text-text-muted">
+                                    No bookings found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <div class="mt-6">

@@ -4,12 +4,12 @@
         Manage Status: #{{ $booking->id }}
     </x-slot>
 
-    <div class="max-w-2xl">
-        <form action="{{ route('admin.bookings.update', $booking) }}" method="POST" class="space-y-8">
+    <div class="max-w-2xl mx-auto lg:mx-0">
+        <form action="{{ route('admin.bookings.update', $booking) }}" method="POST" class="space-y-6 lg:space-y-8">
             @csrf
             @method('PUT')
 
-            <div class="glass-card p-8 space-y-6">
+            <div class="glass-card p-5 sm:p-8 space-y-6">
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Booking Status</label>
                     <select name="status" required class="premium-input bg-[#0a0a0a]">
