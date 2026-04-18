@@ -1,7 +1,7 @@
 <x-app-layout>
-    <x-slot:title>Edit Booking #{{ $booking->id }}</x-slot:title>
+    <x-slot:title>Create New Booking</x-slot:title>
     <x-slot name="header">
-        Manage Booking: #{{ $booking->id }}
+        Add Manual Booking
     </x-slot>
 
     @push('styles')
@@ -90,15 +90,14 @@
     @endpush
 
     <div class="w-full max-w-7xl transition-all duration-500" x-data="adminBookingForm()">
-        <form action="{{ route('admin.bookings.update', $booking) }}" method="POST" class="space-y-6 lg:space-y-8">
+        <form action="{{ route('admin.bookings.store') }}" method="POST" class="space-y-6 lg:space-y-8">
             @csrf
-            @method('PUT')
 
             <input type="hidden" name="preferred_date" :value="selectedDate" required>
 
             <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8 items-start">
                 
-                {{-- Left Column: Customer Details & Status (4/12) --}}
+                {{-- Left Column: Customer Details (4/12) --}}
                 <div class="xl:col-span-4 space-y-6">
                     <div class="glass-card p-6 sm:p-8 space-y-6 backdrop-blur-xl border-ev-green/10">
                         <div class="flex items-center gap-3 mb-2">
@@ -113,21 +112,21 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Full Name</label>
-                                <input type="text" name="customer_name" required value="{{ old('customer_name', $booking->customer_name) }}" 
+                                <input type="text" name="customer_name" required value="{{ old('customer_name') }}" 
                                     class="premium-input bg-[#0a0a0a]/50" placeholder="John Doe">
                                 @error('customer_name') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Email (Client Target)</label>
-                                <input type="email" name="email" required value="{{ old('email', $booking->email) }}" 
+                                <input type="email" name="email" required value="{{ old('email') }}" 
                                     class="premium-input bg-[#0a0a0a]/50" placeholder="john@example.com">
                                 @error('email') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Phone Number</label>
-                                <input type="tel" name="phone_number" required value="{{ old('phone_number', $booking->phone_number) }}" 
+                                <input type="tel" name="phone_number" required value="{{ old('phone_number') }}" 
                                     class="premium-input bg-[#0a0a0a]/50" placeholder="0123456789">
                                 @error('phone_number') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                             </div>
@@ -135,41 +134,23 @@
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Installation Address</label>
                                 <textarea name="address" rows="3" required class="premium-input bg-[#0a0a0a]/50" 
-                                    placeholder="Full address...">{{ old('address', $booking->address) }}</textarea>
+                                    placeholder="Full address...">{{ old('address') }}</textarea>
                                 @error('address') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
 
-                    <div class="glass-card p-6 sm:p-8 space-y-6 backdrop-blur-xl border-amber-500/10">
-                        <div class="flex items-center gap-3 mb-2">
+                    <div class="glass-card p-6 sm:p-8 backdrop-blur-xl border-ev-green/5">
+                        <div class="flex items-center gap-3 mb-4">
                             <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
                                 <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500">Booking Management</h3>
+                            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500">Internal Notes</h3>
                         </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Booking Status</label>
-                                <select name="status" required class="premium-input bg-[#0a0a0a]/50">
-                                    <option value="Pending" {{ old('status', $booking->status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="Confirmed" {{ old('status', $booking->status) == 'Confirmed' ? 'selected' : '' }}>Confirmed (Ready to Install)</option>
-                                    <option value="Completed" {{ old('status', $booking->status) == 'Completed' ? 'selected' : '' }}>Completed (Installation Done)</option>
-                                    <option value="Cancelled" {{ old('status', $booking->status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                </select>
-                                @error('status') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Internal Notes</label>
-                                <textarea name="notes" rows="3" class="premium-input bg-[#0a0a0a]/50" 
-                                    placeholder="Special instructions or requests...">{{ old('notes', $booking->notes) }}</textarea>
-                                @error('notes') <p class="mt-1 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
-                            </div>
-                        </div>
+                        <textarea name="notes" rows="3" class="premium-input bg-[#0a0a0a]/50" 
+                            placeholder="Special instructions or requests...">{{ old('notes') }}</textarea>
                     </div>
                 </div>
 
@@ -309,7 +290,7 @@
                                 <button type="submit" 
                                     class="w-full bg-ev-green text-[#000] font-black text-[10px] tracking-[0.2em] py-4 rounded-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-ev-green/20"
                                     :disabled="!selectedDate || selectedItems.some(i => !i.id)">
-                                    UPDATE BOOKING DETAILS
+                                    CREATE BOOKING & SEND EMAIL
                                 </button>
                                 <a href="{{ route('admin.bookings.index') }}" class="w-full bg-white/5 border border-glass-border text-center font-black text-[10px] tracking-[0.2em] py-4 rounded-xl hover:bg-white/10 transition-all">
                                     CANCEL & BACK
@@ -326,13 +307,13 @@
     <script>
         function adminBookingForm() {
             return {
-                selectedItems: @js($booking->items->map(fn($item) => ['id' => $item->installation_package_id, 'quantity' => $item->quantity, 'price' => $item->price_at_booking])),
-                totalPrice: {{ $booking->total_price }},
-                selectedDate: '{{ $booking->preferred_date }}',
-                fullDates: @js($fullDates->pluck('preferred_date')),
+                selectedItems: [{ id: '', quantity: 1, price: 0 }],
+                totalPrice: 0,
+                selectedDate: '',
+                fullDates: {{ Js::from($fullDates->pluck('preferred_date')) }},
                 monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-                currentMonth: new Date('{{ $booking->preferred_date }}').getMonth(),
-                currentYear: new Date('{{ $booking->preferred_date }}').getFullYear(),
+                currentMonth: new Date().getMonth(),
+                currentYear: new Date().getFullYear(),
                 calendarDays: [],
                 todayStr: '',
 
@@ -371,7 +352,7 @@
                             dateStr: this.formatYMD(d), 
                             dayNum: i, 
                             isOtherMonth: false, 
-                            disabled: d < today && this.formatYMD(d) !== '{{ $booking->preferred_date }}'
+                            disabled: d < today 
                         });
                     }
 
@@ -420,17 +401,11 @@
                     this.calculateTotal();
                 },
                 updatePrice(index) {
-                    this.$nextTick(() => {
-                        const selects = document.querySelectorAll('select[name^="items"]');
-                        // Find the select for this index
-                        const select = Array.from(selects).find(s => s.name.includes('['+index+']'));
-                        if (select) {
-                            const selectedOption = select.options[select.selectedIndex];
-                            const price = selectedOption ? parseFloat(selectedOption.getAttribute('data-price') || 0) : 0;
-                            this.selectedItems[index].price = price;
-                            this.calculateTotal();
-                        }
-                    });
+                    const select = document.querySelectorAll('select')[index];
+                    const selectedOption = select.options[select.selectedIndex];
+                    const price = selectedOption ? parseFloat(selectedOption.getAttribute('data-price') || 0) : 0;
+                    this.selectedItems[index].price = price;
+                    this.calculateTotal();
                 },
                 calculateTotal() {
                     this.totalPrice = this.selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);

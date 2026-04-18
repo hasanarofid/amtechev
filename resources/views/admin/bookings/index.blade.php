@@ -7,6 +7,12 @@
     <div class="w-full space-y-6">
         <div class="flex justify-between items-center border-b border-ev-green/20 pb-4">
             <h3 class="text-xs font-black uppercase tracking-[0.3em] text-ev-green">ALL BOOKINGS</h3>
+            <a href="{{ route('admin.bookings.create') }}" class="btn-premium py-2 px-6 text-[10px] tracking-widest flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                ADD BOOKING
+            </a>
         </div>
 
         @if($fullDates->count() > 0)
