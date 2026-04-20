@@ -83,10 +83,20 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Need a qualified installer?</label>
-                            <select class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-ev-green focus:border-ev-green appearance-none cursor-pointer">
-                                <option>No Installation</option>
-                                <option>Standard Installation (+RM1,350)</option>
-                            </select>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="relative flex cursor-pointer group">
+                                    <input type="radio" name="installation" value="no" class="peer sr-only" checked>
+                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white border border-gray-200 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30">
+                                        <span class="text-sm font-bold text-gray-900 group-hover:text-ev-green transition-colors peer-checked:text-ev-green">No</span>
+                                    </div>
+                                </label>
+                                <label class="relative flex cursor-pointer group">
+                                    <input type="radio" name="installation" value="yes" class="peer sr-only">
+                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white border border-gray-200 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30 text-center px-2">
+                                        <span class="text-sm font-bold text-gray-900 group-hover:text-ev-green transition-colors peer-checked:text-ev-green">Yes</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
 

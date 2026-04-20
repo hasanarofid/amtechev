@@ -223,7 +223,7 @@
                 @endphp
                 <div class="flex gap-4 group/item">
                     <div class="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 p-2">
-                        <img src="{{ $item['image'] }}" class="w-full h-full object-contain">
+                        <img src="{{ (str_starts_with($item['image'], 'http') || str_starts_with($item['image'], 'data:') || str_starts_with($item['image'], '/')) ? $item['image'] : asset('storage/' . $item['image']) }}" class="w-full h-full object-contain">
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-start gap-2 mb-1">

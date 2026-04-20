@@ -237,7 +237,7 @@
                     @endphp
                     <div class="flex items-center gap-4">
                         <div class="relative w-16 h-16 bg-white border border-gray-200 rounded-lg p-1">
-                            <img src="{{ $item['image'] }}" class="w-full h-full object-contain">
+                            <img src="{{ (str_starts_with($item['image'], 'http') || str_starts_with($item['image'], 'data:') || str_starts_with($item['image'], '/')) ? $item['image'] : asset('storage/' . $item['image']) }}" class="w-full h-full object-contain">
                             <span class="absolute -top-2 -right-2 bg-gray-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                                 {{ $item['quantity'] }}
                             </span>

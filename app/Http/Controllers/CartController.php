@@ -20,7 +20,7 @@ class CartController extends Controller
                 "name" => $charger->name,
                 "quantity" => $quantity,
                 "price" => (float)str_replace(['RM', ',', ' '], '', $charger->price),
-                "image" => $charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png')
+                "image" => $charger->image_url ? (str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url)) : asset('storage/ev_charger_product_1773856128972.png')
             ];
         }
 
