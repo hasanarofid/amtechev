@@ -28,6 +28,29 @@ use Illuminate\Support\Facades\Artisan;
      return view('frontend.checkout', compact('settings', 'cart'));
  })->name('checkout');
 
+ Route::post('/checkout', [App\Http\Controllers\Frontend\CheckoutController::class, 'process'])->name('checkout.process');
+ Route::get('/checkout/success', [App\Http\Controllers\Frontend\CheckoutController::class, 'success'])->name('checkout.success');
+ Route::post('/checkout/callback', [App\Http\Controllers\Frontend\CheckoutController::class, 'callback'])->name('checkout.callback');
+ Route::get('/checkout/status/{order}', [App\Http\Controllers\Frontend\CheckoutController::class, 'checkStatus'])->name('checkout.status');
+
+
+ Route::get('/checkout/debug', function() {
+    $rawToken = config('services.bayarcash.api_token');
+    $cleanedToken = str_replace(["\r", "\n", ' '], '', $rawToken);
+    
+    return response()->json([
+        'environment' => config('services.bayarcash.environment'),
+        'raw_token_length' => strlen($rawToken),
+        'cleaned_token_length' => strlen($cleanedToken),
+        'token_starts_with' => substr($cleanedToken ?? '', 0, 10) . '...',
+        'token_ends_with' => '...' . substr($cleanedToken ?? '', -10),
+        'portal_key_length' => strlen(config('services.bayarcash.portal_key')),
+        'secret_key_length' => strlen(config('services.bayarcash.secret_key')),
+        'laravel_env' => app()->environment(),
+        'app_url' => config('app.url'),
+    ]);
+});
+
  Route::get('/installation', function () {
      $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
      return view('frontend.installation.index', compact('settings'));

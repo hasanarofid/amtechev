@@ -49,6 +49,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
  
-         return redirect(route('user.dashboard'));
+         return redirect(route('user.dashboard'))->with('status', 'Registration successful! Please check your email for the activation link.');
     }
 }

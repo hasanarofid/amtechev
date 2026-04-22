@@ -17,6 +17,19 @@ class Order extends Model
         'status',
         'total_price',
         'notes',
+        'customer_first_name',
+        'customer_last_name',
+        'customer_email',
+        'customer_phone',
+        'customer_address',
+        'customer_city',
+        'customer_postcode',
+        'customer_state',
+        'customer_country',
+        'payment_method',
+        'payment_status',
+        'bayarcash_transaction_id',
+        'payment_url',
     ];
 
     public function user()
@@ -32,5 +45,10 @@ class Order extends Model
     public function charger()
     {
         return $this->belongsTo(Charger::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

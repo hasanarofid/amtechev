@@ -81,86 +81,97 @@
             </nav>
 
             <div class="space-y-10">
-                <!-- Express Checkout -->
-                <div class="border border-gray-100 rounded-xl p-6 text-center">
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-black mb-4">Express checkout</p>
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <button class="flex-1 bg-[#ffc439] hover:bg-[#f2ba32] py-3 rounded-lg flex items-center justify-center transition-all">
-                            <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" alt="PayPal" class="h-6">
-                        </button>
-                    </div>
-                </div>
 
-                <div class="relative py-4 flex items-center">
-                    <div class="flex-grow border-t border-gray-100"></div>
-                    <span class="flex-shrink mx-4 text-xs text-gray-400 font-black uppercase tracking-widest">or</span>
-                    <div class="flex-grow border-t border-gray-100"></div>
-                </div>
 
                 <!-- Contact Section -->
-                <section>
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Contact</h2>
-                        <a href="{{ route('login') }}" class="text-[10px] text-[#3BB77E] underline uppercase font-black">Log in</a>
-                    </div>
-                    <div class="relative">
-                        <input type="text" placeholder="Email or mobile phone number" class="checkout-input" id="contact">
-                        <label for="contact" class="checkout-label">Email or mobile phone number</label>
-                    </div>
-                    <div class="mt-4 flex items-center gap-3">
-                        <input type="checkbox" id="news" class="w-4 h-4 accent-[#3BB77E] rounded">
-                        <label for="news" class="text-xs text-gray-600">Email me with news and offers</label>
-                    </div>
-                </section>
+                <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
+                    @csrf
+                    
+                    @if(session('error'))
+                        <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                            <ul class="list-disc list-inside">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <section>
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold">Contact</h2>
+                            @guest
+                            <a href="{{ route('user.login') }}" class="text-[10px] text-[#3BB77E] underline uppercase font-black">Log in</a>
+                            @endguest
+                        </div>
+                        <div class="relative">
+                            <input type="email" name="email" placeholder="Email" class="checkout-input" id="contact" required value="{{ old('email', auth()->user()->email ?? '') }}">
+                            <label for="contact" class="checkout-label">Email</label>
+                        </div>
+                        <div class="mt-4 flex items-center gap-3">
+                            <input type="checkbox" id="news" class="w-4 h-4 accent-[#3BB77E] rounded">
+                            <label for="news" class="text-xs text-gray-600">Email me with news and offers</label>
+                        </div>
+                    </section>
 
                 <!-- Delivery Section -->
                 <section>
                     <h2 class="text-xl font-bold mb-4">Delivery</h2>
                     <div class="space-y-3">
                         <div class="relative">
-                            <select class="checkout-input appearance-none bg-no-repeat bg-[right_1rem_center]" style="background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'><path stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/></svg>');">
+                            <select name="country" class="checkout-input appearance-none bg-no-repeat bg-[right_1rem_center]" style="background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'><path stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/></svg>');">
                                 <option value="MY">Malaysia</option>
                             </select>
                             <span class="checkout-label">Country/Region</span>
                         </div>
                         <div class="flex gap-3">
                             <div class="relative flex-1">
-                                <input type="text" placeholder="First name (optional)" class="checkout-input" id="fname">
+                                <input type="text" name="first_name" placeholder="First name (optional)" class="checkout-input" id="fname" value="{{ old('first_name', auth()->user()->first_name ?? '') }}">
                                 <label for="fname" class="checkout-label">First name (optional)</label>
                             </div>
                             <div class="relative flex-1">
-                                <input type="text" placeholder="Last name" class="checkout-input" id="lname">
+                                <input type="text" name="last_name" placeholder="Last name" class="checkout-input" id="lname" required value="{{ old('last_name', auth()->user()->last_name ?? '') }}">
                                 <label for="lname" class="checkout-label">Last name</label>
                             </div>
                         </div>
                         <div class="relative">
-                            <input type="text" placeholder="Address" class="checkout-input" id="address">
+                            <input type="text" name="address" placeholder="Address" class="checkout-input" id="address" required value="{{ old('address', auth()->user()->address ?? '') }}">
                             <label for="address" class="checkout-label">Address</label>
                         </div>
                         <div class="relative">
-                            <input type="text" placeholder="Apartment, suite, etc. (optional)" class="checkout-input" id="apt">
+                            <input type="text" name="apt" placeholder="Apartment, suite, etc. (optional)" class="checkout-input" id="apt">
                             <label for="apt" class="checkout-label">Apartment, suite, etc. (optional)</label>
                         </div>
                         <div class="flex gap-3">
                             <div class="relative flex-1">
-                                <input type="text" placeholder="Postcode" class="checkout-input" id="postcode">
+                                <input type="text" name="postcode" placeholder="Postcode" class="checkout-input" id="postcode" required value="{{ old('postcode', auth()->user()->postcode ?? '') }}">
                                 <label for="postcode" class="checkout-label">Postcode</label>
                             </div>
                             <div class="relative flex-1">
-                                <input type="text" placeholder="City" class="checkout-input" id="city">
+                                <input type="text" name="city" placeholder="City" class="checkout-input" id="city" required value="{{ old('city', auth()->user()->city ?? '') }}">
                                 <label for="city" class="checkout-label">City</label>
                             </div>
                             <div class="relative flex-1">
-                                <select class="checkout-input appearance-none">
+                                <select name="state" class="checkout-input appearance-none" required>
                                     <option value="">State/territory</option>
-                                    <option value="KL">Kuala Lumpur</option>
-                                    <option value="SEL">Selangor</option>
+                                    @php
+                                        $userState = old('state', auth()->user()->state ?? '');
+                                    @endphp
+                                    <option value="KL" {{ $userState === 'KL' ? 'selected' : '' }}>Kuala Lumpur</option>
+                                    <option value="SEL" {{ $userState === 'SEL' ? 'selected' : '' }}>Selangor</option>
+                                    <option value="JHR" {{ $userState === 'JHR' ? 'selected' : '' }}>Johor</option>
+                                    <option value="PEN" {{ $userState === 'PEN' ? 'selected' : '' }}>Penang</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center gap-3">
-                            <input type="checkbox" id="save" class="w-4 h-4 accent-[#3BB77E] rounded">
-                            <label for="save" class="text-xs text-gray-600">Save this information for next time</label>
+                        <div class="relative mt-3">
+                            <input type="text" name="phone" placeholder="Phone" class="checkout-input" id="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}">
+                            <label for="phone" class="checkout-label">Phone</label>
                         </div>
                     </div>
                 </section>
@@ -181,16 +192,19 @@
                     <div class="border border-gray-200 rounded-xl overflow-hidden">
                         <div class="p-4 flex justify-between items-center bg-[#f0f5ff] border-b border-gray-200">
                             <div class="flex items-center gap-3">
-                                <input type="radio" checked name="payment" class="w-4 h-4 accent-[#3BB77E]">
-                                <span class="text-sm font-bold">PayPal</span>
+                                <input type="radio" checked name="payment_method" value="bayarcash" class="w-4 h-4 accent-[#3BB77E]">
+                                <span class="text-sm font-bold">Bayar Cash</span>
                             </div>
-                            <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" alt="PayPal" class="h-4">
+                            <div class="flex gap-2">
+                                <img src="https://plugin.bayarcash.com/assets/images/fpx.png" alt="FPX" class="h-4">
+                                <img src="https://plugin.bayarcash.com/assets/images/duitnow.png" alt="DuitNow" class="h-4">
+                            </div>
                         </div>
                         <div class="p-10 text-center bg-gray-50">
                             <div class="flex justify-center mb-4">
                                 <svg class="w-16 h-16 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             </div>
-                            <p class="text-sm text-gray-500">You'll be redirected to PayPal to complete your purchase</p>
+                            <p class="text-sm text-gray-500">You'll be redirected to Bayar Cash to complete your purchase</p>
                         </div>
                     </div>
                 </section>
@@ -210,9 +224,10 @@
                     </div>
                 </section>
 
-                <button class="w-full bg-[#1773B0] hover:bg-[#156a9e] text-white font-bold py-4 rounded-xl transition-all text-sm tracking-widest uppercase text-center shadow-lg shadow-blue-900/10">
-                    Pay with PayPal
+                <button type="submit" id="pay-now-button" class="w-full bg-[#3BB77E] hover:bg-[#32a36d] text-white font-bold py-4 rounded-xl transition-all text-sm tracking-widest uppercase text-center shadow-lg shadow-green-900/10">
+                    Pay Now
                 </button>
+                </form>
 
                 <footer class="pt-10 border-t border-gray-100 flex gap-4 text-[10px] text-[#3BB77E] uppercase font-black underline">
                     <a href="#">Refund policy</a>
@@ -275,6 +290,146 @@
             </div>
         </div>
     </main>
+
+    <div id="payment-modal" class="fixed inset-0 z-[100] hidden transition-all duration-300">
+        <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-md"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-0 md:p-6 lg:p-10">
+            <div class="bg-white w-full md:max-w-7xl h-full md:h-[98vh] md:max-h-[1000px] md:rounded-3xl shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col border-0 md:border md:border-gray-100 overflow-hidden">
+
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
+                    <div class="flex items-center gap-3">
+                        <div class="relative flex">
+                            <div class="w-3 h-3 bg-ev-green rounded-full animate-ping absolute opacity-75"></div>
+                            <div class="w-3 h-3 bg-ev-green rounded-full relative"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-900">Secure Payment Terminal</h3>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-tighter font-medium">Bayar Cash Integration</p>
+                        </div>
+                    </div>
+                    <button id="close-modal" class="group p-2 hover:bg-red-50 rounded-full transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-gray-400 group-hover:text-red-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex-1 bg-white relative">
+                    <iframe id="payment-iframe" src="" class="w-full h-full border-0"></iframe>
+                    <!-- Loading Overlay -->
+                    <div id="iframe-loader" class="absolute inset-0 bg-white flex flex-col items-center justify-center space-y-6">
+                        <div class="relative">
+                            <div class="w-16 h-16 border-4 border-ev-green/10 rounded-full"></div>
+                            <div class="w-16 h-16 border-4 border-t-ev-green rounded-full animate-spin absolute top-0"></div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-base font-bold text-gray-900">Connecting to Gateway</p>
+                            <p class="text-xs text-gray-400">Please do not close this window</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-2 grayscale opacity-50">
+                        <img src="https://plugin.bayarcash.com/assets/images/fpx.png" alt="FPX" class="h-4">
+                        <img src="https://plugin.bayarcash.com/assets/images/duitnow.png" alt="DuitNow" class="h-4">
+                    </div>
+                    <p class="text-[11px] text-gray-500 font-medium">Issue with loading? <a id="fallback-link" href="#" target="_blank" class="text-ev-green hover:underline font-bold">Open in secure tab &rarr;</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('checkout-form');
+            const modal = document.getElementById('payment-modal');
+            const iframe = document.getElementById('payment-iframe');
+            const loader = document.getElementById('iframe-loader');
+            const closeModal = document.getElementById('close-modal');
+            const fallbackLink = document.getElementById('fallback-link');
+            const payButton = document.getElementById('pay-now-button');
+            
+            let pollingInterval = null;
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show loading state on button
+                const originalText = payButton.innerHTML;
+                payButton.disabled = true;
+                payButton.innerHTML = `<span class="flex items-center justify-center gap-2"><svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> PROCESSING...</span>`;
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Open Modal
+                        modal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                        
+                        iframe.src = data.url;
+                        fallbackLink.href = data.url;
+                        
+                        iframe.onload = () => {
+                            loader.classList.add('hidden');
+                        };
+
+                        // Start Polling
+                        startPolling(data.order_number);
+                    } else {
+                        alert(data.message || 'An error occurred. Please try again.');
+                        payButton.disabled = false;
+                        payButton.innerHTML = originalText;
+                    }
+                } catch (error) {
+                    console.error('Checkout Error:', error);
+                    alert('Failed to process checkout. Please check your connection.');
+                    payButton.disabled = false;
+                    payButton.innerHTML = originalText;
+                }
+            });
+
+            function startPolling(orderNumber) {
+                if (pollingInterval) clearInterval(pollingInterval);
+                
+                pollingInterval = setInterval(async () => {
+                    try {
+                        const response = await fetch(`/checkout/status/${orderNumber}`);
+                        const data = await response.json();
+                        
+                        if (data.payment_status === 'paid') {
+                            clearInterval(pollingInterval);
+                            window.location.href = data.redirect_url;
+                        }
+                    } catch (error) {
+                        console.error('Polling Error:', error);
+                    }
+                }, 3000); // Poll every 3 seconds
+            }
+
+            closeModal.addEventListener('click', () => {
+                if (confirm('Are you sure you want to cancel the payment process?')) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    iframe.src = '';
+                    loader.classList.remove('hidden');
+                    if (pollingInterval) clearInterval(pollingInterval);
+                    
+                    payButton.disabled = false;
+                    payButton.innerHTML = 'Pay Now';
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

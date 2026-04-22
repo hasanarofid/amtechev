@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,11 +12,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+         $middleware->validateCsrfTokens(except: [
+             'checkout/callback',
+         ]);
+
          $middleware->alias([
              'role' => \App\Http\Middleware\RoleMiddleware::class,
              'admin' => \App\Http\Middleware\AdminMiddleware::class,
              'member' => \App\Http\Middleware\MemberMiddleware::class,
          ]);
+
+         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('user/*') || $request->is('user') ? route('user.login') : route('login'));
+         
+         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
