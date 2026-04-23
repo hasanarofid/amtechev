@@ -19,7 +19,7 @@ class LandingPageController extends Controller
 {
     public function index()
     {
-        $chargers = Charger::where('is_featured', true)->take(3)->get();
+        $chargers = Charger::where('is_featured', true)->latest()->take(3)->get();
         $testimonials = Testimonial::latest()->get();
         $posts = BlogPost::whereNotNull('published_at')->latest()->take(3)->get();
         $brands = Brand::where('is_active', true)->orderBy('sort_order')->get();

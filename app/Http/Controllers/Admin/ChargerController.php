@@ -30,8 +30,10 @@ class ChargerController extends Controller
             'description' => 'nullable|string',
             'price' => 'nullable|string',
             'image_file' => 'nullable|image|max:10240',
-            'is_featured' => 'boolean',
+            'is_featured' => 'nullable',
         ]);
+
+        $validated['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('image_file')) {
             $validated['image_url'] = $request->file('image_file')->store('chargers', 'public');
@@ -61,8 +63,10 @@ class ChargerController extends Controller
             'description' => 'nullable|string',
             'price' => 'nullable|string',
             'image_file' => 'nullable|image|max:10240',
-            'is_featured' => 'boolean',
+            'is_featured' => 'nullable',
         ]);
+
+        $validated['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('image_file')) {
             if ($charger->image_url && Storage::disk('public')->exists($charger->image_url)) {
