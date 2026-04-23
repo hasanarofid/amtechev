@@ -229,11 +229,14 @@
                 </button>
                 </form>
 
-                <footer class="pt-10 border-t border-gray-100 flex gap-4 text-[10px] text-[#3BB77E] uppercase font-black underline">
-                    <a href="#">Refund policy</a>
-                    <a href="#">Privacy policy</a>
-                    <a href="#">Terms of service</a>
-                    <a href="#">Contact</a>
+                <footer class="pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-4 text-[10px] text-[#3BB77E] uppercase font-black underline">
+                        <a href="#">Refund policy</a>
+                        <a href="#">Privacy policy</a>
+                        <a href="#">Terms of service</a>
+                        <a href="#">Contact</a>
+                    </div>
+                    <p class="text-[10px] text-gray-400 uppercase font-black">developer by <a href="https://hasanarofid.site" class="text-ev-green hover:underline">hasanarofid.site</a></p>
                 </footer>
             </div>
         </div>

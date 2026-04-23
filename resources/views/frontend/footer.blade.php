@@ -34,11 +34,15 @@
                 <a href="mailto:{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}" class="text-ev-green font-bold text-center">{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}</a>
             </div>
         </div>
-        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-xs text-gray-500 uppercase tracking-widest">{{ $settings['footer_copyright'] ?? '© 2026 AMTECH EV Specialist. All rights reserved.' }}</p>
-            <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                <a href="#" class="hover:text-white">Privacy Policy</a>
-                <a href="#" class="hover:text-white">Terms of Service</a>
+        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-500 uppercase tracking-widest">
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+                <p>{{ $settings['footer_copyright'] ?? '© 2026 AMTECH EV Specialist. All rights reserved.' }}</p>
+                <div class="hidden md:block w-px h-3 bg-white/10"></div>
+                <p>developer by <a href="https://hasanarofid.site" class="text-ev-green hover:text-white transition-colors">hasanarofid.site</a></p>
+            </div>
+            <div class="flex gap-8 font-bold">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
     </div>

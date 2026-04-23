@@ -126,4 +126,12 @@
         </a>
         @endif
     </nav>
+
+    <div class="mt-auto px-4 py-6 border-t border-glass-border">
+        <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1 opacity-50">developer by</p>
+        <a href="https://hasanarofid.site" target="_blank" class="text-[11px] font-bold text-main hover:text-ev-green transition-colors flex items-center gap-2 group">
+            hasanarofid.site
+            <svg class="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+    </div>
 </aside>

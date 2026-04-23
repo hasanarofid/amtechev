@@ -64,6 +64,8 @@ body {
     border-right: 1px solid var(--glass-border);
     padding: 1.5rem 1rem;
     position: fixed;
+    display: flex;
+    flex-direction: column;
     transition: all 0.4s var(--transition);
     z-index: 120;
     overflow-y: auto;
