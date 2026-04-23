@@ -29,13 +29,15 @@ class ChargerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|string',
-            'image_file' => 'nullable|image|max:2048',
+            'image_file' => 'nullable|image|max:10240',
             'is_featured' => 'boolean',
         ]);
 
         if ($request->hasFile('image_file')) {
             $validated['image_url'] = $request->file('image_file')->store('chargers', 'public');
         }
+
+        $validated['slug'] = \Illuminate\Support\Str::slug($request->name);
 
         Charger::create($validated);
 
@@ -58,7 +60,7 @@ class ChargerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|string',
-            'image_file' => 'nullable|image|max:2048',
+            'image_file' => 'nullable|image|max:10240',
             'is_featured' => 'boolean',
         ]);
 
@@ -68,6 +70,8 @@ class ChargerController extends Controller
             }
             $validated['image_url'] = $request->file('image_file')->store('chargers', 'public');
         }
+
+        $validated['slug'] = \Illuminate\Support\Str::slug($request->name);
 
         $charger->update($validated);
 

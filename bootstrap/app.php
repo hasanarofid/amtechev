@@ -27,5 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
          $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
+            return redirect()->back()->withErrors(['error' => 'The uploaded file or pasted content is too large. Please reduce the size and try again.'])->withInput();
+        });
     })->create();

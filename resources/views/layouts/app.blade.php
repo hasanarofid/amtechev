@@ -87,6 +87,28 @@
                     </header>
                 @endisset
 
+                <div class="max-w-7xl mx-auto">
+                    @if (session('success'))
+                        <div class="mb-6 p-4 bg-ev-green/10 border border-ev-green/20 text-ev-green rounded-xl text-[10px] font-black uppercase tracking-[0.2em] animate-fade-in flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-ev-green shadow-[0_0_10px_rgba(59,183,126,0.5)]"></div>
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] animate-fade-in">
+                            <ul class="space-y-2">
+                                @foreach ($errors->all() as $error)
+                                    <li class="flex items-center gap-3">
+                                        <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                        {{ $error }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+
                 <div class="animate-fade-in">
                     {{ $slot }}
                 </div>
