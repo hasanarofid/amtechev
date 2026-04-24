@@ -17,7 +17,7 @@
                 <p class="text-gray-400 text-lg leading-relaxed mb-10 font-light">
                     {{ $settings['mission_content'] ?? 'Our mission is to make EV charging simple, safe, and accessible for everyone in Malaysia with fair, transparent pricing and no bullshit pricing.' }}
                 </p>
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode($settings['mission_cta_text'] ?? 'Speak to an EV Charging Specialist') }}" 
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number'] ?? '601167686742') }}?text={{ urlencode(strip_tags($settings['mission_cta_text'] ?? 'Speak to an EV Charging Specialist')) }}" 
                    class="flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2.5rem] bg-ev-green text-black group/cta hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 cursor-pointer shadow-lg hover:shadow-ev-green/20 relative overflow-hidden">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-500"></div>
                     <div class="p-4 bg-black/10 rounded-2xl group-hover/cta:bg-black/20 transition-colors shrink-0">
@@ -26,9 +26,9 @@
                         </svg>
                     </div>
                     <div class="relative z-10">
-                        <p class="text-xl md:text-2xl font-black leading-snug">
-                            "{{ $settings['mission_cta_text'] ?? 'Speak to an EV Charging Specialist — From a Free Site Visit and Consultation to Full Installation , We handle everything with expert workmanship and transparent pricing.' }}"
-                        </p>
+                        <div class="text-xl md:text-2xl font-black leading-snug">
+                            {!! $settings['mission_cta_text'] ?? 'Speak to an EV Charging Specialist — From a Free Site Visit and Consultation to Full Installation , We handle everything with expert workmanship and transparent pricing.' !!}
+                        </div>
                         <span class="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest opacity-60 group-hover/cta:opacity-100 transition-opacity">
                             Click to chat on WhatsApp <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </span>
