@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Affiliate;
+use App\Models\AffiliateCommission;
 use App\Models\Charger;
 use App\Mail\OrderInvoice;
 use Illuminate\Http\Request;
@@ -74,7 +76,15 @@ class CheckoutController extends Controller
         }
 
         // Create Order
+        $referralCode = request()->cookie('referral_code');
+        $affiliateId = null;
+        if ($referralCode) {
+            $affiliate = Affiliate::where('referral_code', $referralCode)->first();
+            $affiliateId = $affiliate ? $affiliate->id : null;
+        }
+
         $order = Order::create([
+            'affiliate_id' => $affiliateId,
             'user_id' => \Illuminate\Support\Facades\Auth::id(),
             'order_number' => 'ORD-' . strtoupper(uniqid()),
             'status' => 'pending',
@@ -190,6 +200,28 @@ class CheckoutController extends Controller
                 'payment_status' => 'paid',
                 'status' => 'processing',
             ]);
+
+            // Affiliate Commission logic
+            if ($order->affiliate_id) {
+                $affiliate = $order->affiliate;
+                $commissionAmount = $order->total_price * ($affiliate->commission_rate / 100);
+
+                $commission = AffiliateCommission::create([
+                    'affiliate_id' => $affiliate->id,
+                    'order_id' => $order->id,
+                    'amount' => $commissionAmount,
+                    'status' => 'pending',
+                ]);
+
+                // Send Commission Email
+                try {
+                    \Illuminate\Support\Facades\Mail::to($affiliate->user->email)
+                        ->cc(['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'])
+                        ->send(new \App\Mail\AffiliateCommissionEarned($commission));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to send commission email: ' . $e->getMessage());
+                }
+            }
 
             // Send Invoice Email
             try {

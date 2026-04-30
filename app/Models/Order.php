@@ -10,6 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'affiliate_id',
         'user_id',
         'service_id',
         'charger_id',
@@ -35,6 +36,11 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class);
     }
 
     public function service()

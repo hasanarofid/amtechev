@@ -23,7 +23,7 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             <div class="glass-card overflow-hidden group">
                 <div class="p-6 flex items-start justify-between relative">
                     <div class="space-y-4">
@@ -35,7 +35,22 @@
                             <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Ongoing Orders</p>
                         </div>
                     </div>
-                    <span class="text-[9px] font-black text-accent py-1 px-3 bg-accent/10 rounded-lg uppercase tracking-widest border border-accent/20">Active</span>
+                </div>
+            </div>
+
+            @if($affiliate)
+            <div class="glass-card overflow-hidden group border-accent/20">
+                <div class="p-6 flex items-start justify-between relative">
+                    <div class="space-y-4">
+                        <div class="h-12 w-12 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform duration-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-black text-main">RM {{ number_format($affiliateStats['balance'], 2) }}</h3>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Affiliate Balance</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('affiliate.dashboard') }}" class="text-[9px] font-black text-accent py-1 px-3 bg-accent/10 rounded-lg uppercase tracking-widest border border-accent/20">Manage</a>
                 </div>
             </div>
 
@@ -43,15 +58,24 @@
                 <div class="p-6 flex items-start justify-between relative">
                     <div class="space-y-4">
                         <div class="h-12 w-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform duration-500">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </div>
                         <div>
-                            <h3 class="text-3xl font-black text-main">RM 0.00</h3>
-                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Total Spending</p>
+                            <h3 class="text-3xl font-black text-main">{{ $affiliateStats['total_clicks'] }}</h3>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Referral Clicks</p>
                         </div>
                     </div>
                 </div>
             </div>
+            @else
+            <div class="glass-card overflow-hidden group bg-gradient-to-br from-accent/5 to-transparent border-dashed border-accent/30">
+                <div class="p-6 h-full flex flex-col justify-center text-center space-y-3">
+                    <h4 class="text-sm font-black text-main uppercase">Join Affiliate</h4>
+                    <p class="text-[10px] text-text-muted">Earn 5% commission on every referral!</p>
+                    <a href="{{ route('affiliate.join') }}" class="inline-block py-2 px-4 bg-accent text-black font-black text-[10px] rounded-xl uppercase tracking-widest hover:scale-105 transition-transform">Get Started</a>
+                </div>
+            </div>
+            @endif
 
             <div class="glass-card overflow-hidden group">
                 <div class="p-6 flex items-start justify-between relative">

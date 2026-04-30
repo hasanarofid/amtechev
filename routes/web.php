@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Artisan;
 
 
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
+ Route::get('/ref/{code}', [App\Http\Controllers\AffiliateTrackingController::class, 'track'])->name('affiliate.track');
+
+Route::middleware(['auth'])->prefix('affiliate')->group(function () {
+    Route::get('/join', [App\Http\Controllers\Frontend\AffiliateController::class, 'join'])->name('affiliate.join');
+    Route::post('/join', [App\Http\Controllers\Frontend\AffiliateController::class, 'store'])->name('affiliate.store');
+    Route::get('/dashboard', [App\Http\Controllers\Frontend\AffiliateController::class, 'index'])->name('affiliate.dashboard');
+    Route::get('/history', [App\Http\Controllers\Frontend\AffiliateController::class, 'history'])->name('affiliate.history');
+});
  Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'index'])->name('catalog');
  Route::get('/catalog/{id}', [App\Http\Controllers\CatalogController::class, 'show'])->name('catalog.show');
  Route::post('/cart/add/{charger}', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
@@ -131,6 +139,13 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::get('site-settings/about', [App\Http\Controllers\Admin\SiteSettingController::class, 'about'])->name('site-settings.about');
         Route::get('site-settings/mission', [App\Http\Controllers\Admin\SiteSettingController::class, 'mission'])->name('site-settings.mission');
         Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
+
+        // Affiliate Management
+        Route::get('affiliates', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'index'])->name('affiliates.index');
+        Route::get('affiliates/commissions', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'commissions'])->name('affiliates.commissions');
+        Route::get('affiliates/payouts', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'payouts'])->name('affiliates.payouts');
+        Route::post('affiliates/commissions/{commission}/approve', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'approveCommission'])->name('affiliates.commissions.approve');
+        Route::post('affiliates/payouts/{payout}/complete', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'completePayout'])->name('affiliates.payouts.complete');
     });
  });
  

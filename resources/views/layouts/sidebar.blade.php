@@ -12,118 +12,135 @@
         </button>
     </div>
 
-    <nav class="flex flex-col gap-2">
+    <nav class="flex flex-col gap-2 px-2" x-data="{ 
+        activeGroup: localStorage.getItem('sidebar_active_group') || 'landing',
+        toggleGroup(group) {
+            this.activeGroup = this.activeGroup === group ? '' : group;
+            localStorage.setItem('sidebar_active_group', this.activeGroup);
+        }
+    }">
         <a href="{{ auth()->user()->isAdmin() ? route('dashboard') : route('user.dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') || request()->routeIs('user.dashboard') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             Dashboard
         </a>
         
         @if(auth()->user()->isMember())
+        <!-- Member Menus -->
         <a href="{{ route('user.orders') }}" class="nav-link {{ request()->routeIs('user.orders') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
             My Orders
+        </a>
+        <a href="{{ route('affiliate.dashboard') }}" class="nav-link {{ request()->routeIs('affiliate.*') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Affiliate Center
         </a>
         <a href="{{ route('user.profile.edit') }}" class="nav-link {{ request()->routeIs('user.profile.edit') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             My Profile
         </a>
-        <a href="{{ route('user.settings') }}" class="nav-link {{ request()->routeIs('user.settings') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Settings
-        </a>
         @endif
 
         @if(auth()->user()->isAdmin())
-        <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Landing Page</div>
         
-        <a href="{{ route('admin.site-settings.hero') }}" class="nav-link {{ request()->routeIs('admin.site-settings.hero') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            Manage Hero Section
-        </a>
-        
-        <a href="{{ route('admin.site-settings.about') }}" class="nav-link {{ request()->routeIs('admin.site-settings.about') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-            About Section Details
-        </a>
+        <!-- Group: Landing Page -->
+        <div class="mt-4">
+            <button @click="toggleGroup('landing')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Landing Page</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'landing' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'landing'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.site-settings.hero') }}" class="nav-link {{ request()->routeIs('admin.site-settings.hero') ? 'active' : '' }} scale-95 origin-left">
+                    Manage Hero Section
+                </a>
+                <a href="{{ route('admin.site-settings.about') }}" class="nav-link {{ request()->routeIs('admin.site-settings.about') ? 'active' : '' }} scale-95 origin-left">
+                    About Section Details
+                </a>
+                <a href="{{ route('admin.site-settings.mission') }}" class="nav-link {{ request()->routeIs('admin.site-settings.mission') ? 'active' : '' }} scale-95 origin-left">
+                    Our Mission Page
+                </a>
+                <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }} scale-95 origin-left">
+                    Manage Services
+                </a>
+                <a href="{{ route('admin.gallery-items.index') }}" class="nav-link {{ request()->routeIs('admin.gallery-items.*') ? 'active' : '' }} scale-95 origin-left">
+                    Gallery Workmanship
+                </a>
+                <a href="{{ route('admin.quality-brands.index') }}" class="nav-link {{ request()->routeIs('admin.quality-brands.*') ? 'active' : '' }} scale-95 origin-left">
+                    Quality Brands
+                </a>
+                <a href="{{ route('admin.chargers.index') }}" class="nav-link {{ request()->routeIs('admin.chargers.*') ? 'active' : '' }} scale-95 origin-left">
+                    Manage Chargers
+                </a>
+                <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }} scale-95 origin-left">
+                    Testimonials
+                </a>
+                <a href="{{ route('admin.video-testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.video-testimonials.*') ? 'active' : '' }} scale-95 origin-left">
+                    Video Feedback
+                </a>
+                <a href="{{ route('admin.blog-posts.index') }}" class="nav-link {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }} scale-95 origin-left">
+                    Insights & Blog
+                </a>
+            </div>
+        </div>
 
-        <a href="{{ route('admin.site-settings.mission') }}" class="nav-link {{ request()->routeIs('admin.site-settings.mission') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            Our Mission Page
-        </a>
+        <!-- Group: Booking Management -->
+        <div class="mt-2">
+            <button @click="toggleGroup('booking')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Booking System</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'booking' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'booking'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.index') || request()->routeIs('admin.bookings.show') || request()->routeIs('admin.bookings.edit') ? 'active' : '' }} scale-95 origin-left">
+                    View All Bookings
+                </a>
+                <a href="{{ route('admin.bookings.calendar') }}" class="nav-link {{ request()->routeIs('admin.bookings.calendar') ? 'active' : '' }} scale-95 origin-left">
+                    Booking Calendar
+                </a>
+                <a href="{{ route('admin.installation-packages.index') }}" class="nav-link {{ request()->routeIs('admin.installation-packages.*') ? 'active' : '' }} scale-95 origin-left">
+                    Manage Packages
+                </a>
+                <a href="{{ route('admin.slots.index') }}" class="nav-link {{ request()->routeIs('admin.slots.*') ? 'active' : '' }} scale-95 origin-left">
+                    Manage Slots
+                </a>
+            </div>
+        </div>
 
-        <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-            Manage Services
-        </a>
+        <!-- Group: Affiliate Management -->
+        <div class="mt-2">
+            <button @click="toggleGroup('affiliate')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Affiliate System</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'affiliate' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'affiliate'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.affiliates.index') }}" class="nav-link {{ request()->routeIs('admin.affiliates.*') ? 'active' : '' }} scale-95 origin-left">
+                    Partner List
+                </a>
+                <a href="{{ route('admin.affiliates.commissions') }}" class="nav-link {{ request()->routeIs('admin.affiliates.commissions') ? 'active' : '' }} scale-95 origin-left">
+                    Commission Log
+                </a>
+                <a href="{{ route('admin.affiliates.payouts') }}" class="nav-link {{ request()->routeIs('admin.affiliates.payouts') ? 'active' : '' }} scale-95 origin-left">
+                    Payout Requests
+                </a>
+            </div>
+        </div>
 
-        <a href="{{ route('admin.gallery-items.index') }}" class="nav-link {{ request()->routeIs('admin.gallery-items.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            Gallery Workmanship
-        </a>
-
-        <a href="{{ route('admin.quality-brands.index') }}" class="nav-link {{ request()->routeIs('admin.quality-brands.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-            Quality Brands
-        </a>
-
-        <a href="{{ route('admin.chargers.index') }}" class="nav-link {{ request()->routeIs('admin.chargers.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            Manage Chargers
-        </a>
-
-        <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            Testimonials
-        </a>
-
-        <a href="{{ route('admin.video-testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.video-testimonials.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            Video Feedback
-        </a>
-
-        <a href="{{ route('admin.blog-posts.index') }}" class="nav-link {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            Insights & Blog
-        </a>
-
-        <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Booking Management</div>
-        
-        <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.index') || request()->routeIs('admin.bookings.show') || request()->routeIs('admin.bookings.edit') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-            View All Bookings
-        </a>
-
-        <a href="{{ route('admin.bookings.calendar') }}" class="nav-link {{ request()->routeIs('admin.bookings.calendar') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            Booking Calendar
-        </a>
-
-        <a href="{{ route('admin.installation-packages.index') }}" class="nav-link {{ request()->routeIs('admin.installation-packages.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-            Manage Packages
-        </a>
-
-        <a href="{{ route('admin.slots.index') }}" class="nav-link {{ request()->routeIs('admin.slots.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"></path><path d="M18.4 4.6a9 9 0 1 1-12.8 0"></path></svg>
-            Manage Slots
-        </a>
-
-        <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Configuration</div>
-        
-        <a href="{{ route('admin.contact-inquiries.index') }}" class="nav-link {{ request()->routeIs('admin.contact-inquiries.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            Contact Inquiries
-        </a>
-
-        <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            Supported Brands
-        </a>
-
-        <a href="{{ route('admin.site-settings.index') }}" class="nav-link {{ request()->routeIs('admin.site-settings.index') ? 'active' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Site Settings
-        </a>
+        <!-- Group: Configuration -->
+        <div class="mt-2">
+            <button @click="toggleGroup('config')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Settings & Config</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'config' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'config'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.contact-inquiries.index') }}" class="nav-link {{ request()->routeIs('admin.contact-inquiries.*') ? 'active' : '' }} scale-95 origin-left">
+                    Contact Inquiries
+                </a>
+                <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }} scale-95 origin-left">
+                    Supported Brands
+                </a>
+                <a href="{{ route('admin.site-settings.index') }}" class="nav-link {{ request()->routeIs('admin.site-settings.index') ? 'active' : '' }} scale-95 origin-left">
+                    Site Settings
+                </a>
+            </div>
+        </div>
         @endif
     </nav>
 

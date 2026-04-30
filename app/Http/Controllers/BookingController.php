@@ -8,6 +8,8 @@ use Illuminate\Validation\Rule;
 use App\Models\InstallationPackage;
 use App\Models\Booking;
 use App\Models\SiteSetting;
+use App\Models\Affiliate;
+use App\Models\AffiliateCommission;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\BookingNotification;
@@ -48,7 +50,15 @@ class BookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        $referralCode = request()->cookie('referral_code');
+        $affiliateId = null;
+        if ($referralCode) {
+            $affiliate = Affiliate::where('referral_code', $referralCode)->first();
+            $affiliateId = $affiliate ? $affiliate->id : null;
+        }
+
         $booking = Booking::create([
+            'affiliate_id' => $affiliateId,
             'customer_name' => $validated['customer_name'],
             'phone_number' => $validated['phone_number'],
             'email' => $validated['email'],
@@ -73,6 +83,28 @@ class BookingController extends Controller
         }
 
         $booking->update(['total_price' => $totalPrice]);
+
+        // Affiliate Commission logic
+        if ($booking->affiliate_id && $totalPrice > 0) {
+            $affiliate = $booking->affiliate;
+            $commissionAmount = $totalPrice * ($affiliate->commission_rate / 100);
+
+            $commission = AffiliateCommission::create([
+                'affiliate_id' => $affiliate->id,
+                'booking_id' => $booking->id,
+                'amount' => $commissionAmount,
+                'status' => 'pending',
+            ]);
+
+            // Send Commission Email
+            try {
+                \Illuminate\Support\Facades\Mail::to($affiliate->user->email)
+                    ->cc(['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'])
+                    ->send(new \App\Mail\AffiliateCommissionEarned($commission));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send commission email for booking: ' . $e->getMessage());
+            }
+        }
 
         // Send Email Notification
         try {

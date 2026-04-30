@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $fillable = [
+        'affiliate_id',
         'customer_name',
         'phone_number',
         'email',
@@ -21,5 +22,10 @@ class Booking extends Model
     public function items()
     {
         return $this->hasMany(BookingItem::class);
+    }
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class);
     }
 }
