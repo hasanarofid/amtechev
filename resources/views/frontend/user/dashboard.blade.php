@@ -38,6 +38,7 @@
                 </div>
             </div>
 
+            {{-- 
             @if($affiliate)
             <div class="glass-card overflow-hidden group border-accent/20">
                 <div class="p-6 flex items-start justify-between relative">
@@ -76,6 +77,7 @@
                 </div>
             </div>
             @endif
+            --}}
 
             <div class="glass-card overflow-hidden group">
                 <div class="p-6 flex items-start justify-between relative">
