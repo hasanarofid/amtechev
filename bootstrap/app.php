@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
              'member' => \App\Http\Middleware\MemberMiddleware::class,
          ]);
 
-         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('user/*') || $request->is('user') || $request->is('affiliate/*') || $request->is('affiliate') ? route('user.login') : route('login'));
+         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin/*') || $request->is('admin') || $request->is('dashboard') ? route('login') : route('user.login'));
          
          $middleware->trustProxies(at: '*');
     })

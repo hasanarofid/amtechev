@@ -71,7 +71,7 @@
             </form>
 
             <div class="mt-8 pt-8 border-t border-white/5 text-center">
-                <p class="text-gray-400 text-sm">Don't have an account? <a href="{{ route('register') }}" class="text-ev-green font-bold hover:underline">Register Now</a></p>
+                <p class="text-gray-400 text-sm">Don't have an account? <a href="{{ route('user.register') }}" class="text-ev-green font-bold hover:underline">Register Now</a></p>
             </div>
         </div>
         
