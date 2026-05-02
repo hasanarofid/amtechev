@@ -41,8 +41,8 @@
                 <p>developer by <a href="https://hasanarofid.site" class="text-ev-green hover:text-white transition-colors">hasanarofid.site</a></p>
             </div>
             <div class="flex gap-8 font-bold">
-                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="{{ route('privacy') }}" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="{{ route('terms') }}" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
     </div>

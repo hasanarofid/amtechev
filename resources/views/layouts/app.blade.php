@@ -8,6 +8,10 @@
         <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
 
         <title>{{ $title ?? 'Dashboard' }} | {{ config('app.name', 'Laravel') }}</title>
+        <meta name="description" content="Manage your EV infrastructure with Amtech EV Specialist.">
+        <link rel="canonical" href="https://amtechev.com{{ Request::getPathInfo() }}">
+
+       
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +27,9 @@
                 document.documentElement.setAttribute('data-theme', theme);
             })();
         </script>
+         <!-- AdSense Script -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861"
+             crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased text-main" x-data="{ sidebarOpen: false }">
         <div class="min-h-screen flex flex-col lg:flex-row">

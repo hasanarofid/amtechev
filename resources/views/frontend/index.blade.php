@@ -10,6 +10,17 @@
     
     <!-- SEO -->
     <meta name="description" content="Amtech EV Specialist makes EV charging accessible in Malaysia with high-quality products and services. Best value EV charger installation with FREE site visit.">
+    <link rel="canonical" href="https://amtechev.com/">
+
+    <!-- AdSense Script -->
+    <meta name="google-adsense-account" content="ca-pub-7190047001129861">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
+
+    <!-- GEO Tags -->
+    <meta name="geo.region" content="MY-14" />
+    <meta name="geo.placename" content="Kuala Lumpur" />
+    <meta name="geo.position" content="3.139003;101.686855" />
+    <meta name="ICBM" content="3.139003, 101.686855" />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

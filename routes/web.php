@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Artisan;
 
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
  Route::get('/ref/{code}', [App\Http\Controllers\AffiliateTrackingController::class, 'track'])->name('affiliate.track');
+ Route::get('/privacy-policy', function () {
+    $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+    return view('frontend.privacy', compact('settings'));
+ })->name('privacy');
+
+ Route::get('/terms-of-service', function () {
+    $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+    return view('frontend.terms', compact('settings'));
+ })->name('terms');
 
 Route::middleware(['auth'])->prefix('affiliate')->group(function () {
     Route::get('/join', [App\Http\Controllers\Frontend\AffiliateController::class, 'join'])->name('affiliate.join');
