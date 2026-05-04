@@ -82,6 +82,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     @stack('styles')
+    @stack('head')
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-white dark:selection:text-black bg-gray-50 dark:bg-[#030303] text-gray-900 dark:text-white transition-colors duration-300">
 
