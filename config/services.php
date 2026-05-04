@@ -42,4 +42,8 @@ return [
         'environment' => env('BAYARCASH_ENVIRONMENT', 'sandbox'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];

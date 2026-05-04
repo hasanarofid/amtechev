@@ -10,7 +10,7 @@ class BlogPost extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'excerpt', 'content', 'image_url', 'category', 'author_name', 'published_at'
+        'title', 'title_ms', 'slug', 'excerpt', 'excerpt_ms', 'content', 'content_ms', 'image_url', 'category', 'author_name', 'published_at'
     ];
 
     /**

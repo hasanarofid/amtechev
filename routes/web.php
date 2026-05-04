@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Artisan;
     return "Cache cleared!";
 });
 
+Route::get('/fix-blog-paths', function() {
+    $count = \App\Models\BlogPost::where('image_url', 'like', 'blog/%')->get()->each(function($post) {
+        $post->update(['image_url' => str_replace('blog/', 'blog-assets/', $post->image_url)]);
+    })->count();
+    return "Updated $count posts! You can now go back to the blog.";
+});
+
 
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
  Route::get('/ref/{code}', [App\Http\Controllers\AffiliateTrackingController::class, 'track'])->name('affiliate.track');
@@ -127,7 +134,8 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
          });
          Route::resource('chargers', App\Http\Controllers\Admin\ChargerController::class);
          Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
-         Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
+         Route::post('blog-posts/generate', [App\Http\Controllers\Admin\BlogPostController::class, 'generate'])->name('blog-posts.generate');
+        Route::resource('blog-posts', App\Http\Controllers\Admin\BlogPostController::class);
         Route::resource('brands', App\Http\Controllers\Admin\BrandController::class);
         Route::resource('contact-inquiries', App\Http\Controllers\Admin\ContactInquiryController::class);
         Route::post('contact-inquiries/{contact_inquiry}/reply', [App\Http\Controllers\Admin\ContactInquiryController::class, 'reply'])->name('contact-inquiries.reply');

@@ -40,9 +40,10 @@
             <!-- Featured Post -->
             <div class="mb-24">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div class="post-image aspect-[16/10]">
-                        <img src="{{ str_starts_with($featured->image_url, 'http') ? $featured->image_url : asset('storage/' . $featured->image_url) }}" alt="{{ $featured->title }}" class="w-full h-full object-cover">
-                    </div>
+                        @php
+                            $featuredSrc = str_starts_with($featured->image_url, 'http') ? $featured->image_url : (str_starts_with($featured->image_url, 'blog-assets/') ? asset($featured->image_url) : asset('storage/' . $featured->image_url));
+                        @endphp
+                        <img src="{{ $featuredSrc }}" alt="{{ $featured->title }}" class="w-full h-full object-cover">
                     <div>
                         <div class="text-ev-green font-bold text-xs uppercase tracking-widest mb-4">Latest Update</div>
                         <h2 class="text-3xl font-black mb-6 leading-tight dark:text-white">{{ $featured->title }}</h2>
@@ -60,7 +61,10 @@
                 @foreach($posts->skip(1) as $post)
                 <div class="post-card dark:border-white/5">
                     <div class="post-image aspect-[16/10] mb-8">
-                        <img src="{{ str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                        @php
+                            $postSrc = str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url));
+                        @endphp
+                        <img src="{{ $postSrc }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
                     </div>
                     <div class="text-gray-400 text-xs mb-3">{{ $post->created_at ? $post->created_at->format('M d, Y') : 'Mar 21, 2026' }}</div>
                     <a href="{{ route('blog.show', $post->slug) }}">

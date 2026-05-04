@@ -6,10 +6,22 @@
 
     <div class="flex justify-between items-center mb-8">
         <p class="text-text-muted text-sm font-medium">Manage news, guides, and insights for the charging community.</p>
-        <a href="{{ route('admin.blog-posts.create') }}" class="btn-premium">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Write New Post
-        </a>
+        <div class="flex gap-4">
+            <form action="{{ route('admin.blog-posts.generate') }}" method="POST">
+                @csrf
+                <button type="submit" 
+                    class="btn-premium flex items-center {{ !$hasNewImages ? 'opacity-50 cursor-not-allowed' : '' }}" 
+                    {{ !$hasNewImages ? 'disabled' : '' }}
+                    title="{{ !$hasNewImages ? 'No new images found in public/blog' : 'Generate content from new images' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+                    Generate AI Posts
+                </button>
+            </form>
+            <a href="{{ route('admin.blog-posts.create') }}" class="btn-premium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Write New Post
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -18,11 +30,31 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="mb-6 p-4 glass-card border-red-500/30 text-red-500 animate-fade-in text-sm font-medium">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($posts as $post)
             <div class="glass-card overflow-hidden flex flex-col group">
                 <div class="relative aspect-video bg-white/5 overflow-hidden">
-                    <img src="{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url)) : asset('storage/ev_hero_bg_1773856111374.png') }}" alt="{{ $post->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    @php
+                        $imageUrl = $post->image_url;
+                        if ($imageUrl) {
+                            if (str_starts_with($imageUrl, 'http')) {
+                                $src = $imageUrl;
+                            } elseif (str_starts_with($imageUrl, 'blog-assets/')) {
+                                $src = asset($imageUrl);
+                            } else {
+                                $src = asset('storage/' . $imageUrl);
+                            }
+                        } else {
+                            $src = asset('storage/ev_hero_bg_1773856111374.png');
+                        }
+                    @endphp
+                    <img src="{{ $src }}" alt="{{ $post->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     @if($post->category)
                         <span class="absolute top-4 left-4 px-2 py-1 bg-black/50 backdrop-blur-md text-[10px] font-black uppercase tracking-widest rounded border border-white/10">{{ $post->category }}</span>
                     @endif
