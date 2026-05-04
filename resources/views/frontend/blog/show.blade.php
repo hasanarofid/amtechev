@@ -1,37 +1,19 @@
-<!-- resources/views/frontend/blog/show.blade.php -->
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $post->title }} – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
-    
-    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
-    <!-- AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
+@extends('frontend.layouts.app')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .blog-header {
-            padding: 140px 0 60px;
-            background-color: #0a0a0a;
-            color: #ffffff;
-            position: relative;
-        }
-        .prose img { border-radius: 24px; margin: 40px 0; border: 1px solid #f3f4f6; }
-        .prose h2 { font-weight: 800; color: #111827; }
-        .prose p { line-height: 1.8; color: #374151; }
-    </style>
-</head>
-<body class="antialiased">
+@section('title', $post->title . ' – ' . ($settings['site_title'] ?? 'AMTECH EV Specialist'))
 
-    @include('frontend.header')
+@push('styles')
+<style>
+    .blog-header {
+        padding: 140px 0 60px;
+        background-color: #0a0a0a;
+        color: #ffffff;
+        position: relative;
+    }
+</style>
+@endpush
 
+@section('content')
     <!-- Article Header -->
     <header class="blog-header">
         <div class="max-w-4xl mx-auto px-6 lg:px-14">
@@ -54,34 +36,31 @@
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-6 lg:px-14 py-20">
         @if($post->image_url)
-        <div class="mb-16 aspect-video rounded-[32px] overflow-hidden border border-gray-100 shadow-2xl">
+        <div class="mb-16 aspect-video rounded-[32px] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl">
             <img src="{{ str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
         </div>
         @endif
 
-        <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green">
+        <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green dark:prose-invert">
             {!! $post->content !!}
         </article>
 
         <!-- Related Posts -->
         @if($relatedPosts->count() > 0)
-        <div class="mt-32 pt-16 border-t border-gray-100">
-            <h2 class="text-2xl font-black mb-12">More to <span class="italic text-ev-green">read</span></h2>
+        <div class="mt-32 pt-16 border-t border-gray-100 dark:border-white/5">
+            <h2 class="text-2xl font-black mb-12 dark:text-white">More to <span class="italic text-ev-green">read</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach($relatedPosts as $related)
                 <a href="{{ route('blog.show', $related->slug) }}" class="group">
-                    <div class="aspect-video rounded-2xl overflow-hidden mb-4 bg-gray-50 border border-gray-100">
+                    <div class="aspect-video rounded-2xl overflow-hidden mb-4 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
                         <img src="{{ $related->image_url ? (str_starts_with($related->image_url, 'http') ? $related->image_url : asset('storage/' . $related->image_url)) : asset('storage/ev_charger_product_1773856128972.png') }}" alt="{{ $related->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                     </div>
-                    <h4 class="font-bold leading-tight group-hover:text-ev-green transition-colors">{{ $related->title }}</h4>
+                    <h4 class="font-bold leading-tight group-hover:text-ev-green transition-colors dark:text-white">{{ $related->title }}</h4>
                 </a>
                 @endforeach
             </div>
         </div>
         @endif
     </main>
+@endsection
 
-    @include('frontend.footer')
-
-</body>
-</html>

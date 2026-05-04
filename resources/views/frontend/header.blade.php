@@ -47,7 +47,10 @@
         </div>
     
         <div class="flex items-center gap-3 md:gap-6" x-data="{
-            isDark: document.documentElement.classList.contains('dark'),
+            isDark: false,
+            init() {
+                this.isDark = document.documentElement.classList.contains('dark');
+            },
             toggleTheme() {
                 this.isDark = !this.isDark;
                 if (this.isDark) {

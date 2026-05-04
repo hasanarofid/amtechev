@@ -1,29 +1,8 @@
-<!-- resources/views/frontend/catalog/show.blade.php -->
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $charger->name }} – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
-    
-    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
-    <!-- AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
+@extends('frontend.layouts.app')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .text-muted { color: #6b7280; }
-    </style>
-</head>
-<body class="antialiased">
+@section('title', $charger->name . ' – ' . ($settings['site_title'] ?? 'AMTECH EV Specialist'))
 
-    @include('frontend.header')
-
+@section('content')
     <main class="max-w-7xl mx-auto px-6 lg:px-14 pt-32 pb-24">
         <!-- Breadcrumbs -->
         <nav class="flex mb-8 text-xs font-medium uppercase tracking-widest text-gray-400 gap-2">
@@ -31,7 +10,7 @@
             <span>/</span>
             <a href="{{ route('catalog') }}" class="hover:text-ev-green">Products</a>
             <span>/</span>
-            <span class="text-gray-900">{{ $charger->name }}</span>
+            <span class="text-gray-900 dark:text-white">{{ $charger->name }}</span>
         </nav>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -45,13 +24,13 @@
                     @foreach($images as $image)
                     <div @click="activeImage = '{{ $image }}'" 
                          :class="activeImage === '{{ $image }}' ? 'border-ev-green' : 'border-gray-100'"
-                         class="aspect-square bg-gray-50 rounded-lg overflow-hidden border cursor-pointer hover:border-ev-green transition-colors p-2 shrink-0 w-20 h-20">
+                         class="aspect-square bg-gray-50 dark:bg-white/5 rounded-lg overflow-hidden border cursor-pointer hover:border-ev-green transition-colors p-2 shrink-0 w-20 h-20">
                         <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}" class="w-full h-full object-contain">
                     </div>
                     @endforeach
                 </div>
                 <!-- Main Image -->
-                <div class="flex-1 aspect-square bg-gray-50 rounded-2xl overflow-hidden p-12 border border-gray-50 flex items-center justify-center">
+                <div class="flex-1 aspect-square bg-gray-50 dark:bg-white/5 rounded-2xl overflow-hidden p-12 border border-gray-50 dark:border-white/5 flex items-center justify-center">
                     <img :src="activeImage" 
                          alt="{{ $charger->name }}" 
                          class="max-w-full max-h-full object-contain">
@@ -62,7 +41,7 @@
             <div class="flex flex-col">
                 <p class="text-[10px] font-black uppercase tracking-[0.3em] text-ev-green mb-4">MY STORE</p>
                 <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-4">{{ $charger->name }}</h1>
-                <p class="text-xl font-bold text-gray-900 mb-8">{{ $charger->price }} MYR</p>
+                <p class="text-xl font-bold text-gray-900 dark:text-white mb-8">{{ $charger->price }} MYR</p>
 
                 <form action="{{ route('cart.add', $charger->id) }}" method="POST" class="space-y-6 mb-10">
                     @csrf
@@ -70,7 +49,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Color</label>
-                            <select class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-ev-green focus:border-ev-green appearance-none cursor-pointer">
+                            <select class="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-ev-green focus:border-ev-green appearance-none cursor-pointer text-gray-900 dark:text-white">
                                 <option>Black</option>
                                 <option>White</option>
                                 <option>Silver</option>
@@ -78,7 +57,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Length Of Cable</label>
-                            <select class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-ev-green focus:border-ev-green appearance-none cursor-pointer">
+                            <select class="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-ev-green focus:border-ev-green appearance-none cursor-pointer text-gray-900 dark:text-white">
                                 <option>5m</option>
                                 <option>7m</option>
                                 <option>10m</option>
@@ -89,14 +68,14 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <label class="relative flex cursor-pointer group">
                                     <input type="radio" name="installation" value="no" class="peer sr-only" checked>
-                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white border border-gray-200 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30">
-                                        <span class="text-sm font-bold text-gray-900 group-hover:text-ev-green transition-colors peer-checked:text-ev-green">No</span>
+                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30">
+                                        <span class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-ev-green transition-colors peer-checked:text-ev-green">No</span>
                                     </div>
                                 </label>
                                 <label class="relative flex cursor-pointer group">
                                     <input type="radio" name="installation" value="yes" class="peer sr-only">
-                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white border border-gray-200 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30 text-center px-2">
-                                        <span class="text-sm font-bold text-gray-900 group-hover:text-ev-green transition-colors peer-checked:text-ev-green">Yes</span>
+                                    <div class="w-full flex flex-col items-center justify-center py-4 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-xl border-2 transition-all peer-checked:border-ev-green peer-checked:bg-ev-green/5 hover:border-ev-green/30 text-center px-2">
+                                        <span class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-ev-green transition-colors peer-checked:text-ev-green">Yes</span>
                                     </div>
                                 </label>
                             </div>
@@ -106,10 +85,10 @@
                     <!-- Quantity -->
                     <div x-data="{ count: 1 }">
                         <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Quantity</label>
-                        <div class="flex items-center w-32 border border-gray-200 rounded-lg overflow-hidden">
-                            <button @click="if(count > 1) count--" type="button" class="w-10 h-10 flex items-center justify-center hover:bg-gray-50">－</button>
-                            <input type="number" name="quantity" x-model="count" class="w-12 h-10 border-none text-center text-sm focus:ring-0">
-                            <button @click="count++" type="button" class="w-10 h-10 flex items-center justify-center hover:bg-gray-50">＋</button>
+                        <div class="flex items-center w-32 border border-gray-200 dark:border-white/10 rounded-lg overflow-hidden">
+                            <button @click="if(count > 1) count--" type="button" class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5">－</button>
+                            <input type="number" name="quantity" x-model="count" class="w-12 h-10 border-none text-center text-sm focus:ring-0 bg-transparent text-gray-900 dark:text-white">
+                            <button @click="count++" type="button" class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5">＋</button>
                         </div>
                     </div>
 
@@ -140,7 +119,7 @@
             </div>
         </div>
 
-        <div class="mt-24 max-w-4xl bg-gray-50/50 rounded-3xl p-8 md:p-12 border border-gray-100 prose prose-lg prose-green prose-headings:font-black prose-headings:tracking-tight">
+        <div class="mt-24 max-w-4xl bg-gray-50/50 dark:bg-white/5 rounded-3xl p-8 md:p-12 border border-gray-100 dark:border-white/5 prose prose-lg prose-green prose-headings:font-black prose-headings:tracking-tight dark:prose-invert">
             {!! $charger->description !!}
             
             <div class="mt-12 not-prose">
@@ -150,8 +129,5 @@
             </div>
         </div>
     </main>
+@endsection
 
-    @include('frontend.footer')
-
-</body>
-</html>

@@ -24,7 +24,7 @@
             @foreach($galleryItems as $item)
             <div class="swiper-slide cursor-pointer" onclick="openLightbox('{{ asset("storage/" . $item->image_path) }}', '{{ $item->title }}')">
                 <div class="relative group overflow-hidden rounded-[2rem] border border-white/10 aspect-[4/5]">
-                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 grayscale-[0.5] group-hover:grayscale-0">
+                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000">
                     
                     <!-- Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>

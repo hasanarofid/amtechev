@@ -1,32 +1,16 @@
-<!-- resources/views/frontend/catalog/index.blade.php -->
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Products – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
-    
-    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
-    <!-- AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
+@extends('frontend.layouts.app')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .text-muted { color: #6b7280; }
-        .filter-title { font-size: 0.875rem; font-weight: 600; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1rem; }
-        .product-card img { transition: transform 0.5s ease; }
-        .product-card:hover img { transform: scale(1.05); }
-    </style>
-</head>
-<body class="antialiased">
+@section('title', 'Products – ' . ($settings['site_title'] ?? 'AMTECH EV Specialist'))
 
-    @include('frontend.header')
+@push('styles')
+<style>
+    .filter-title { font-size: 0.875rem; font-weight: 600; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1rem; }
+    .product-card img { transition: transform 0.5s ease; }
+    .product-card:hover img { transform: scale(1.05); }
+</style>
+@endpush
 
+@section('content')
     <!-- Catalog Content -->
     <main class="max-w-7xl mx-auto px-6 lg:px-14 pt-32 pb-24">
         <h1 class="text-4xl font-bold mb-12">Products</h1>
@@ -92,15 +76,12 @@
                             </div>
                         </div>
                         <h3 class="text-sm font-medium mb-2 group-hover:underline leading-relaxed">{{ $charger->name }}</h3>
-                        <p class="text-gray-900 font-bold">{{ $charger->price }}</p>
+                        <p class="text-gray-900 font-bold dark:text-white">{{ $charger->price }}</p>
                     </a>
                     @endforeach
                 </div>
             </div>
         </div>
     </main>
+@endsection
 
-    @include('frontend.footer')
-
-</body>
-</html>

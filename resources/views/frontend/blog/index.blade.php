@@ -1,43 +1,28 @@
-<!-- resources/views/frontend/blog/index.blade.php -->
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blogs – {{ $settings['site_title'] ?? 'AMTECH EV Specialist' }}</title>
-    
-    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
-    <!-- AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
+@extends('frontend.layouts.app')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .hero-blog {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            padding: 140px 0 80px;
-            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('{{ asset('storage/ev_hero_bg_1773856111374.png') }}');
-            background-size: cover;
-            background-position: center;
-            text-align: center;
-        }
-        .post-card { border-bottom: 1px solid #f3f4f6; padding-bottom: 60px; margin-bottom: 60px; }
-        .post-card:last-child { border-bottom: none; }
-        .post-image { border-radius: 20px; overflow: hidden; transition: transform 0.5s ease; }
-        .post-card:hover .post-image { transform: translateY(-8px); }
-        .btn-read { display: inline-block; padding: 12px 32px; background-color: #22c55e; color: white; border-radius: 99px; font-weight: 700; font-size: 14px; transition: all 0.3s ease; }
-        .btn-read:hover { background-color: #16a34a; transform: translateX(5px); }
-    </style>
-</head>
-<body class="antialiased">
+@section('title', 'Blogs – ' . ($settings['site_title'] ?? 'AMTECH EV Specialist'))
 
-    @include('frontend.header')
+@push('styles')
+<style>
+    .hero-blog {
+        background-color: #0a0a0a;
+        color: #ffffff;
+        padding: 140px 0 80px;
+        background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('{{ asset('storage/ev_hero_bg_1773856111374.png') }}');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+    }
+    .post-card { border-bottom: 1px solid #f3f4f6; padding-bottom: 60px; margin-bottom: 60px; }
+    .post-card:last-child { border-bottom: none; }
+    .post-image { border-radius: 20px; overflow: hidden; transition: transform 0.5s ease; }
+    .post-card:hover .post-image { transform: translateY(-8px); }
+    .btn-read { display: inline-block; padding: 12px 32px; background-color: #22c55e; color: white; border-radius: 99px; font-weight: 700; font-size: 14px; transition: all 0.3s ease; }
+    .btn-read:hover { background-color: #16a34a; transform: translateX(5px); }
+</style>
+@endpush
 
+@section('content')
     <!-- Hero Section -->
     <section class="hero-blog">
         <div class="max-w-7xl mx-auto px-6 lg:px-14">
@@ -60,9 +45,9 @@
                     </div>
                     <div>
                         <div class="text-ev-green font-bold text-xs uppercase tracking-widest mb-4">Latest Update</div>
-                        <h2 class="text-3xl font-black mb-6 leading-tight">{{ $featured->title }}</h2>
+                        <h2 class="text-3xl font-black mb-6 leading-tight dark:text-white">{{ $featured->title }}</h2>
                         <div class="text-gray-400 text-sm mb-6">{{ $featured->created_at ? $featured->created_at->format('M d, Y') : 'Mar 21, 2026' }} • By Admin</div>
-                        <p class="text-gray-600 mb-8 line-clamp-3 leading-relaxed">
+                        <p class="text-gray-600 dark:text-gray-400 mb-8 line-clamp-3 leading-relaxed">
                             {{ Str::limit(strip_tags($featured->content), 200) }}
                         </p>
                         <a href="{{ route('blog.show', $featured->slug) }}" class="btn-read">Read Article</a>
@@ -73,15 +58,15 @@
             <!-- Posts Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12">
                 @foreach($posts->skip(1) as $post)
-                <div class="post-card">
+                <div class="post-card dark:border-white/5">
                     <div class="post-image aspect-[16/10] mb-8">
                         <img src="{{ str_starts_with($post->image_url, 'http') ? $post->image_url : asset('storage/' . $post->image_url) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
                     </div>
                     <div class="text-gray-400 text-xs mb-3">{{ $post->created_at ? $post->created_at->format('M d, Y') : 'Mar 21, 2026' }}</div>
                     <a href="{{ route('blog.show', $post->slug) }}">
-                        <h3 class="text-xl font-bold mb-4 line-clamp-2 hover:text-ev-green transition-colors cursor-pointer">{{ $post->title }}</h3>
+                        <h3 class="text-xl font-bold mb-4 line-clamp-2 hover:text-ev-green transition-colors cursor-pointer dark:text-white">{{ $post->title }}</h3>
                     </a>
-                    <p class="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2 leading-relaxed">
                         {{ Str::limit(strip_tags($post->content), 120) }}
                     </p>
                     <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center gap-2 text-ev-green font-bold text-sm group">
@@ -97,8 +82,5 @@
             </div>
         @endif
     </main>
+@endsection
 
-    @include('frontend.footer')
-
-</body>
-</html>

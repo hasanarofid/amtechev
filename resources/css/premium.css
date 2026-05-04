@@ -30,6 +30,20 @@
     .slot-page, .booking-page {
         background: var(--bg-color);
     }
+
+    /* Force visibility on dark sections in light theme */
+    .bg-black, .bg-ev-dark, .hero-bg, .hero-contact, .hero-installation, .hero-booking {
+        color: #ffffff !important;
+    }
+    .bg-black h1, .bg-black h2, .bg-black h3, .bg-black h4, .bg-black p, .bg-black span:not(.text-ev-green),
+    .bg-ev-dark h1, .bg-ev-dark h2, .bg-ev-dark h3, .bg-ev-dark h4, .bg-ev-dark p, .bg-ev-dark span:not(.text-ev-green),
+    .hero-bg h1, .hero-bg h2, .hero-bg h3, .hero-bg h4, .hero-bg p, .hero-bg span:not(.text-ev-green),
+    .hero-contact h1, .hero-contact h2, .hero-contact h3, .hero-contact h4, .hero-contact p, .hero-contact span:not(.text-ev-green) {
+        color: #ffffff !important;
+    }
+    .bg-black .text-gray-400, .bg-ev-dark .text-gray-400, .hero-bg .text-gray-400 {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
 }
 
 body {
