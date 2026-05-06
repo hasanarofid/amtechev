@@ -2,6 +2,10 @@
 
 @section('title', $charger->name . ' – ' . ($settings['site_title'] ?? 'AMTECH EV Specialist'))
 
+@section('meta_description', Str::limit(strip_tags($charger->description), 160))
+@section('meta_keywords', $charger->name . ', EV Charger, ' . ($charger->brand->name ?? 'AMTECH') . ', Jual EV Charger Malaysia')
+@section('og_image', str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url))
+
 @section('content')
     <main class="max-w-7xl mx-auto px-6 lg:px-14 pt-32 pb-24">
         <!-- Breadcrumbs -->

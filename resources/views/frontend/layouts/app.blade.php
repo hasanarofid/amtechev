@@ -7,6 +7,26 @@
     
     <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
     
+    <!-- SEO & Meta Tags -->
+    <meta name="description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia. Expert installation and high-quality EV chargers for your home and business.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'EV Charger Malaysia, Electric Vehicle Charging, AMTECH EV, Home EV Charging, EV Installation Malaysia')">
+    <meta name="author" content="AMTECH EV Specialist">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'AMTECH EV Specialist')">
+    <meta property="og:description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
+    <meta property="og:image" content="@yield('og_image', asset('logo/logo.png'))">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'AMTECH EV Specialist')">
+    <meta property="twitter:description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
+    <meta property="twitter:image" content="@yield('og_image', asset('logo/logo.png'))">
+    
     <!-- AdSense Script -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8508864005334643" crossorigin="anonymous"></script>

@@ -2,6 +2,9 @@
 
 @section('title', ($settings['site_title'] ?? 'AMTECH EV Specialist') . ' – Best Value EV Charging Solutions in Malaysia')
 
+@section('meta_description', 'AMTECH EV Specialist menyediakan solusi pengisian daya kendaraan listrik (EV) terbaik di Malaysia. Kami melayani instalasi EV charger profesional untuk rumah dan bisnis.')
+@section('meta_keywords', 'EV Charger Malaysia, Instalasi EV Charger, AMTECH EV, Pengisian Mobil Listrik, EV Charging Station Malaysia')
+
 @push('styles')
 <style>
     .hero-bg {

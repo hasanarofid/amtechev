@@ -18,6 +18,7 @@ Route::get('/fix-blog-paths', function() {
     return "Updated $count posts! You can now go back to the blog.";
 });
 
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
  Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
  Route::get('/ref/{code}', [App\Http\Controllers\AffiliateTrackingController::class, 'track'])->name('affiliate.track');

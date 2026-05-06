@@ -2,6 +2,9 @@
 
 @section('title', 'Price Estimator & Book - AMTECH EV Specialist')
 
+@section('meta_description', 'Gunakan Estimator Harga AMTECH EV untuk menghitung biaya instalasi charger mobil listrik Anda secara instan. Pilih paket dan jadwal instalasi dengan mudah.')
+@section('meta_keywords', 'Estimator Harga EV Charger, Biaya Instalasi EV Charger, Booking Instalasi EV, AMTECH EV Malaysia')
+
 @push('styles')
 <style>
     /* ── Page Shell ──────────────────────────────────────────── */

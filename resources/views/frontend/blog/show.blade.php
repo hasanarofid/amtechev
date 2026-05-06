@@ -13,24 +13,11 @@
 </style>
 @endpush
 
+@section('meta_description', Str::limit(strip_tags($post->excerpt ?? $post->content), 160))
+@section('og_image', $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url))) : asset('logo/amtech-removebg.png'))
+
 @push('head')
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="{{ $post->title }}">
-    <meta name="description" content="{{ Str::limit(strip_tags($post->excerpt ?? $post->content), 160) }}">
-
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="{{ $post->title }}">
-    <meta property="og:description" content="{{ Str::limit(strip_tags($post->excerpt ?? $post->content), 160) }}">
-    <meta property="og:image" content="{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url))) : asset('logo/amtech-removebg.png') }}">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="{{ $post->title }}">
-    <meta property="twitter:description" content="{{ Str::limit(strip_tags($post->excerpt ?? $post->content), 160) }}">
-    <meta property="twitter:image" content="{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url))) : asset('logo/amtech-removebg.png') }}">
 @endpush
 
 @section('content')
