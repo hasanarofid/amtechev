@@ -21,11 +21,33 @@ class BlogPostResource extends Resource
     public static function form(Schema $form): Schema
     {
         return $form->schema([
-            Forms\Components\TextInput::make('title')->required()->live(onBlur: true)->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
-            Forms\Components\TextInput::make('slug')->required()->unique(BlogPost::class, 'slug', ignoreRecord: true),
-            Forms\Components\RichEditor::make('content')->required()->columnSpanFull(),
-            Forms\Components\FileUpload::make('image_url')->image()->disk('public'),
+            Forms\Components\TextInput::make('title')
+                ->label('Title (English)')
+                ->required()
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+            Forms\Components\TextInput::make('title_ms')
+                ->label('Title (Malaysia)'),
+            Forms\Components\TextInput::make('slug')
+                ->required()
+                ->unique(BlogPost::class, 'slug', ignoreRecord: true),
             Forms\Components\DateTimePicker::make('published_at'),
+            Forms\Components\FileUpload::make('image_url')
+                ->image()
+                ->disk('public'),
+            Forms\Components\Textarea::make('excerpt')
+                ->label('Excerpt (English)')
+                ->columnSpanFull(),
+            Forms\Components\Textarea::make('excerpt_ms')
+                ->label('Excerpt (Malaysia)')
+                ->columnSpanFull(),
+            Forms\Components\RichEditor::make('content')
+                ->label('Content (English)')
+                ->required()
+                ->columnSpanFull(),
+            Forms\Components\RichEditor::make('content_ms')
+                ->label('Content (Malaysia)')
+                ->columnSpanFull(),
         ]);
     }
 

@@ -113,8 +113,11 @@ class BlogPostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_ms' => 'nullable|string|max:255',
             'excerpt' => 'nullable|string',
+            'excerpt_ms' => 'nullable|string',
             'content' => 'required|string',
+            'content_ms' => 'nullable|string',
             'image_file' => 'nullable|image|max:2048',
             'category' => 'nullable|string',
             'author_name' => 'required|string',
@@ -146,8 +149,11 @@ class BlogPostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_ms' => 'nullable|string|max:255',
             'excerpt' => 'nullable|string',
+            'excerpt_ms' => 'nullable|string',
             'content' => 'required|string',
+            'content_ms' => 'nullable|string',
             'image_file' => 'nullable|image|max:2048',
             'category' => 'nullable|string',
             'author_name' => 'required|string',

@@ -49,7 +49,7 @@
                         <h2 class="text-3xl font-black mb-6 leading-tight dark:text-white">{{ $featured->title }}</h2>
                         <div class="text-gray-400 text-sm mb-6">{{ $featured->created_at ? $featured->created_at->format('M d, Y') : 'Mar 21, 2026' }} • By Admin</div>
                         <p class="text-gray-600 dark:text-gray-400 mb-8 line-clamp-3 leading-relaxed">
-                            {{ Str::limit(strip_tags($featured->content), 200) }}
+                            {{ $featured->excerpt ?? Str::limit(strip_tags($featured->content), 200) }}
                         </p>
                         <a href="{{ route('blog.show', $featured->slug) }}" class="btn-read">Read Article</a>
                     </div>
@@ -71,7 +71,7 @@
                         <h3 class="text-xl font-bold mb-4 line-clamp-2 hover:text-ev-green transition-colors cursor-pointer dark:text-white">{{ $post->title }}</h3>
                     </a>
                     <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-2 leading-relaxed">
-                        {{ Str::limit(strip_tags($post->content), 120) }}
+                        {{ $post->excerpt ?? Str::limit(strip_tags($post->content), 120) }}
                     </p>
                     <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center gap-2 text-ev-green font-bold text-sm group">
                         Read more
