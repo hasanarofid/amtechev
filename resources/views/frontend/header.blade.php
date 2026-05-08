@@ -2,10 +2,15 @@
     mobileMenuOpen: false, 
     cartOpen: {{ session('open_cart') ? 'true' : 'false' }} 
 }" @keydown.escape="cartOpen = false" class="relative">
-    <!-- Overlay for Cart Drawer Background -->
-    <div x-show="cartOpen" @click="cartOpen = false" class="fixed inset-0 bg-black/40 z-[90] backdrop-blur-sm" style="display: none;"></div>
+    <!-- Top Bar Registration Badge -->
+    <div class="fixed top-0 left-0 w-full z-[60] bg-[#FFD700] text-black py-1.5 px-4 text-center">
+        <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            Registration No: 202503227566 (JM1030181-M)
+        </p>
+    </div>
 
-    <nav class="fixed top-0 left-0 w-full z-50 px-4 md:px-14 py-4 md:py-5 flex justify-between items-center bg-white/80 dark:bg-black/60 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-300">
+    <nav class="fixed top-8 left-0 w-full z-50 px-4 md:px-14 py-4 md:py-5 flex justify-between items-center bg-white/80 dark:bg-black/60 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 transition-all duration-300">
         <a href="{{ route('home') }}" class="flex items-center gap-2 md:gap-3 group cursor-pointer">
             <div class="relative">
                 <div class="absolute -inset-2 bg-ev-green/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -147,7 +152,7 @@
         <div class="absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-md" @click="mobileMenuOpen = false"></div>
         
         <!-- Menu Content -->
-        <div class="relative bg-white/95 dark:bg-black/90 border-b border-gray-200 dark:border-white/10 pt-24 pb-10 px-6">
+        <div class="relative bg-white/95 dark:bg-black/90 border-b border-gray-200 dark:border-white/10 pt-32 pb-10 px-6">
             <div class="flex flex-col gap-6 text-center">
                 <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('home') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Home

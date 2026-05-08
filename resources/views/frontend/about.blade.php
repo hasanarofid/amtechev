@@ -14,13 +14,9 @@
                     <p>
                         {{ $settings['about_content_2'] ?? 'We take pride in clean, precise workmanship — every installation is done with attention to detail, ensuring a neat and professional finish.' }}
                     </p>
-                    <div class="flex items-center gap-3 pt-4">
-                        <div class="px-3 py-1 bg-ev-green/10 border border-ev-green/20 rounded-lg flex items-center gap-2">
-                            <svg class="w-4 h-4 text-ev-green" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-xs font-bold text-white uppercase tracking-wider">SSM Registered</span>
-                        </div>
-                        <a href="{{ asset('documents/AmliftSSMCert.pdf') }}" target="_blank" class="text-xs text-gray-500 hover:text-ev-green underline transition-colors">View Certification</a>
-                    </div>
+                    <p class="text-ev-green font-bold">
+                        {{ $settings['about_highlight'] ?? 'Installation is just one part - We take care of the full process.' }}
+                    </p>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
