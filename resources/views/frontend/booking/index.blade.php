@@ -591,7 +591,7 @@
                 </div>
             </div>
 
-            {{-- ══ COLUMN 3: Summary & Form ════════════════════════ --}}
+            {{-- ══ COLUMN 3: Summary & CTA ════════════════════════ --}}
             <div class="lg:col-span-3">
                 <div class="sticky top-32 space-y-5">
 
@@ -624,17 +624,22 @@
                         </div>
                     </div>
 
-                    {{-- Client Form --}}
+                    {{-- Step indicator --}}
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0 0.25rem;">
+                        <div style="width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:#000;flex-shrink:0;">1</div>
+                        <div style="flex:1;height:2px;background:var(--glass-border);border-radius:99px;">
+                            <div style="height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s ease;"
+                                :style="'width:' + (selectedItems.length > 0 && selectedDate ? '100' : selectedItems.length > 0 ? '50' : '0') + '%'"></div>
+                        </div>
+                        <div style="width:1.5rem;height:1.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;flex-shrink:0;transition:all 0.3s;"
+                            :style="selectedItems.length > 0 && selectedDate ? 'background:var(--accent);color:#000;' : 'background:var(--glass-border);color:var(--text-muted);'">2</div>
+                    </div>
+
+                    {{-- CTA Card --}}
                     <div class="book-card">
-                        <form action="{{ route('booking.store') }}" method="POST" class="space-y-3">
+                        <form action="{{ route('booking.checkout') }}" method="POST" id="proceed-form">
                             @csrf
                             <input type="hidden" name="preferred_date" :value="selectedDate">
-
-                            {{-- Honeypot --}}
-                            <div style="display: none;">
-                                <input type="text" name="_website_url" tabindex="-1" autocomplete="off">
-                            </div>
-
                             <template x-for="(item, index) in selectedItems" :key="item.id">
                                 <div>
                                     <input type="hidden" :name="'items['+index+'][id]'" :value="item.id">
@@ -642,26 +647,42 @@
                                 </div>
                             </template>
 
-                            <input type="text" name="customer_name" class="book-input" placeholder="Full Name" required value="{{ old('customer_name') }}">
-                            <input type="tel" name="phone_number" class="book-input" placeholder="WhatsApp Number" required value="{{ old('phone_number') }}">
-                            <input type="email" name="email" class="book-input" placeholder="Email Address" required value="{{ old('email') }}">
-                            <textarea name="address" class="book-input" placeholder="Installation Address..." rows="2" required>{{ old('address') }}</textarea>
-                            <textarea name="notes" class="book-input" placeholder="Additional Notes (Optional)..." rows="2">{{ old('notes') }}</textarea>
+                            {{-- Status hints --}}
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center gap-2 text-xs"
+                                    :style="selectedItems.length > 0 ? 'color:var(--accent);' : 'color:var(--text-muted);'">
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            :d="selectedItems.length > 0 ? 'M5 13l4 4L19 7' : 'M12 5v14M5 12h14'"/>
+                                    </svg>
+                                    <span x-text="selectedItems.length > 0 ? selectedItems.length + ' item(s) selected' : 'Select at least 1 package'"></span>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs"
+                                    :style="selectedDate ? 'color:var(--accent);' : 'color:var(--text-muted);'">
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            :d="selectedDate ? 'M5 13l4 4L19 7' : 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'"/>
+                                    </svg>
+                                    <span x-text="selectedDate ? formatDate(selectedDate) : 'Choose an installation date'"></span>
+                                </div>
+                            </div>
 
                             <button type="submit"
                                 class="book-btn"
-                                :disabled="selectedItems.length === 0 || !selectedDate">
+                                :disabled="selectedItems.length === 0 || !selectedDate"
+                                @click.prevent="selectedItems.length > 0 && selectedDate && $el.closest('form').submit()">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                                 </svg>
-                                <span x-text="!selectedDate ? 'Select a Date First' : selectedItems.length === 0 ? 'Pick a Package' : 'Book Now'"></span>
+                                <span x-text="selectedItems.length === 0 ? 'Pick a Package First' : !selectedDate ? 'Choose a Date First' : 'Proceed to Payment →'"></span>
                             </button>
 
-                            <p class="text-[9px] text-center font-medium" style="color: var(--text-muted);">
-                                Our team will confirm your booking via WhatsApp within 24 hours.
+                            <p class="text-[9px] text-center font-medium mt-3" style="color: var(--text-muted);">
+                                Next: Enter your details & choose payment method
                             </p>
                         </form>
                     </div>
+
                 </div>
             </div>
 

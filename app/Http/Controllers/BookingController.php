@@ -13,9 +13,23 @@ use App\Models\AffiliateCommission;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\BookingNotification;
+use Webimpian\BayarcashSdk\Bayarcash;
 
 class BookingController extends Controller
 {
+    protected $bayarcash;
+
+    public function __construct()
+    {
+        // Robust cleaning: trim whitespace and surrounding quotes
+        $token = trim(config('services.bayarcash.api_token') ?? '', " \t\n\r\0\x0B\"'");
+        $this->bayarcash = new Bayarcash($token);
+        if (config('services.bayarcash.environment') === 'sandbox') {
+            $this->bayarcash->useSandbox();
+        }
+        $this->bayarcash->setApiVersion('v2');
+    }
+
     public function index()
     {
         $packages = InstallationPackage::where('is_active', true)
@@ -25,6 +39,54 @@ class BookingController extends Controller
         $settings = SiteSetting::all()->pluck('value', 'key');
         
         return view('frontend.booking.index', compact('packages', 'settings'));
+    }
+
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'preferred_date' => 'required|date|after:today',
+            'items'          => 'required|array|min:1',
+            'items.*.id'     => 'required|exists:installation_packages,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        // Resolve full package info for the session
+        $resolvedItems = [];
+        $totalPrice    = 0;
+        foreach ($request->items as $item) {
+            $pkg = InstallationPackage::find($item['id']);
+            if (!$pkg) continue;
+            $qty   = (int) $item['quantity'];
+            $price = (float) $pkg->price;
+            $resolvedItems[] = [
+                'id'       => $pkg->id,
+                'name'     => $pkg->name,
+                'price'    => $price,
+                'quantity' => $qty,
+            ];
+            $totalPrice += $price * $qty;
+        }
+
+        session(['booking_draft' => [
+            'items'          => $resolvedItems,
+            'preferred_date' => $request->preferred_date,
+            'total_price'    => $totalPrice,
+        ]]);
+
+        return redirect()->route('booking.payment');
+    }
+
+    public function paymentPage()
+    {
+        $draft = session('booking_draft');
+        if (!$draft) {
+            return redirect()->route('booking.index')
+                ->with('error', 'Please select a package and date first.');
+        }
+
+        $settings = SiteSetting::all()->pluck('value', 'key');
+
+        return view('frontend.booking.payment', compact('draft', 'settings'));
     }
 
     public function store(Request $request)
@@ -41,6 +103,7 @@ class BookingController extends Controller
             'email' => 'required|email|max:255',
             'address' => 'required|string|min:10',
             'preferred_date' => 'required|date|after:today',
+            'payment_method' => 'required|string|in:fpx,card,whatsapp',
             'items' => 'required|array',
             'items.*.id' => [
                 'required',
@@ -66,6 +129,9 @@ class BookingController extends Controller
             'preferred_date' => $validated['preferred_date'],
             'notes' => $validated['notes'] ?? null,
             'status' => 'Pending',
+            'payment_method' => $validated['payment_method'],
+            'payment_status' => 'pending',
+            'order_number' => 'BOK-' . strtoupper(uniqid()),
         ]);
 
         $totalPrice = 0;
@@ -84,29 +150,44 @@ class BookingController extends Controller
 
         $booking->update(['total_price' => $totalPrice]);
 
-        // Affiliate Commission logic
-        if ($booking->affiliate_id && $totalPrice > 0) {
-            $affiliate = $booking->affiliate;
-            $commissionAmount = $totalPrice * ($affiliate->commission_rate / 100);
+        // If online payment, initiate Bayarcash
+        if (in_array($validated['payment_method'], ['fpx', 'card'])) {
+            $data = [
+                'portal_key'             => config('services.bayarcash.portal_key'),
+                'order_number'           => $booking->order_number,
+                'amount'                 => $totalPrice,
+                'payer_name'             => $booking->customer_name,
+                'payer_email'            => $booking->email,
+                'payer_telephone_number' => $booking->phone_number,
+                'callback_url'           => route('booking.callback'),
+                'return_url'             => route('booking.success', ['order' => $booking->order_number]),
+            ];
 
-            $commission = AffiliateCommission::create([
-                'affiliate_id' => $affiliate->id,
-                'booking_id' => $booking->id,
-                'amount' => $commissionAmount,
-                'status' => 'pending',
-            ]);
+            // Generate Checksum
+            $checksum = $this->bayarcash->createPaymentIntentChecksumValue(config('services.bayarcash.secret_key'), $data);
+            $data['checksum'] = $checksum;
 
-            // Send Commission Email
             try {
-                \Illuminate\Support\Facades\Mail::to($affiliate->user->email)
-                    ->cc(['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'])
-                    ->send(new \App\Mail\AffiliateCommissionEarned($commission));
+                $response = $this->bayarcash->createPaymentIntent($data);
+                if ($response && isset($response->url)) {
+                    $booking->update([
+                        'payment_url' => $response->url,
+                        'bayarcash_transaction_id' => $response->id ?? null,
+                    ]);
+
+                    session()->forget('booking_draft');
+                    return redirect($response->url);
+                } else {
+                    Log::error('Bayar Cash Booking Error: ' . json_encode($response));
+                    return back()->with('error', 'Failed to initiate payment. Please try again.');
+                }
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Failed to send commission email for booking: ' . $e->getMessage());
+                Log::error('Bayar Cash Booking Exception: ' . $e->getMessage());
+                return back()->with('error', 'An error occurred while processing your payment.');
             }
         }
 
-        // Send Email Notification
+        // WhatsApp / Manual Booking
         try {
             $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
             $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
@@ -115,10 +196,60 @@ class BookingController extends Controller
                 ->cc($ccEmails)
                 ->send(new BookingNotification($booking));
         } catch (\Exception $e) {
-            // Log the error but don't break the user experience
             Log::error('Booking Email failed: ' . $e->getMessage());
         }
 
-        return back()->with('success', 'Thank you! Your booking request for RM' . number_format($totalPrice, 2) . ' has been submitted successfully.');
+        session()->forget('booking_draft');
+        return redirect()->route('booking.index')->with('success', 'Thank you! Your booking request for RM' . number_format($totalPrice, 2) . ' has been submitted successfully.');
+    }
+
+    public function callback(Request $request)
+    {
+        Log::info('Bayar Cash Booking Callback Received: ', $request->all());
+
+        $orderNumber = $request->input('order_number');
+        if (!$orderNumber) {
+            return response()->json(['message' => 'Order number missing'], 400);
+        }
+
+        $booking = Booking::where('order_number', $orderNumber)->first();
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+
+        $status = $request->input('status'); // e.g., 'paid', 'failed'
+        
+        if ($status === 'paid' && $booking->payment_status !== 'paid') {
+            $booking->update([
+                'payment_status' => 'paid',
+                'status' => 'confirmed',
+            ]);
+
+            // Send Notification Email again if needed or similar
+            try {
+                $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
+                $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
+
+                Mail::to($toEmail)
+                    ->cc($ccEmails)
+                    ->send(new BookingNotification($booking));
+            } catch (\Exception $e) {
+                Log::error('Booking Confirmation Email failed: ' . $e->getMessage());
+            }
+        } elseif ($status === 'failed') {
+            $booking->update(['payment_status' => 'failed']);
+        }
+
+        return response()->json(['message' => 'OK']);
+    }
+
+    public function success(Request $request)
+    {
+        $orderNumber = $request->query('order');
+        $booking = Booking::where('order_number', $orderNumber)->with('items')->firstOrFail();
+        
+        $settings = SiteSetting::all()->pluck('value', 'key');
+        
+        return view('frontend.booking_success', compact('booking', 'settings'));
     }
 }

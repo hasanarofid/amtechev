@@ -19,17 +19,21 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <!-- Image Gallery -->
-            <div class="flex flex-col-reverse md:flex-row gap-4" x-data="{ activeImage: '{{ str_starts_with($charger->image_url, 'http') ? $charger->image_url : asset('storage/' . $charger->image_url) }}' }">
+            @php
+                $rawImages = $charger->images ?? [$charger->image_url ?: 'ev_charger_product_1773856128972.png'];
+                $resolvedImages = collect($rawImages)->map(function($img) {
+                    return str_starts_with($img, 'http') ? $img : asset('storage/' . $img);
+                })->values()->all();
+                $firstImage = $resolvedImages[0] ?? '';
+            @endphp
+            <div class="flex flex-col-reverse md:flex-row gap-4" x-data="{ activeImage: '{{ $firstImage }}' }">
                 <!-- Thumbnails -->
                 <div class="flex md:flex-col gap-4 w-full md:w-20 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
-                    @php
-                        $images = $charger->images ?? [$charger->image_url ?: asset('storage/ev_charger_product_1773856128972.png')];
-                    @endphp
-                    @foreach($images as $image)
-                    <div @click="activeImage = '{{ $image }}'" 
-                         :class="activeImage === '{{ $image }}' ? 'border-ev-green' : 'border-gray-100'"
+                    @foreach($resolvedImages as $resolvedImage)
+                    <div @click="activeImage = '{{ $resolvedImage }}'" 
+                         :class="activeImage === '{{ $resolvedImage }}' ? 'border-ev-green' : 'border-gray-100'"
                          class="aspect-square bg-gray-50 dark:bg-white/5 rounded-lg overflow-hidden border cursor-pointer hover:border-ev-green transition-colors p-2 shrink-0 w-20 h-20">
-                        <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}" class="w-full h-full object-contain">
+                        <img src="{{ $resolvedImage }}" class="w-full h-full object-contain">
                     </div>
                     @endforeach
                 </div>

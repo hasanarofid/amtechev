@@ -75,8 +75,8 @@
                                 <span class="bg-white px-6 py-2 rounded-full text-xs font-bold shadow-lg">View Details</span>
                             </div>
                         </div>
-                        <h3 class="text-sm font-medium mb-2 group-hover:underline leading-relaxed">{{ $charger->name }}</h3>
-                        <p class="text-gray-900 font-bold dark:text-white">{{ $charger->price }}</p>
+                        <h3 class="text-sm font-medium mb-2 group-hover:underline leading-relaxed text-gray-900 dark:text-white">{{ $charger->name }}</h3>
+                        <p class="font-bold text-gray-900 dark:text-white">{{ $charger->price }}</p>
                     </a>
                     @endforeach
                 </div>
