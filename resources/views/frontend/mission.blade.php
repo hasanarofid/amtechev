@@ -38,3 +38,115 @@
         </div>
     </div>
 </section>
+
+{{-- ===== AS SEEN IN / PRESS SECTION ===== --}}
+<section id="press" class="relative py-20 overflow-hidden" style="background: linear-gradient(180deg, #000000 0%, #030f05 50%, #000000 100%);">
+
+    {{-- Ambient glow --}}
+    <div class="absolute inset-0 pointer-events-none">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:200px;background:radial-gradient(ellipse,rgba(34,197,94,0.08) 0%,transparent 70%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-14 relative z-10">
+
+        {{-- Top label --}}
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-3 mb-5">
+                <div style="height:1px;width:40px;background:rgba(34,197,94,0.5);"></div>
+                <span style="color:#22c55e;font-size:0.7rem;font-weight:800;letter-spacing:0.35em;text-transform:uppercase;">Media Coverage</span>
+                <div style="height:1px;width:40px;background:rgba(34,197,94,0.5);"></div>
+            </div>
+            <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;color:#ffffff;line-height:1.2;margin-bottom:1rem;">
+                Recognised by leading local media outlets such as
+                <span style="color:#22c55e;">NST &amp; SAYS</span>
+            </h2>
+            <p style="color:#9ca3af;font-size:1rem;max-width:580px;margin:0 auto;line-height:1.7;">
+                AMTECH EV has been recognised by leading local media outlets such as <strong style="color:#d1fae5;">NST &amp; SAYS</strong> for contributing insights and expertise in Malaysia's growing EV charging industry.
+            </p>
+        </div>
+
+        {{-- Press Logo Cards --}}
+        <div class="press-cards-wrapper" style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;align-items:center;margin-bottom:3rem;">
+
+            {{-- NEW STRAITS TIMES --}}
+            <div class="press-card" style="
+                display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;
+                background:rgba(255,255,255,0.03);
+                border:1px solid rgba(34,197,94,0.15);
+                border-radius:1.5rem;
+                padding:2rem 2.5rem;
+                min-width:220px;
+                transition:all 0.4s ease;
+                cursor:default;
+            " onmouseover="this.style.borderColor='rgba(34,197,94,0.5)';this.style.background='rgba(34,197,94,0.05)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 40px rgba(34,197,94,0.1)'"
+               onmouseout="this.style.borderColor='rgba(34,197,94,0.15)';this.style.background='rgba(255,255,255,0.03)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                {{-- NST Logo --}}
+                <img src="{{ asset('nst3.png') }}" alt="New Straits Times" style="height:50px;width:auto;object-fit:contain;filter:brightness(0) invert(1);">
+                <div class="press-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:999px;border:1px solid rgba(34,197,94,0.3);">
+                    As Featured In
+                </div>
+            </div>
+
+            {{-- SAYS.COM --}}
+            <div class="press-card" style="
+                display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;
+                background:rgba(255,255,255,0.03);
+                border:1px solid rgba(34,197,94,0.15);
+                border-radius:1.5rem;
+                padding:2rem 2.5rem;
+                min-width:220px;
+                transition:all 0.4s ease;
+                cursor:default;
+            " onmouseover="this.style.borderColor='rgba(34,197,94,0.5)';this.style.background='rgba(34,197,94,0.05)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 40px rgba(34,197,94,0.1)'"
+               onmouseout="this.style.borderColor='rgba(34,197,94,0.15)';this.style.background='rgba(255,255,255,0.03)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                {{-- Says.com Logo --}}
+                <img src="{{ asset('says.png') }}" alt="Says.com" style="height:50px;width:auto;object-fit:contain;filter:brightness(0) invert(1);">
+                <div class="press-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:999px;border:1px solid rgba(34,197,94,0.3);">
+                    As Featured In
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Bottom Trust Bar --}}
+        <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:2rem;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;align-items:center;">
+            @php
+                $trustPoints = [
+                    ['icon'=>'🏆','text'=>'Award-Worthy Service'],
+                    ['icon'=>'🔌','text'=>'500+ EV Chargers Installed'],
+                    ['icon'=>'🛡️','text'=>'Licensed & Insured Installer'],
+                    ['icon'=>'⭐','text'=>'5-Star Rated by Customers'],
+                ];
+            @endphp
+            @foreach($trustPoints as $tp)
+                <div style="display:flex;align-items:center;gap:0.5rem;color:#9ca3af;font-size:0.8rem;font-weight:600;">
+                    <span style="font-size:1rem;">{{ $tp['icon'] }}</span>
+                    <span>{{ $tp['text'] }}</span>
+                </div>
+            @endforeach
+        </div>
+
+    </div>
+
+    {{-- Scroll-reveal animation script (scoped) --}}
+    <style>
+        .press-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: pressCardReveal 0.7s ease forwards;
+        }
+        .press-card:nth-child(1) { animation-delay: 0.1s; }
+        .press-card:nth-child(2) { animation-delay: 0.3s; }
+
+        @keyframes pressCardReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 640px) {
+            .press-cards-wrapper { flex-direction: column; align-items: center; }
+            .press-card { width: 100%; max-width: 300px; }
+        }
+    </style>
+
+</section>
+

@@ -212,7 +212,7 @@
                         <a href="#">Terms of service</a>
                         <a href="#">Contact</a>
                     </div>
-                    <p class="text-[10px] text-gray-400 uppercase font-black">developer by <a href="https://hasanarofid.site" class="text-ev-green hover:underline">hasanarofid.site</a></p>
+                    <!-- <p class="text-[10px] text-gray-400 uppercase font-black">developer by <a href="https://hasanarofid.site" class="text-ev-green hover:underline">hasanarofid.site</a></p> -->
                 </footer>
             </div>
         </div>

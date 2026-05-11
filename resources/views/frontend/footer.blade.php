@@ -44,8 +44,7 @@
                 
                 <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6 text-xs text-gray-500 uppercase tracking-widest">
                     <p>{{ $settings['footer_copyright'] ?? '© 2026 AMTECH EV Specialist. All rights reserved.' }}</p>
-                    <div class="hidden md:block w-px h-3 bg-white/10"></div>
-                    <p>developer by <a href="https://hasanarofid.site" class="text-ev-green hover:text-white transition-colors">hasanarofid.site</a></p>
+
                 </div>
             </div>
             <div class="flex gap-8 font-bold">
