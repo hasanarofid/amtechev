@@ -61,7 +61,9 @@ class GeminiService
                 $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
                 
                 if ($text) {
-                    return json_decode($text, true);
+                    Log::debug('Gemini Raw Response: ' . $text);
+                    $decoded = json_decode($text, true);
+                    return is_array($decoded) ? $decoded : null;
                 } else {
                     Log::error('Gemini API Error: No content returned in response. Full response: ' . json_encode($data));
                 }

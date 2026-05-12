@@ -71,6 +71,15 @@ class BlogPostController extends Controller
             $aiContent = $gemini->generateContent($context);
             
             if ($aiContent) {
+                // Validate required keys
+                $requiredKeys = ['title', 'excerpt', 'content', 'title_ms', 'excerpt_ms', 'content_ms'];
+                $missingKeys = array_filter($requiredKeys, fn($key) => !isset($aiContent[$key]));
+
+                if (!empty($missingKeys)) {
+                    \Log::error("Gemini content missing keys for image {$img}: " . implode(', ', $missingKeys));
+                    continue;
+                }
+
                 $parts = explode('-', explode('.', $img)[0]);
                 $dateStr = end($parts) ?? date('dmY');
                 
