@@ -10,7 +10,7 @@ class InstallationPackageController extends Controller
 {
     public function index()
     {
-        $packages = InstallationPackage::orderBy('category')->orderBy('sort_order')->get();
+        $packages = InstallationPackage::orderBy('sort_order')->orderBy('category')->get();
         return view('admin.installation-packages.index', compact('packages'));
     }
 

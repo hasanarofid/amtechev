@@ -34,6 +34,7 @@ class BookingController extends Controller
     {
         $packages = InstallationPackage::where('is_active', true)
             ->orderBy('sort_order')
+            ->orderBy('category')
             ->get();
             
         $settings = SiteSetting::all()->pluck('value', 'key');
