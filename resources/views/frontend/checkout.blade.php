@@ -142,6 +142,7 @@
                                     <option value="SEL" {{ $userState === 'SEL' ? 'selected' : '' }}>Selangor</option>
                                     <option value="JHR" {{ $userState === 'JHR' ? 'selected' : '' }}>Johor</option>
                                     <option value="PEN" {{ $userState === 'PEN' ? 'selected' : '' }}>Penang</option>
+                                    <option value="NSN" {{ $userState === 'NSN' ? 'selected' : '' }}>Negeri Sembilan</option>
                                 </select>
                             </div>
                         </div>
