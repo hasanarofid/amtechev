@@ -54,7 +54,7 @@ Route::middleware(['auth'])->prefix('affiliate')->group(function () {
  })->name('checkout');
 
  Route::post('/checkout', [App\Http\Controllers\Frontend\CheckoutController::class, 'process'])->name('checkout.process');
- Route::get('/checkout/success', [App\Http\Controllers\Frontend\CheckoutController::class, 'success'])->name('checkout.success');
+  Route::match(['get', 'post'], '/checkout/success', [App\Http\Controllers\Frontend\CheckoutController::class, 'success'])->name('checkout.success');
  Route::post('/checkout/callback', [App\Http\Controllers\Frontend\CheckoutController::class, 'callback'])->name('checkout.callback');
  Route::get('/checkout/status/{order}', [App\Http\Controllers\Frontend\CheckoutController::class, 'checkStatus'])->name('checkout.status');
 
@@ -95,7 +95,7 @@ Route::middleware(['auth'])->prefix('affiliate')->group(function () {
   Route::post('/booking/checkout', [App\Http\Controllers\BookingController::class, 'checkout'])->name('booking.checkout');
   Route::get('/booking/payment', [App\Http\Controllers\BookingController::class, 'paymentPage'])->name('booking.payment');
   Route::post('/booking/callback', [App\Http\Controllers\BookingController::class, 'callback'])->name('booking.callback');
-  Route::get('/booking/success', [App\Http\Controllers\BookingController::class, 'success'])->name('booking.success');
+  Route::match(['get', 'post'], '/booking/success', [App\Http\Controllers\BookingController::class, 'success'])->name('booking.success');
   Route::get('/api/booking-availability', [App\Http\Controllers\BookingAvailabilityController::class, 'index'])->name('api.booking-availability');
 
 Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController::class, 'store'])->name('contact.store');

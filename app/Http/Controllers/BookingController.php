@@ -271,7 +271,7 @@ class BookingController extends Controller
 
     public function success(Request $request)
     {
-        $orderNumber = $request->query('order');
+        $orderNumber = $request->input('order');
         $booking = Booking::where('order_number', $orderNumber)->with('items')->firstOrFail();
         
         $settings = SiteSetting::all()->pluck('value', 'key');

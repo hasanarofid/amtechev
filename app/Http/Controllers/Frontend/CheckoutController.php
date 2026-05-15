@@ -271,7 +271,7 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
-        $orderNumber = $request->query('order');
+        $orderNumber = $request->input('order');
         $order = Order::where('order_number', $orderNumber)->with('items')->firstOrFail();
         
         // Final fallback to send email if callback was missed or delayed
