@@ -233,7 +233,21 @@
                             <h3 class="text-xs font-bold text-gray-900 leading-snug truncate">{{ $item['name'] }}</h3>
                             <p class="text-[10px] font-black whitespace-nowrap">RM{{ number_format($itemTotal, 2) }} MYR</p>
                         </div>
-                        <p class="text-[10px] text-gray-500 mb-3">RM{{ number_format($price, 2) }} MYR</p>
+                        <p class="text-[10px] text-gray-500 mb-2">RM{{ number_format($price, 2) }} MYR</p>
+                        
+                        @if(isset($item['attributes']['type']) && $item['attributes']['type'] === 'booking')
+                            <div class="mb-3 space-y-1">
+                                <p class="text-[9px] text-ev-green font-bold flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    Preferred Date: {{ $item['attributes']['preferred_date'] }}
+                                </p>
+                                <ul class="text-[8px] text-gray-400 list-disc list-inside">
+                                    @foreach($item['attributes']['items'] as $subItem)
+                                        <li>{{ $subItem['name'] }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         
                         <div class="flex items-center justify-between">
                             <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden h-8">

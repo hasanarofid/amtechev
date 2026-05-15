@@ -16,24 +16,22 @@ use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
-    protected $bayarcash;
-
     public function __construct()
     {
-        // Robust cleaning: trim whitespace and surrounding quotes
-        $token = trim(config('services.bayarcash.api_token') ?? '', " \t\n\r\0\x0B\"'");
-        
-        Log::info('Bayar Cash Token Initialization:', [
-            'raw_length' => strlen(config('services.bayarcash.api_token') ?? ''),
-            'cleaned_length' => strlen($token),
-            'environment' => config('services.bayarcash.environment')
-        ]);
-
-        $this->bayarcash = new Bayarcash($token);
-        if (config('services.bayarcash.environment') === 'sandbox') {
+        $this->bayarcash = new Bayarcash($this->getConfig('api_token'));
+        if ($this->getConfig('environment') === 'sandbox') {
             $this->bayarcash->useSandbox();
         }
         $this->bayarcash->setApiVersion('v2');
+    }
+
+    /**
+     * Helper to get cleaned config values
+     */
+    private function getConfig($key)
+    {
+        $value = config("services.bayarcash.$key") ?? '';
+        return trim($value, " \t\n\r\0\x0B\"'");
     }
 
     public function process(Request $request)
@@ -112,17 +110,13 @@ class CheckoutController extends Controller
                 'price' => $price,
                 'subtotal' => $price * (int)($item['quantity'] ?? 1),
                 'image' => $item['image'] ?? null,
-                'attributes' => [
-                    'color' => $item['color'] ?? null,
-                    'cable_length' => $item['cable_length'] ?? null,
-                    'installation' => $item['installation'] ?? null,
-                ]
+                'attributes' => $item['attributes'] ?? []
             ]);
         }
 
         // Prepare Bayar Cash Data
         $data = [
-            'portal_key'             => config('services.bayarcash.portal_key'),
+            'portal_key'             => $this->getConfig('portal_key'),
             'order_number'           => $order->order_number,
             'amount'                 => $total,
             'payer_name'             => $request->first_name . ' ' . $request->last_name,
@@ -133,7 +127,7 @@ class CheckoutController extends Controller
         ];
 
         // Generate Checksum
-        $checksum = $this->bayarcash->createPaymentIntentChecksumValue(config('services.bayarcash.secret_key'), $data);
+        $checksum = $this->bayarcash->createPaymentIntentChecksumValue($this->getConfig('secret_key'), $data);
         $data['checksum'] = $checksum;
 
         Log::info('Bayar Cash Payment Request Data: ', $data);
@@ -229,6 +223,44 @@ class CheckoutController extends Controller
                 Log::info('Invoice email sent for order: ' . $order->order_number);
             } catch (\Exception $e) {
                 Log::error('Failed to send invoice email: ' . $e->getMessage());
+            }
+
+            // Sync with Bookings if there's an installation item
+            foreach ($order->items as $item) {
+                if (isset($item->attributes['type']) && $item->attributes['type'] === 'booking') {
+                    try {
+                        $booking = \App\Models\Booking::create([
+                            'affiliate_id' => $order->affiliate_id,
+                            'customer_name' => $order->customer_first_name . ' ' . $order->customer_last_name,
+                            'phone_number' => $order->customer_phone,
+                            'email' => $order->customer_email,
+                            'address' => $order->customer_address . ', ' . $order->customer_city . ', ' . $order->customer_postcode . ', ' . $order->customer_state,
+                            'preferred_date' => $item->attributes['preferred_date'] ?? now()->addDays(7)->format('Y-m-d'),
+                            'status' => 'pending',
+                            'payment_method' => 'bayarcash',
+                            'payment_status' => 'paid',
+                            'order_number' => $order->order_number,
+                            'total_price' => $item->subtotal,
+                            'notes' => 'Created from unified checkout. Original Order: ' . $order->order_number,
+                        ]);
+
+                        // Save Booking Items
+                        if (isset($item->attributes['items'])) {
+                            foreach ($item->attributes['items'] as $subItem) {
+                                \App\Models\BookingItem::create([
+                                    'booking_id' => $booking->id,
+                                    'installation_package_id' => $subItem['id'],
+                                    'quantity' => $subItem['quantity'],
+                                    'price_at_booking' => $subItem['price'],
+                                ]);
+                            }
+                        }
+
+                        Log::info('Booking record created from order: ' . $order->order_number);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to create booking record from order: ' . $e->getMessage());
+                    }
+                }
             }
         } elseif ($status === 'failed') {
             $order->update(['payment_status' => 'failed']);

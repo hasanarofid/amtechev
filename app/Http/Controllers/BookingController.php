@@ -17,17 +17,22 @@ use Webimpian\BayarcashSdk\Bayarcash;
 
 class BookingController extends Controller
 {
-    protected $bayarcash;
-
     public function __construct()
     {
-        // Robust cleaning: trim whitespace and surrounding quotes
-        $token = trim(config('services.bayarcash.api_token') ?? '', " \t\n\r\0\x0B\"'");
-        $this->bayarcash = new Bayarcash($token);
-        if (config('services.bayarcash.environment') === 'sandbox') {
+        $this->bayarcash = new Bayarcash($this->getConfig('api_token'));
+        if ($this->getConfig('environment') === 'sandbox') {
             $this->bayarcash->useSandbox();
         }
         $this->bayarcash->setApiVersion('v2');
+    }
+
+    /**
+     * Helper to get cleaned config values
+     */
+    private function getConfig($key)
+    {
+        $value = config("services.bayarcash.$key") ?? '';
+        return trim($value, " \t\n\r\0\x0B\"'");
     }
 
     public function index()
@@ -68,13 +73,28 @@ class BookingController extends Controller
             $totalPrice += $price * $qty;
         }
 
-        session(['booking_draft' => [
-            'items'          => $resolvedItems,
-            'preferred_date' => $request->preferred_date,
-            'total_price'    => $totalPrice,
-        ]]);
+        // Add to standard cart instead of separate flow
+        $cart = session()->get('cart', []);
+        
+        // We use a fixed key 'booking_estimate' to ensure only one installation plan at a time
+        $cart['booking_estimate'] = [
+            'id' => 'booking_estimate',
+            'name' => 'EV Charger Installation - ' . ($resolvedItems[0]['name'] ?? 'Custom Plan'),
+            'quantity' => 1,
+            'price' => $totalPrice,
+            'image' => asset('storage/ev_charger_product_1773856128972.png'),
+            'attributes' => [
+                'type' => 'booking',
+                'preferred_date' => $request->preferred_date,
+                'items' => $resolvedItems,
+            ]
+        ];
+        
+        session()->put('cart', $cart);
 
-        return redirect()->route('booking.payment');
+        return redirect()->back()
+            ->with('success', 'Installation plan added to your cart!')
+            ->with('open_cart', true);
     }
 
     public function paymentPage()
@@ -153,8 +173,9 @@ class BookingController extends Controller
 
         // If online payment, initiate Bayarcash
         if (in_array($validated['payment_method'], ['fpx', 'card'])) {
+            // Prepare Bayar Cash Data
             $data = [
-                'portal_key'             => config('services.bayarcash.portal_key'),
+                'portal_key'             => $this->getConfig('portal_key'),
                 'order_number'           => $booking->order_number,
                 'amount'                 => $totalPrice,
                 'payer_name'             => $booking->customer_name,
@@ -165,11 +186,15 @@ class BookingController extends Controller
             ];
 
             // Generate Checksum
-            $checksum = $this->bayarcash->createPaymentIntentChecksumValue(config('services.bayarcash.secret_key'), $data);
+            $checksum = $this->bayarcash->createPaymentIntentChecksumValue($this->getConfig('secret_key'), $data);
             $data['checksum'] = $checksum;
+
+            Log::info('Bayar Cash Booking Request Data: ', $data);
 
             try {
                 $response = $this->bayarcash->createPaymentIntent($data);
+                Log::info('Bayar Cash Booking Response: ', (array) $response);
+
                 if ($response && isset($response->url)) {
                     $booking->update([
                         'payment_url' => $response->url,

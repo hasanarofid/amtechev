@@ -312,7 +312,13 @@
 
                 for (let i = 1; i <= lastDay.getDate(); i++) {
                     const d = new Date(this.currentYear, this.currentMonth, i);
-                    days.push({ dateStr: this.formatYMD(d), dayNum: i, isOtherMonth: false, disabled: d < today });
+                    // Disable today and past dates to match server validation (after:today)
+                    days.push({ 
+                        dateStr: this.formatYMD(d), 
+                        dayNum: i, 
+                        isOtherMonth: false, 
+                        disabled: d <= today 
+                    });
                 }
 
                 const remaining = 42 - days.length;
@@ -416,6 +422,24 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span class="font-bold text-sm" style="color: var(--accent);">{{ session('success') }}</span>
+        </div>
+        @endif
+
+        @if(session('error') || $errors->any())
+        <div class="mb-8 p-5 rounded-2xl space-y-2" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);">
+            <div class="flex items-center gap-4">
+                <svg class="w-6 h-6 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-bold text-sm text-red-500">{{ session('error') ?: 'There were some issues with your selection.' }}</span>
+            </div>
+            @if($errors->any())
+            <ul class="ml-10 list-disc text-xs font-medium text-red-400/80">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            @endif
         </div>
         @endif
 
@@ -674,7 +698,7 @@
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                                 </svg>
-                                <span x-text="selectedItems.length === 0 ? 'Pick a Package First' : !selectedDate ? 'Choose a Date First' : 'Proceed to Payment →'"></span>
+                                <span x-text="selectedItems.length === 0 ? 'Pick a Package First' : !selectedDate ? 'Choose a Date First' : 'Add Installation to Cart →'"></span>
                             </button>
 
                             <p class="text-[9px] text-center font-medium mt-3" style="color: var(--text-muted);">
