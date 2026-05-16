@@ -120,10 +120,26 @@
     <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
+    @if(config('analytics.gtm_id'))
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ config('analytics.gtm_id') }}');</script>
+    <!-- End Google Tag Manager -->
+    @endif
+
     @stack('styles')
     @stack('head')
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-white dark:selection:text-black bg-gray-50 dark:bg-[#030303] text-gray-900 dark:text-white transition-colors duration-300">
+    @if(config('analytics.gtm_id'))
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @endif
 
     @include('frontend.header')
 

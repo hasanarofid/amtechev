@@ -60,4 +60,24 @@
             </div>
         </div>
     </div>
+    <script>
+        window.addEventListener('load', function() {
+            if (window.amtechTracking) {
+                window.amtechTracking.pushEvent('booking_complete', {
+                    'transaction_id': '{{ $booking->order_number }}',
+                    'value': {{ $booking->total_price }},
+                    'currency': 'MYR',
+                    'items': [
+                        @foreach($booking->items as $item)
+                        {
+                            'item_name': '{{ $item->installationPackage->name ?? "Package" }}',
+                            'price': {{ $item->price_at_booking }},
+                            'quantity': {{ $item->quantity }}
+                        },
+                        @endforeach
+                    ]
+                });
+            }
+        });
+    </script>
 @endsection

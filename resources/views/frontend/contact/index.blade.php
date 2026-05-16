@@ -57,6 +57,15 @@
                 <div class="mb-10 p-6 bg-ev-green/10 border border-ev-green/20 rounded-2xl text-ev-green font-bold text-center animate-bounce-subtle">
                     {{ session('success') }}
                 </div>
+                <script>
+                    window.addEventListener('load', function() {
+                        if (window.amtechTracking) {
+                            window.amtechTracking.pushEvent('form_submission', {
+                                'form_name': 'Contact Us'
+                            });
+                        }
+                    });
+                </script>
             @endif
 
             @if($errors->any())

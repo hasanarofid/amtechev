@@ -56,5 +56,25 @@
             </div>
         </div>
     </div>
+    <script>
+        window.addEventListener('load', function() {
+            if (window.amtechTracking) {
+                window.amtechTracking.pushEvent('purchase', {
+                    'transaction_id': '{{ $order->order_number }}',
+                    'value': {{ $order->total_price }},
+                    'currency': 'MYR',
+                    'items': [
+                        @foreach($order->items as $item)
+                        {
+                            'item_name': '{{ $item->product_name }}',
+                            'price': {{ $item->price_at_order ?? ($item->subtotal / $item->quantity) }},
+                            'quantity': {{ $item->quantity }}
+                        },
+                        @endforeach
+                    ]
+                });
+            }
+        });
+    </script>
 @endsection
 
