@@ -11,6 +11,16 @@
         <meta name="description" content="Amtech EV Specialist - Leading EV infrastructure and system management in Malaysia. Reliable, scalable, and enterprise-grade solutions.">
         <link rel="canonical" href="https://amtechev.com{{ Request::getPathInfo() }}">
 
+        @if(config('analytics.gtm_id'))
+            <!-- Google Tag Manager -->
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','{{ config('analytics.gtm_id') }}');</script>
+            <!-- End Google Tag Manager -->
+        @endif
+
         <!-- GEO Tags -->
         <meta name="geo.region" content="MY-14" />
         <meta name="geo.placename" content="Kuala Lumpur" />
@@ -50,6 +60,12 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2266174054387048" crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased text-main bg-black min-h-screen relative overflow-x-hidden">
+        @if(config('analytics.gtm_id'))
+            <!-- Google Tag Manager (noscript) -->
+            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+            <!-- End Google Tag Manager (noscript) -->
+        @endif
         <!-- Dynamic Background -->
         <div class="fixed inset-0 z-[-1]">
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ $background ?? asset('bg/member-login.png') }}');"></div>
