@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @if(config('analytics.gtm_id'))
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '{{ config('analytics.gtm_id') }}');</script>
+        <!-- End Google Tag Manager -->
+    @endif
+
     <title>@yield('title', 'AMTECH EV Specialist') – Best Value EV Charging Solutions in Malaysia</title>
-    
+
     <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
-    
+
     <!-- SEO & Meta Tags -->
-    <meta name="description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia. Expert installation and high-quality EV chargers for your home and business.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'EV Charger Malaysia, Electric Vehicle Charging, AMTECH EV, Home EV Charging, EV Installation Malaysia')">
+    <meta name="description"
+        content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia. Expert installation and high-quality EV chargers for your home and business.')">
+    <meta name="keywords"
+        content="@yield('meta_keywords', 'EV Charger Malaysia, Electric Vehicle Charging, AMTECH EV, Home EV Charging, EV Installation Malaysia')">
     <meta name="author" content="AMTECH EV Specialist">
     <link rel="canonical" href="{{ url()->current() }}">
 
@@ -17,19 +34,22 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'AMTECH EV Specialist')">
-    <meta property="og:description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
+    <meta property="og:description"
+        content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
     <meta property="og:image" content="@yield('og_image', asset('logo/logo.png'))">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', 'AMTECH EV Specialist')">
-    <meta property="twitter:description" content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
+    <meta property="twitter:description"
+        content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia.')">
     <meta property="twitter:image" content="@yield('og_image', asset('logo/logo.png'))">
-    
+
     <!-- AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8508864005334643" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861"
+        crossorigin="anonymous"></script>
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8508864005334643" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7011966334577062" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8237299120114346" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5709110142652608" crossorigin="anonymous"></script>
@@ -48,15 +68,16 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1217506959699866" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8084033310853758" crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2266174054387048" crossorigin="anonymous"></script>
-    
+     -->
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     <script>
         // Check local storage for theme preference or system preference
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -68,17 +89,21 @@
         }
     </script>
 
-    
+
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
         .hero-bg {
-            background-image: 
+            background-image:
                 linear-gradient(to bottom, rgba(3, 3, 3, 0.7) 0%, rgba(3, 3, 3, 0.4) 50%, rgba(3, 3, 3, 0.9) 100%),
                 url("{{ (isset($settings['hero_image']) && $settings['hero_image']) ? (Str::startsWith($settings['hero_image'], 'settings/') ? asset('storage/' . $settings['hero_image']) : asset($settings['hero_image'])) : asset('technical_analysis.jpg') }}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
+
         .btn-ev {
             padding: 1rem 2.5rem;
             background-color: #22c55e;
@@ -92,53 +117,65 @@
             box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
             display: inline-block;
         }
+
         .ev-card {
             background-color: #0a0a0a;
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 2.5rem;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
+
         .glassmorphism {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .text-ev-green { color: #22c55e; }
-        .bg-ev-green { background-color: #22c55e; }
+
+        .text-ev-green {
+            color: #22c55e;
+        }
+
+        .bg-ev-green {
+            background-color: #22c55e;
+        }
+
         .font-outline-2 {
             -webkit-text-stroke: 1px currentColor;
             -webkit-text-fill-color: transparent;
         }
+
         @keyframes reveal {
-            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
         }
+
         .animate-reveal {
             animation: reveal 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
     </style>
     <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    
-    @if(config('analytics.gtm_id'))
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','{{ config('analytics.gtm_id') }}');</script>
-    <!-- End Google Tag Manager -->
-    @endif
 
     @stack('styles')
     @stack('head')
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-white dark:selection:text-black bg-gray-50 dark:bg-[#030303] text-gray-900 dark:text-white transition-colors duration-300">
+
+<body
+    class="antialiased overflow-x-hidden selection:bg-ev-green selection:text-white dark:selection:text-black bg-gray-50 dark:bg-[#030303] text-gray-900 dark:text-white transition-colors duration-300">
     @if(config('analytics.gtm_id'))
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}" height="0"
+                width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
     @endif
 
     @include('frontend.header')
@@ -154,4 +191,5 @@
 
     @stack('scripts')
 </body>
+
 </html>

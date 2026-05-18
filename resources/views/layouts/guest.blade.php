@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ?? 'Welcome' }} | Amtech EV Specialist</title>
-        <meta name="description" content="Amtech EV Specialist - Leading EV infrastructure and system management in Malaysia. Reliable, scalable, and enterprise-grade solutions.">
-        <link rel="canonical" href="https://amtechev.com{{ Request::getPathInfo() }}">
+    @if(config('analytics.gtm_id'))
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '{{ config('analytics.gtm_id') }}');</script>
+        <!-- End Google Tag Manager -->
+    @endif
 
-        @if(config('analytics.gtm_id'))
-            <!-- Google Tag Manager -->
-            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','{{ config('analytics.gtm_id') }}');</script>
-            <!-- End Google Tag Manager -->
-        @endif
+    <link rel="icon" type="image/png" href="{{ asset('logo/amtech-removebg.png') }}">
 
-        <!-- GEO Tags -->
-        <meta name="geo.region" content="MY-14" />
-        <meta name="geo.placename" content="Kuala Lumpur" />
-        <meta name="geo.position" content="3.139003;101.686855" />
-        <meta name="ICBM" content="3.139003, 101.686855" />
+    <title>{{ $title ?? 'Welcome' }} | Amtech EV Specialist</title>
+    <meta name="description"
+        content="Amtech EV Specialist - Leading EV infrastructure and system management in Malaysia. Reliable, scalable, and enterprise-grade solutions.">
+    <link rel="canonical" href="https://amtechev.com{{ Request::getPathInfo() }}">
 
-        <!-- Schema Markup removed temporarily to fix ParseError -->
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- GEO Tags -->
+    <meta name="geo.region" content="MY-14" />
+    <meta name="geo.placename" content="Kuala Lumpur" />
+    <meta name="geo.position" content="3.139003;101.686855" />
+    <meta name="ICBM" content="3.139003, 101.686855" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/css/premium.css', 'resources/js/app.js'])
-        
-        <!-- AdSense Script -->
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861" crossorigin="anonymous"></script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8508864005334643" crossorigin="anonymous"></script>
+    <!-- Schema Markup removed temporarily to fix ParseError -->
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/css/premium.css', 'resources/js/app.js'])
+
+    <!-- AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7190047001129861"
+        crossorigin="anonymous"></script>
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8508864005334643" crossorigin="anonymous"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7011966334577062" crossorigin="anonymous"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8237299120114346" crossorigin="anonymous"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5709110142652608" crossorigin="anonymous"></script>
@@ -57,32 +65,35 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2267794952392779" crossorigin="anonymous"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1217506959699866" crossorigin="anonymous"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8084033310853758" crossorigin="anonymous"></script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2266174054387048" crossorigin="anonymous"></script>
-    </head>
-    <body class="font-sans antialiased text-main bg-black min-h-screen relative overflow-x-hidden">
-        @if(config('analytics.gtm_id'))
-            <!-- Google Tag Manager (noscript) -->
-            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-            <!-- End Google Tag Manager (noscript) -->
-        @endif
-        <!-- Dynamic Background -->
-        <div class="fixed inset-0 z-[-1]">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ $background ?? asset('bg/member-login.png') }}');"></div>
-            <div class="absolute inset-0 bg-white/20 backdrop-blur-[2px]"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2266174054387048" crossorigin="anonymous"></script> -->
+</head>
+
+<body class="font-sans antialiased text-main bg-black min-h-screen relative overflow-x-hidden">
+    @if(config('analytics.gtm_id'))
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('analytics.gtm_id') }}" height="0"
+                width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    @endif
+    <!-- Dynamic Background -->
+    <div class="fixed inset-0 z-[-1]">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style="background-image: url('{{ $background ?? asset('bg/member-login.png') }}');"></div>
+        <div class="absolute inset-0 bg-white/20 backdrop-blur-[2px]"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+    </div>
+
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+        <div class="mb-8">
+            <a href="/">
+                <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-16 w-auto">
+            </a>
         </div>
 
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-            <div class="mb-8">
-                <a href="/">
-                    <img src="/logo/amtech-removebg.png" alt="Amtech EV Logo" class="h-16 w-auto">
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-4xl mt-6 px-8 py-10 glass-card animate-fade-in">
-                {{ $slot }}
-            </div>
+        <div class="w-full sm:max-w-4xl mt-6 px-8 py-10 glass-card animate-fade-in">
+            {{ $slot }}
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
