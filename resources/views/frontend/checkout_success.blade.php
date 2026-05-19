@@ -58,6 +58,32 @@
     </div>
     <script>
         window.addEventListener('load', function() {
+            window.dataLayer = window.dataLayer || [];
+            
+            // Clear the previous ecommerce object to prevent data pollution in GA4
+            window.dataLayer.push({ ecommerce: null });
+            
+            // Push standard GA4 E-commerce Purchase event
+            window.dataLayer.push({
+                'event': 'purchase',
+                'ecommerce': {
+                    'transaction_id': '{{ $order->order_number }}',
+                    'value': {{ $order->total_price }},
+                    'currency': 'MYR',
+                    'items': [
+                        @foreach($order->items as $item)
+                        {
+                            'item_id': '{{ $item->id ?? "" }}',
+                            'item_name': '{{ $item->product_name }}',
+                            'price': {{ $item->price ?? ($item->subtotal / $item->quantity) }},
+                            'quantity': {{ $item->quantity }}
+                        },
+                        @endforeach
+                    ]
+                }
+            });
+
+            // Legacy tracking event
             if (window.amtechTracking) {
                 window.amtechTracking.pushEvent('purchase', {
                     'transaction_id': '{{ $order->order_number }}',
@@ -67,7 +93,7 @@
                         @foreach($order->items as $item)
                         {
                             'item_name': '{{ $item->product_name }}',
-                            'price': {{ $item->price_at_order ?? ($item->subtotal / $item->quantity) }},
+                            'price': {{ $item->price ?? ($item->subtotal / $item->quantity) }},
                             'quantity': {{ $item->quantity }}
                         },
                         @endforeach

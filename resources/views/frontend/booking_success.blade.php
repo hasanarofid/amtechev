@@ -62,6 +62,32 @@
     </div>
     <script>
         window.addEventListener('load', function() {
+            window.dataLayer = window.dataLayer || [];
+            
+            // Clear the previous ecommerce object to prevent data pollution in GA4
+            window.dataLayer.push({ ecommerce: null });
+            
+            // Push standard GA4 E-commerce Purchase event
+            window.dataLayer.push({
+                'event': 'purchase',
+                'ecommerce': {
+                    'transaction_id': '{{ $booking->order_number }}',
+                    'value': {{ $booking->total_price }},
+                    'currency': 'MYR',
+                    'items': [
+                        @foreach($booking->items as $item)
+                        {
+                            'item_id': '{{ $item->installation_package_id ?? "" }}',
+                            'item_name': '{{ $item->installationPackage->name ?? "Package" }}',
+                            'price': {{ $item->price_at_booking }},
+                            'quantity': {{ $item->quantity }}
+                        },
+                        @endforeach
+                    ]
+                }
+            });
+
+            // Legacy booking_complete event for existing GTM tags
             if (window.amtechTracking) {
                 window.amtechTracking.pushEvent('booking_complete', {
                     'transaction_id': '{{ $booking->order_number }}',
