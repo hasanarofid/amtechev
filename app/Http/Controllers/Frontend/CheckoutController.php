@@ -44,7 +44,7 @@ class CheckoutController extends Controller
         $request->validate([
             'email' => 'required|email',
             'first_name' => 'nullable|string',
-            'last_name' => 'required|string',
+            'last_name' => 'nullable|string',
             'address' => 'required|string',
             'city' => 'required|string',
             'postcode' => 'required|string',

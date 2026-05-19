@@ -11,7 +11,7 @@ const tracking = {
             'event': eventName,
             ...eventParams
         });
-        if (process.env.NODE_ENV !== 'production') {
+        if (!import.meta.env.PROD) {
             console.log('Tracking Event:', eventName, eventParams);
         }
     },

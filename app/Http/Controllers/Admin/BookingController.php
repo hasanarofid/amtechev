@@ -49,7 +49,7 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'customer_name' => 'required|string|min:3|max:255',
-            'phone_number' => 'required|string|min:10|max:20',
+            'phone_number' => 'required|string|min:9|max:20',
             'email' => 'required|email|max:255',
             'address' => 'required|string|min:10',
             'preferred_date' => 'required|date|after:today',
@@ -133,7 +133,7 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'customer_name' => 'required|string|min:3|max:255',
-            'phone_number' => 'required|string|min:10|max:20',
+            'phone_number' => 'required|string|min:9|max:20',
             'email' => 'required|email|max:255',
             'address' => 'required|string|min:10',
             'preferred_date' => 'required|date',
