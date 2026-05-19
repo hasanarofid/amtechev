@@ -14,5 +14,11 @@
             </div>
             @endforeach
         </div>
+
+        <div class="mt-16 flex justify-center">
+            <a href="{{ route('catalog') }}" class="px-10 py-4 border-2 border-ev-green text-ev-green hover:bg-ev-green hover:text-black rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300">
+                All Products
+            </a>
+        </div>
     </div>
 </section>
