@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Google Ads Analytics - Amtech EV</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e8f0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1f35,#0d1b2a);border-bottom:1px solid rgba(99,179,237,.15);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.5rem;font-weight:800;background:linear-gradient(90deg,#63b3ed,#9f7aea);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:.82rem;color:#718096;margin-top:4px}
+.badge{background:rgba(99,179,237,.1);border:1px solid rgba(99,179,237,.3);color:#63b3ed;padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:600}
+.container{max-width:1280px;margin:0 auto;padding:28px 20px}
+
+/* CRITICAL ALERT */
+.critical{background:linear-gradient(135deg,rgba(245,101,101,.12),rgba(245,101,101,.04));border:1px solid rgba(245,101,101,.45);border-radius:14px;padding:20px 24px;margin-bottom:28px;display:flex;gap:16px;align-items:flex-start}
+.critical h3{color:#fc8181;font-size:1rem;font-weight:700;margin-bottom:6px}
+.critical p{color:#feb2b2;font-size:.83rem;line-height:1.7}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.kpi{background:#141929;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .2s}
+.kpi:hover{transform:translateY(-3px)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.blue::before{background:linear-gradient(90deg,#63b3ed,#4299e1)}
+.kpi.purple::before{background:linear-gradient(90deg,#9f7aea,#805ad5)}
+.kpi.red::before{background:linear-gradient(90deg,#fc8181,#e53e3e)}
+.kpi.orange::before{background:linear-gradient(90deg,#f6ad55,#dd6b20)}
+.kpi.green::before{background:linear-gradient(90deg,#68d391,#38a169)}
+.kpi-icon{font-size:1.6rem;margin-bottom:10px}
+.kpi-label{font-size:.72rem;color:#718096;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.kpi-value{font-size:2rem;font-weight:800;margin:4px 0}
+.kpi.blue .kpi-value{color:#63b3ed}
+.kpi.purple .kpi-value{color:#9f7aea}
+.kpi.red .kpi-value{color:#fc8181}
+.kpi.orange .kpi-value{color:#f6ad55}
+.kpi.green .kpi-value{color:#68d391}
+.kpi-sub{font-size:.74rem;color:#4a5568}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{background:#141929;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 18px;font-size:.82rem;font-weight:600;color:#718096;cursor:pointer;transition:all .2s}
+.tab.active{background:rgba(99,179,237,.15);border-color:rgba(99,179,237,.4);color:#63b3ed}
+
+/* Panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* Cards */
+.card{background:#141929;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:24px;margin-bottom:24px}
+.section-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Table */
+table{width:100%;border-collapse:collapse}
+th{background:rgba(99,179,237,.08);color:#63b3ed;font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:11px 14px;text-align:left}
+td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.85rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* Status badge */
+.sbadge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:600}
+.sbadge.active{background:rgba(104,211,145,.15);color:#68d391}
+.sbadge.zero{background:rgba(245,101,101,.15);color:#fc8181}
+
+/* Funnel */
+.funnel-step{display:grid;grid-template-columns:170px 1fr 60px;align-items:center;gap:14px;margin-bottom:10px}
+.fbar-wrap{background:rgba(255,255,255,.05);border-radius:6px;height:32px;overflow:hidden}
+.fbar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-size:.8rem;font-weight:600;color:#fff}
+
+/* Keyword list */
+.kw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.kw-item{background:rgba(159,122,234,.07);border:1px solid rgba(159,122,234,.2);border-radius:8px;padding:10px 14px;font-size:.8rem;color:#b794f4;display:flex;align-items:center;gap:8px}
+.kw-item::before{content:'🔑';font-size:.9rem}
+
+/* Reco */
+.reco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.reco{background:#141929;border:1px solid rgba(255,255,255,.06);border-left:4px solid;border-radius:12px;padding:18px}
+.reco.r{border-left-color:#fc8181}.reco.r h4{color:#fc8181}
+.reco.o{border-left-color:#f6ad55}.reco.o h4{color:#f6ad55}
+.reco.b{border-left-color:#63b3ed}.reco.b h4{color:#63b3ed}
+.reco.g{border-left-color:#68d391}.reco.g h4{color:#68d391}
+.reco h4{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.reco p{font-size:.79rem;color:#718096;line-height:1.6}
+.reco-icon{font-size:1.3rem;margin-bottom:8px}
+
+footer{text-align:center;padding:20px;color:#4a5568;font-size:.75rem;border-top:1px solid rgba(255,255,255,.04);margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>📊 Google Ads Analytics — Amtech EV</h1>
+    <p>Kampanye: Search-1 &nbsp;|&nbsp; Periode: 23 Apr – 20 Mei 2026 (28 hari)</p>
+  </div>
+  <span class="badge">Live Report</span>
+</div>
+
+<div class="container">
+
+  <div class="critical">
+    <div style="font-size:2rem">🚨</div>
+    <div>
+      <h3>Iklan Aktif Tapi ZERO Tayangan — Budget Tidak Terpakai</h3>
+      <p>Selama 28 hari kampanye berjalan, <strong>0 klik, 0 tayangan, Rp0 biaya terpakai</strong>. Iklan tidak pernah muncul di hasil pencarian. Ini bukan masalah konversi — iklan bahkan belum tayang. Kemungkinan: budget terlalu rendah, bid terlalu rendah, atau masalah kualitas iklan/landing page.</p>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi blue"><div class="kpi-icon">👁️</div><div class="kpi-label">Total Tayangan</div><div class="kpi-value">0</div><div class="kpi-sub">28 hari kampanye</div></div>
+    <div class="kpi red"><div class="kpi-icon">🖱️</div><div class="kpi-label">Total Klik</div><div class="kpi-value">0</div><div class="kpi-sub">CTR: 0%</div></div>
+    <div class="kpi orange"><div class="kpi-icon">💸</div><div class="kpi-label">Biaya Terpakai</div><div class="kpi-value">Rp0</div><div class="kpi-sub">Budget terbuang: Rp0</div></div>
+    <div class="kpi purple"><div class="kpi-icon">🔑</div><div class="kpi-label">Kata Kunci</div><div class="kpi-value">27</div><div class="kpi-sub">Semua aktif, 0 tayangan</div></div>
+    <div class="kpi red"><div class="kpi-icon">🛒</div><div class="kpi-label">Konversi</div><div class="kpi-value">0</div><div class="kpi-sub">GA4 Funnel: 0 pembelian</div></div>
+    <div class="kpi green"><div class="kpi-icon">📊</div><div class="kpi-label">Status Kampanye</div><div class="kpi-value" style="font-size:1.1rem;padding-top:4px">Aktif</div><div class="kpi-sub">Search-1 — running</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('funnel',this)">🔽 Funnel GA4</div>
+    <div class="tab" onclick="showTab('timeline',this)">📅 Deret Waktu</div>
+    <div class="tab" onclick="showTab('keywords',this)">🔑 Kata Kunci</div>
+    <div class="tab" onclick="showTab('rekomendasi',this)">💡 Rekomendasi</div>
+  </div>
+
+  <!-- PANEL: Funnel GA4 -->
+  <div class="panel active" id="panel-funnel">
+    <div class="card">
+      <div class="section-title">🔽 Funnel Konversi (GA4 — 21 Apr–18 Mei 2026)</div>
+      <div style="margin-bottom:20px">
+        <div class="funnel-step">
+          <div style="font-size:.8rem;color:#a0aec0">1. Buka Situs</div>
+          <div class="fbar-wrap"><div class="fbar" style="width:100%;background:linear-gradient(90deg,#4299e1,#63b3ed)">36 pengguna</div></div>
+          <div style="font-weight:700;color:#63b3ed">36</div>
+        </div>
+        <div class="funnel-step">
+          <div style="font-size:.8rem;color:#a0aec0">2. Memulai Sesi</div>
+          <div class="fbar-wrap"><div class="fbar" style="width:100%;background:linear-gradient(90deg,#9f7aea,#b794f4)">36 pengguna</div></div>
+          <div style="font-weight:700;color:#9f7aea">36</div>
+        </div>
+        <div class="funnel-step">
+          <div style="font-size:.8rem;color:#a0aec0">3. Melihat Halaman</div>
+          <div class="fbar-wrap"><div class="fbar" style="width:100%;background:linear-gradient(90deg,#f6ad55,#fbd38d)">36 → abandon 100%</div></div>
+          <div style="font-weight:700;color:#f6ad55">36</div>
+        </div>
+        <div class="funnel-step">
+          <div style="font-size:.8rem;color:#a0aec0">4. Pembelian</div>
+          <div class="fbar-wrap"><div class="fbar" style="width:2%;background:linear-gradient(90deg,#e53e3e,#fc8181)"></div></div>
+          <div style="font-weight:700;color:#fc8181">0 ❌</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <canvas id="funnelChart" style="max-height:220px"></canvas>
+        <canvas id="deviceChart" style="max-height:220px"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: Deret Waktu -->
+  <div class="panel" id="panel-timeline">
+    <div class="card">
+      <div class="section-title">📅 Performa Harian (23 Apr – 20 Mei 2026)</div>
+      <div style="background:rgba(245,101,101,.08);border:1px solid rgba(245,101,101,.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;color:#fc8181;font-size:.85rem">
+        ⚠️ Seluruh 28 hari menunjukkan <strong>0 klik, 0 tayangan, Rp0</strong>. Grafik flat — iklan tidak tayang sama sekali.
+      </div>
+      <canvas id="timelineChart" style="max-height:280px"></canvas>
+      <div style="margin-top:20px;overflow-x:auto">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Klik</th><th>Tayangan</th><th>CPC Rata-rata</th><th>Biaya</th><th>Status</th></tr></thead>
+          <tbody id="timelineTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: Kata Kunci -->
+  <div class="panel" id="panel-keywords">
+    <div class="card">
+      <div class="section-title">🔑 Daftar Kata Kunci (27 keywords)</div>
+      <div style="background:rgba(159,122,234,.08);border:1px solid rgba(159,122,234,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;color:#b794f4;font-size:.84rem">
+        ℹ️ Semua 27 kata kunci menggunakan <strong>Pencocokan Luas</strong>, status Aktif, namun <strong>0 klik dan 0 tayangan</strong>. Kemungkinan besar bid terlalu rendah atau Quality Score buruk.
+      </div>
+      <div class="kw-grid" id="kwGrid"></div>
+    </div>
+    <div class="card">
+      <div class="section-title">📊 Analisis Kata Kunci</div>
+      <table>
+        <thead><tr><th>#</th><th>Kata Kunci</th><th>Jenis Kecocokan</th><th>Status</th><th>Klik</th><th>Biaya</th></tr></thead>
+        <tbody id="kwTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL: Rekomendasi -->
+  <div class="panel" id="panel-rekomendasi">
+    <div class="card">
+      <div class="section-title">💡 Rekomendasi Tindakan</div>
+      <div class="reco-grid">
+        <div class="reco r"><div class="reco-icon">🚨</div><h4>Cek Budget & Bid Segera</h4><p>Iklan tidak tayang sama sekali. Kemungkinan utama: daily budget terlalu kecil atau max CPC bid di bawah threshold pasar. Naikkan bid secara bertahap dan cek Bid Simulator di Google Ads.</p></div>
+        <div class="reco r"><div class="reco-icon">🎯</div><h4>Periksa Quality Score</h4><p>Google tidak akan menampilkan iklan jika Quality Score rendah. Pastikan ad copy relevan dengan keyword dan landing page memiliki konten yang sesuai dengan intent pencarian.</p></div>
+        <div class="reco o"><div class="reco-icon">📝</div><h4>Ubah ke Exact/Phrase Match</h4><p>Semua 27 keyword pakai "Pencocokan Luas" — ini boros dan tidak terarah. Prioritaskan keyword utama (ev charger, home charger) dengan Phrase Match atau Exact Match.</p></div>
+        <div class="reco o"><div class="reco-icon">🌍</div><h4>Review Targeting Lokasi</h4><p>Keyword seperti "car conversion to electric malaysia" menunjukkan target Malaysia. Pastikan geo-targeting sudah sesuai dengan area layanan Amtech EV (Indonesia).</p></div>
+        <div class="reco b"><div class="reco-icon">📱</div><h4>Optimasi Mobile (75% traffic)</h4><p>Data GA4 menunjukkan 75% pengguna dari mobile. Pastikan landing page ringan, CTA mudah diklik, dan checkout mobile-friendly.</p></div>
+        <div class="reco b"><div class="reco-icon">🔍</div><h4>Tambahkan Negative Keywords</h4><p>Hindari impressi tidak relevan dengan negative keywords: "free", "DIY", "malaysia", "used", "second hand". Ini menghemat budget untuk klik yang lebih berkualitas.</p></div>
+        <div class="reco g"><div class="reco-icon">📊</div><h4>Setup Conversion Tracking</h4><p>Pastikan Google Ads terhubung dengan GA4 dan conversion tracking aktif untuk purchase. Tanpa data konversi, optimasi otomatis Google tidak bisa bekerja.</p></div>
+        <div class="reco g"><div class="reco-icon">✅</div><h4>Gunakan Responsive Search Ads</h4><p>Buat RSA dengan minimal 10 headline dan 4 deskripsi yang relevan dengan keyword EV charger. Google akan otomatis mengoptimasi kombinasi terbaik.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📋 Checklist Perbaikan Prioritas</div>
+      <table>
+        <thead><tr><th>Prioritas</th><th>Tindakan</th><th>Estimasi Dampak</th></tr></thead>
+        <tbody>
+          <tr><td><span class="sbadge zero">🔴 SEGERA</span></td><td>Naikkan Max CPC bid & daily budget</td><td>Iklan mulai tayang</td></tr>
+          <tr><td><span class="sbadge zero">🔴 SEGERA</span></td><td>Cek & perbaiki Quality Score / Ad Relevance</td><td>Menurunkan CPC, meningkatkan posisi</td></tr>
+          <tr><td><span class="sbadge" style="background:rgba(246,173,85,.15);color:#f6ad55">🟠 MINGGU INI</span></td><td>Ganti Broad Match → Phrase/Exact Match</td><td>Traffic lebih relevan</td></tr>
+          <tr><td><span class="sbadge" style="background:rgba(246,173,85,.15);color:#f6ad55">🟠 MINGGU INI</span></td><td>Fix geo-targeting (hapus Malaysia jika tidak relevan)</td><td>Hemat budget</td></tr>
+          <tr><td><span class="sbadge active">🟢 BULAN INI</span></td><td>Optimasi landing page mobile</td><td>Turunkan bounce rate</td></tr>
+          <tr><td><span class="sbadge active">🟢 BULAN INI</span></td><td>Setup konversi GA4 ↔ Google Ads</td><td>Aktifkan Smart Bidding</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>Amtech EV &nbsp;|&nbsp; Google Ads Campaign: Search-1 &nbsp;|&nbsp; 23 Apr – 20 Mei 2026 &nbsp;|&nbsp; Analytics Dashboard</footer>
+
+<script>
+// Tab logic
+function showTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// Funnel chart
+new Chart(document.getElementById('funnelChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Buka Situs', 'Memulai Sesi', 'Lihat Halaman', 'Pembelian'],
+    datasets: [{
+      label: 'Pengguna', data: [36, 36, 36, 0],
+      backgroundColor: ['rgba(99,179,237,.7)', 'rgba(159,122,234,.7)', 'rgba(246,173,85,.7)', 'rgba(252,129,129,.7)'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false }, title: { display: true, text: 'Funnel GA4', color: '#a0aec0', font: { size: 12 } } },
+    scales: { x: { ticks: { color: '#718096', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,.04)' } }, y: { ticks: { color: '#718096' }, grid: { color: 'rgba(255,255,255,.04)' } } }
+  }
+});
+
+// Device donut
+new Chart(document.getElementById('deviceChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Mobile (27)', 'Desktop (9)'],
+    datasets: [{ data: [27, 9], backgroundColor: ['rgba(159,122,234,.8)', 'rgba(99,179,237,.8)'], borderColor: ['#9f7aea', '#63b3ed'], borderWidth: 2, hoverOffset: 6 }]
+  },
+  options: {
+    responsive: true, cutout: '62%',
+    plugins: { legend: { labels: { color: '#a0aec0', font: { size: 11 } } }, title: { display: true, text: 'Perangkat (GA4)', color: '#a0aec0', font: { size: 12 } } }
+  }
+});
+
+// Timeline data
+const dates = ['23 Apr','24 Apr','25 Apr','26 Apr','27 Apr','28 Apr','29 Apr','30 Apr','1 Mei','2 Mei','3 Mei','4 Mei','5 Mei','6 Mei','7 Mei','8 Mei','9 Mei','10 Mei','11 Mei','12 Mei','13 Mei','14 Mei','15 Mei','16 Mei','17 Mei','18 Mei','19 Mei','20 Mei'];
+const days = ['Kam','Jum','Sab','Min','Sen','Sel','Rab','Kam','Jum','Sab','Min','Sen','Sel','Rab','Kam','Jum','Sab','Min','Sen','Sel','Rab','Kam','Jum','Sab','Min','Sen','Sel','Rab'];
+
+new Chart(document.getElementById('timelineChart'), {
+  type: 'line',
+  data: {
+    labels: dates,
+    datasets: [
+      { label: 'Klik', data: Array(28).fill(0), borderColor: '#63b3ed', backgroundColor: 'rgba(99,179,237,.1)', tension: 0.3, fill: true },
+      { label: 'Tayangan', data: Array(28).fill(0), borderColor: '#9f7aea', backgroundColor: 'rgba(159,122,234,.08)', tension: 0.3, fill: true }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#a0aec0' } } },
+    scales: {
+      x: { ticks: { color: '#718096', maxTicksLimit: 10, font: { size: 10 } }, grid: { color: 'rgba(255,255,255,.04)' } },
+      y: { ticks: { color: '#718096' }, grid: { color: 'rgba(255,255,255,.04)' }, min: 0, max: 5 }
+    }
+  }
+});
+
+// Timeline table
+const tbody = document.getElementById('timelineTable');
+dates.forEach((d, i) => {
+  tbody.innerHTML += `<tr><td>${days[i]}, ${d} 2026</td><td>0</td><td>0</td><td>Rp0</td><td>Rp0</td><td><span class="sbadge zero">Tidak Tayang</span></td></tr>`;
+});
+
+// Keywords
+const kws = ['home charger','electric charger','ev charger','electric vehicle charger','evse charger','electric car charging at home','ev charging solutions','best home ev charger','electric vehicle charger installation','ev home charger installation','ev home chargers','ev home charger','electric charger installation','ev installation','best ev charger','ev charger installation','commercial ev charger','wallbox charger','ev chargers near me','home charger installation','car conversion to electric malaysia','best ev charger for home','ev charger installation near me','ev charger installers near me','best ev chargers for home','ev installers near me','Ev Charger Installation Selangor'];
+
+const kwGrid = document.getElementById('kwGrid');
+kws.forEach(k => { kwGrid.innerHTML += `<div class="kw-item">${k}</div>`; });
+
+const kwTable = document.getElementById('kwTable');
+kws.forEach((k, i) => {
+  kwTable.innerHTML += `<tr><td>${i+1}</td><td>${k}</td><td><span style="font-size:.75rem;color:#9f7aea">Pencocokan Luas</span></td><td><span class="sbadge active">Aktif</span></td><td style="color:#fc8181">0</td><td style="color:#fc8181">Rp0</td></tr>`;
+});
+</script>
+</body>
+</html>

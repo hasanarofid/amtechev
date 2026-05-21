@@ -143,6 +143,21 @@
                 </a>
             </div>
         </div>
+        <!-- Group: Analytics & Ads -->
+        <div class="mt-2">
+            <button @click="toggleGroup('analytics')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Analytics & Ads</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'analytics' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'analytics'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.analytics.index') }}" class="nav-link {{ request()->routeIs('admin.analytics.index') ? 'active' : '' }} scale-95 origin-left">
+                    📊 Marketing Dashboard
+                </a>
+                <a href="{{ route('admin.analytics.guide') }}" class="nav-link {{ request()->routeIs('admin.analytics.guide') ? 'active' : '' }} scale-95 origin-left">
+                    📖 Panduan Setup API
+                </a>
+            </div>
+        </div>
         @endif
     </nav>
 

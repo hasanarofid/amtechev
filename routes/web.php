@@ -162,6 +162,13 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::get('site-settings/mission', [App\Http\Controllers\Admin\SiteSettingController::class, 'mission'])->name('site-settings.mission');
         Route::resource('site-settings', App\Http\Controllers\Admin\SiteSettingController::class);
 
+        // Google Analytics / Ads / GTM
+        Route::get('analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+        Route::get('analytics/guide', [App\Http\Controllers\Admin\AnalyticsController::class, 'guide'])->name('analytics.guide');
+        Route::get('analytics/ga4', [App\Http\Controllers\Admin\AnalyticsController::class, 'ga4'])->name('analytics.ga4');
+        Route::get('analytics/ads', [App\Http\Controllers\Admin\AnalyticsController::class, 'googleAds'])->name('analytics.ads');
+        Route::get('analytics/gtm', [App\Http\Controllers\Admin\AnalyticsController::class, 'gtm'])->name('analytics.gtm');
+
         // Affiliate Management
         Route::get('affiliates', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'index'])->name('affiliates.index');
         Route::get('affiliates/commissions', [App\Http\Controllers\Admin\AdminAffiliateController::class, 'commissions'])->name('affiliates.commissions');

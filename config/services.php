@@ -46,4 +46,14 @@ return [
         'api_key' => env('GEMINI_API_KEY'),
     ],
 
+    'google' => [
+        'client_id'           => env('GOOGLE_CLIENT_ID'),
+        'client_secret'       => env('GOOGLE_CLIENT_SECRET'),
+        'refresh_token'       => env('GOOGLE_REFRESH_TOKEN'),
+        'ga4_property_id'     => env('GA4_PROPERTY_ID'),
+        'ads_developer_token' => env('GOOGLE_ADS_DEVELOPER_TOKEN'),
+        'ads_customer_id'     => env('GOOGLE_ADS_CUSTOMER_ID'),
+        'gtm_account_id'      => env('GTM_ACCOUNT_ID'),
+    ],
+
 ];
