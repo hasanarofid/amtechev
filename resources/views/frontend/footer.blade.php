@@ -22,10 +22,10 @@
             <div>
                 <h4 class="text-white font-bold uppercase tracking-widest mb-8">Quick Links</h4>
                 <ul class="space-y-4 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-ev-green">About Us</a></li>
-                    <li><a href="#" class="hover:text-ev-green">Services</a></li>
-                    <li><a href="#" class="hover:text-ev-green">Chargers</a></li>
-                    <li><a href="#" class="hover:text-ev-green">FAQs</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-ev-green">About Us</a></li>
+                    <li><a href="{{ route('catalog') }}" class="hover:text-ev-green">Services</a></li>
+                    <li><a href="{{ route('catalog') }}" class="hover:text-ev-green">Chargers</a></li>
+                    <li><a href="{{ route('faq') }}" class="hover:text-ev-green">FAQs</a></li>
                 </ul>
             </div>
             <div>
@@ -47,9 +47,10 @@
 
                 </div>
             </div>
-            <div class="flex gap-8 font-bold">
+            <div class="flex gap-4 md:gap-8 font-bold text-sm md:text-base flex-wrap justify-end">
                 <a href="{{ route('privacy') }}" class="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="{{ route('terms') }}" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="{{ route('disclaimer') }}" class="hover:text-white transition-colors">Disclaimer</a>
             </div>
         </div>
     </div>

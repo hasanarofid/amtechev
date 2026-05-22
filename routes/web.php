@@ -32,6 +32,21 @@ Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'inde
     return view('frontend.terms', compact('settings'));
  })->name('terms');
 
+ Route::get('/disclaimer', function () {
+    $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+    return view('frontend.disclaimer', compact('settings'));
+ })->name('disclaimer');
+
+ Route::get('/about-us', function () {
+    $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+    return view('frontend.about-us', compact('settings'));
+ })->name('about');
+
+ Route::get('/faq', function () {
+    $settings = \App\Models\SiteSetting::all()->pluck('value', 'key');
+    return view('frontend.faqs', compact('settings'));
+ })->name('faq');
+
 Route::middleware(['auth'])->prefix('affiliate')->group(function () {
     Route::get('/join', [App\Http\Controllers\Frontend\AffiliateController::class, 'join'])->name('affiliate.join');
     Route::post('/join', [App\Http\Controllers\Frontend\AffiliateController::class, 'store'])->name('affiliate.store');
