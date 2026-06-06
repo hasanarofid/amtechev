@@ -173,50 +173,13 @@ class BookingController extends Controller
 
         // If online payment, initiate Bayarcash
         if (in_array($validated['payment_method'], ['fpx', 'card'])) {
-            // Prepare Bayar Cash Data
-            $data = [
-                'portal_key'             => $this->getConfig('portal_key'),
-                'order_number'           => $booking->order_number,
-                'amount'                 => $totalPrice,
-                'payer_name'             => $booking->customer_name,
-                'payer_email'            => $booking->email,
-                'payer_telephone_number' => $booking->phone_number,
-                'callback_url'           => route('booking.callback'),
-                'return_url'             => route('booking.success', ['order' => $booking->order_number]),
-            ];
-
-            // Generate Checksum
-            $checksum = $this->bayarcash->createPaymentIntentChecksumValue($this->getConfig('secret_key'), $data);
-            $data['checksum'] = $checksum;
-
-            Log::info('Bayar Cash Booking Request Data: ', $data);
-
-            try {
-                $response = $this->bayarcash->createPaymentIntent($data);
-                Log::info('Bayar Cash Booking Response: ', (array) $response);
-
-                if ($response && isset($response->url)) {
-                    $booking->update([
-                        'payment_url' => $response->url,
-                        'bayarcash_transaction_id' => $response->id ?? null,
-                    ]);
-
-                    session()->forget('booking_draft');
-                    return redirect($response->url);
-                } else {
-                    Log::error('Bayar Cash Booking Error: ' . json_encode($response));
-                    return back()->with('error', 'Failed to initiate payment. Please try again.');
-                }
-            } catch (\Exception $e) {
-                Log::error('Bayar Cash Booking Exception: ' . $e->getMessage());
-                return back()->with('error', 'An error occurred while processing your payment.');
-            }
+            return back()->with('error', 'Payment gateway is currently under construction. Please try another method or contact us.');
         }
 
         // WhatsApp / Manual Booking
         try {
-            $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
-            $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
+            $ccEmails = ['hafiyisyraf8@gmail.com', 'hasanarofid@gmail.com'];
+            $toEmail = $booking->email ?: 'hafiyisyraf8@gmail.com';
 
             Mail::to($toEmail)
                 ->cc($ccEmails)
@@ -253,8 +216,8 @@ class BookingController extends Controller
 
             // Send Notification Email again if needed or similar
             try {
-                $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
-                $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
+                $ccEmails = ['hafiyisyraf8@gmail.com', 'hasanarofid@gmail.com'];
+                $toEmail = $booking->email ?: 'hafiyisyraf8@gmail.com';
 
                 Mail::to($toEmail)
                     ->cc($ccEmails)

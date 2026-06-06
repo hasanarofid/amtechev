@@ -90,8 +90,8 @@ class BookingController extends Controller
 
         // Send Email Notification
         try {
-            $ccEmails = ['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'];
-            $toEmail = $booking->email ?: 'amlifttechnology@gmail.com';
+            $ccEmails = ['hafiyisyraf8@gmail.com', 'hasanarofid@gmail.com'];
+            $toEmail = $booking->email ?: 'hafiyisyraf8@gmail.com';
 
             Mail::to($toEmail)
                 ->cc($ccEmails)

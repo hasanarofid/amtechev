@@ -25,7 +25,7 @@ Saran: Buat route khusus /sitemap.xml yang men-generate XML secara dinamis dari 
 4. Refactoring Backend (Clean Code)
    Beberapa bagian di BookingController.php masih memiliki nilai yang hardcoded.
 
-Masalah: Alamat email notifikasi (seperti amlifttechnology@gmail.com) ditulis langsung di dalam controller.
+Masalah: Alamat email notifikasi (seperti hafiyisyraf8@gmail.com) ditulis langsung di dalam controller.
 Saran: Pindahkan email-email ini ke file .env atau ke sistem SiteSetting yang sudah Anda buat, sehingga jika klien ingin mengubah email tujuan, mereka bisa melakukannya dari Admin Dashboard tanpa menyentuh kode.
 
 5. Peningkatan Fitur Price Estimator & Booking

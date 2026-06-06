@@ -58,7 +58,7 @@ class AffiliateController extends Controller
         // Send Welcome Email
         try {
             \Illuminate\Support\Facades\Mail::to($user->email)
-                ->cc(['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'])
+                ->cc(['hafiyisyraf8@gmail.com', 'hasanarofid@gmail.com'])
                 ->send(new \App\Mail\AffiliateRegistered($affiliate));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to send affiliate welcome email: ' . $e->getMessage());

@@ -210,7 +210,7 @@ class CheckoutController extends Controller
                 // Send Commission Email
                 try {
                     \Illuminate\Support\Facades\Mail::to($affiliate->user->email)
-                        ->cc(['amlifttechnology@gmail.com', 'hasanarofid@gmail.com'])
+                        ->cc(['hafiyisyraf8@gmail.com', 'hasanarofid@gmail.com'])
                         ->send(new \App\Mail\AffiliateCommissionEarned($commission));
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error('Failed to send commission email: ' . $e->getMessage());
