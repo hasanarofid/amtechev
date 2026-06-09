@@ -58,6 +58,8 @@ class DefaultSiteDataSeeder extends Seeder
             // General
             'site_title' => ['value' => 'AMTECH EV Specialist', 'group' => 'general'],
             'site_logo' => ['value' => 'logo/amtech-removebg.png', 'group' => 'general'],
+            'registration_number' => ['value' => 'Registration No: 202503227566 (JM1030181-M)', 'group' => 'general'],
+            'ssm_cert_path' => ['value' => 'documents/IzeefNexusSSMCert.pdf', 'group' => 'general'],
 
             // Services Section
             'services_badge' => ['value' => 'OUR EXPERTISE', 'group' => 'services'],
