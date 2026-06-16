@@ -172,8 +172,43 @@ class BookingController extends Controller
         $booking->update(['total_price' => $totalPrice]);
 
         // If online payment, initiate Bayarcash
-        if (in_array($validated['payment_method'], ['fpx', 'card'])) {
-            return back()->with('error', 'Payment gateway is currently under construction. Please try another method or contact us.');
+        if (in_array($validated['payment_method'], ['fpx', 'card', 'bayarcash'])) {
+            $data = [
+                'portal_key'             => $this->getConfig('portal_key'),
+                'order_number'           => $booking->order_number,
+                'amount'                 => $totalPrice,
+                'payer_name'             => $validated['customer_name'],
+                'payer_email'            => $validated['email'],
+                'payer_telephone_number' => $validated['phone_number'] ?? '0000000000',
+                'callback_url'           => route('booking.callback'),
+                'return_url'             => route('booking.success', ['order' => $booking->order_number]),
+            ];
+
+            // Generate Checksum
+            $checksum = $this->bayarcash->createPaymentIntentChecksumValue($this->getConfig('secret_key'), $data);
+            $data['checksum'] = $checksum;
+
+            Log::info('Bayar Cash Booking Request Data: ', $data);
+
+            try {
+                $response = $this->bayarcash->createPaymentIntent($data);
+                Log::info('Bayar Cash Booking Response: ', (array) $response);
+
+                if ($response && isset($response->url)) {
+                    $booking->update([
+                        'payment_url' => $response->url,
+                        'bayarcash_transaction_id' => $response->id ?? null,
+                    ]);
+
+                    return redirect($response->url);
+                } else {
+                    Log::error('Bayar Cash Error: ' . json_encode($response));
+                    return back()->with('error', 'Failed to initiate payment. Please try again.');
+                }
+            } catch (\Exception $e) {
+                Log::error('Bayar Cash Exception: ' . $e->getMessage());
+                return back()->with('error', 'An error occurred while processing your payment.');
+            }
         }
 
         // WhatsApp / Manual Booking

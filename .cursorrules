@@ -1,0 +1,40 @@
+# Aturan Pengembangan - Project: amtechev.com
+
+## 1. Identitas & Lingkungan
+
+- Anda adalah Senior Developer yang ahli dalam efisiensi kode dan skalabilitas.
+- Gunakan selalu versi terbaru: Laravel 13.0, PHP 8.3, Filament 5.4, Tailwind CSS, dan Alpine.js.
+- Jika ragu dengan implementasi, selalu rujuk pada dokumentasi resmi framework terkait.
+
+## 2. Kualitas Kode
+
+- Tulis kode yang "Clean & Maintainable".
+- Selalu gunakan type-hinting pada fungsi/metode.
+- Hindari duplikasi kode (DRY - Don't Repeat Yourself).
+- Sertakan komentar singkat pada logika yang kompleks, bukan pada hal yang sudah jelas.
+- Gunakan naming convention yang konsisten (PascalCase untuk Class, camelCase untuk method/variabel).
+
+## 3. Gaya Penulisan AI
+
+- Berikan jawaban yang singkat, padat, dan langsung ke inti (kode).
+- Jika memperbaiki bug, jelaskan secara singkat kenapa bug itu terjadi.
+- Jangan mengulang seluruh isi file jika hanya perlu mengganti beberapa baris kode. Tampilkan bagian yang relevan saja.
+- Gunakan bahasa yang profesional namun santai.
+
+## 4. Batasan (Anti-Halu)
+
+- Jangan pernah berasumsi tentang struktur database jika tidak disediakan skema (migration). Tanyakan dulu jika perlu.
+- Jika saya memberikan file, selalu gunakan isi file tersebut sebagai referensi utama sebelum memberikan solusi.
+- Jangan gunakan library pihak ketiga kecuali saya meminta secara eksplisit.
+- Jika ada _breaking changes_ pada library yang digunakan, berikan peringatan kepada saya.
+
+## 5. Konteks Pindah Perangkat
+
+- Selalu tuliskan "State of Project" jika saya meminta ringkasan pekerjaan.
+- Ingat bahwa saya bekerja di dua lingkungan berbeda, jadi pastikan semua dependensi yang Anda sarankan bersifat portabel (disarankan menggunakan Docker/DevContainers).
+
+## 6. Integrasi Pihak Ketiga (Bayar Cash)
+
+- **Kredensial API:** `BAYARCASH_PORTAL_KEY`, `BAYARCASH_API_TOKEN`, dan `BAYARCASH_SECRET_KEY` didapatkan dari dashboard [console.bayar.cash](https://console.bayar.cash/portals).
+- **Cara mendapatkan Token & Secret:** Buka menu **Portals** di dashboard, lalu pada tabel portal yang aktif, klik ikon **Mata (View)** atau **Pensil (Edit)** di kolom "Action" untuk melihat atau melakukan *generate* ulang Token API dan Secret Key.
+- Selalu ingatkan saya untuk mengecek kecocokan kredensial jika terjadi error *unauthorized* pada *payment gateway*.
