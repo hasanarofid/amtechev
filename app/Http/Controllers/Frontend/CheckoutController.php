@@ -195,6 +195,53 @@ class CheckoutController extends Controller
                 'status' => 'processing',
             ]);
 
+            $this->processSuccessfulOrder($order);
+        } elseif ($status === 'failed') {
+            $order->update(['payment_status' => 'failed']);
+        }
+
+        return response()->json(['message' => 'OK']);
+    }
+
+    public function success(Request $request)
+    {
+        $orderNumber = $request->input('order');
+        $order = Order::where('order_number', $orderNumber)->with('items')->firstOrFail();
+        
+        // Fallback: Check Bayarcash API if status is not paid
+        if ($order->payment_status !== 'paid' && $order->bayarcash_transaction_id) {
+            try {
+                $bayarcash = new \Webimpian\BayarcashSdk\Bayarcash(config('services.bayarcash.api_token'));
+                if (config('services.bayarcash.environment') === 'sandbox') {
+                    $bayarcash->useSandbox();
+                }
+                $bayarcash->setApiVersion('v3');
+                
+                $pi = $bayarcash->getPaymentIntent($order->bayarcash_transaction_id);
+                
+                if ($pi && (strtolower($pi->status) === 'successful' || strtolower($pi->status) === 'paid')) {
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'status' => 'processing',
+                    ]);
+                    
+                    $this->processSuccessfulOrder($order);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Bayar Cash Fallback Error: ' . $e->getMessage());
+            }
+        }
+
+        // Final fallback to send email if callback was missed or delayed
+        if ($order->payment_status === 'paid') {
+            session()->forget('cart');
+        }
+
+        return view('frontend.checkout_success', compact('order'));
+    }
+
+    private function processSuccessfulOrder(Order $order)
+    {
             // Affiliate Commission logic
             if ($order->affiliate_id) {
                 $affiliate = $order->affiliate;
@@ -262,24 +309,6 @@ class CheckoutController extends Controller
                     }
                 }
             }
-        } elseif ($status === 'failed') {
-            $order->update(['payment_status' => 'failed']);
-        }
-
-        return response()->json(['message' => 'OK']);
-    }
-
-    public function success(Request $request)
-    {
-        $orderNumber = $request->input('order');
-        $order = Order::where('order_number', $orderNumber)->with('items')->firstOrFail();
-        
-        // Final fallback to send email if callback was missed or delayed
-        if ($order->payment_status === 'paid') {
-            session()->forget('cart');
-        }
-
-        return view('frontend.checkout_success', compact('order'));
     }
 
     public function checkStatus($orderNumber)
