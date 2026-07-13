@@ -26,7 +26,7 @@
     <meta name="description"
         content="@yield('meta_description', 'AMTECH EV Specialist – Best Value EV Charging Solutions in Malaysia. Expert installation and high-quality EV chargers for your home and business.')">
     <meta name="keywords"
-        content="@yield('meta_keywords', 'EV Charger Malaysia, Electric Vehicle Charging, AMTECH EV, Home EV Charging, EV Installation Malaysia')">
+        content="@yield('meta_keywords', 'EV charger installation, Home EV charger installation, Home wallbox installation, EV charger installer, Residential EV charger installation, Wallbox charger installation, Home EV charging, Type 2 EV charger, 7kW EV charger, 11kW EV charger, 22kW EV charger, BYD charger installation, Tesla charger installation, Proton e.MAS charger installation, XPENG charger installation, Mercedes EV charger installation, BMW EV charger installation, EV charger installation Malaysia, EV charger installation Selangor, EV charger installation Kuala Lumpur, EV charger installation Johor, EV charger installation Penang, EV charger installation Negeri Sembilan, EV charger installation Melaka, EV charger installation Perak, Home EV charging solution')">
     <meta name="author" content="AMTECH EV Specialist">
     <link rel="canonical" href="{{ url()->current() }}">
 

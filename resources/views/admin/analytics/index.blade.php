@@ -189,11 +189,14 @@
     fetch('{{ route("admin.analytics.ads") }}')
         .then(r => r.json())
         .then(data => {
-            if (data.error) { showErr('ads', data.error); renderAdsEmpty(); return; }
+            let apiErr = data && data.error ? data.error : (Array.isArray(data) && data[0] && data[0].error ? data[0].error : null);
+            if (apiErr) { showErr('ads', apiErr.message || apiErr); renderAdsEmpty(); return; }
 
             let totClicks=0, totImpr=0, totCost=0;
             let rows = '';
-            (data || []).forEach(batch => {
+            
+            let arr = Array.isArray(data) ? data : (data && Object.keys(data).length > 0 ? [data] : []);
+            arr.forEach(batch => {
                 (batch.results || []).forEach(item => {
                     const c = item.campaign || {};
                     const m = item.metrics || {};
@@ -230,7 +233,10 @@
                     <tbody>${rows||'<tr><td colspan="6" style="text-align:center;padding:20px;color:#718096">Tidak ada data kampanye</td></tr>'}</tbody>
                 </table>`;
         })
-        .catch(e => { showErr('ads', e.message); renderAdsEmpty(); });
+        .catch(e => {
+            let msg = e.message === 'NetworkError when attempting to fetch resource.' ? 'Koneksi diblokir. Harap matikan Adblocker (UBlock/Adblock) atau Tracking Protection di browser Anda.' : e.message;
+            showErr('ads', msg); renderAdsEmpty(); 
+        });
 
     function renderAdsEmpty() {
         document.getElementById('ads-kpis').innerHTML = `
@@ -255,7 +261,10 @@
                 </div>`).join('');
             document.getElementById('gtm-data').innerHTML = html || '<p style="color:#718096;font-size:.84rem">Tidak ada container ditemukan.</p>';
         })
-        .catch(e => showErr('gtm', e.message));
+        .catch(e => {
+            let msg = e.message === 'NetworkError when attempting to fetch resource.' ? 'Koneksi diblokir. Harap matikan Adblocker (UBlock/Adblock) atau Tracking Protection di browser Anda untuk melihat data GTM.' : e.message;
+            showErr('gtm', msg);
+        });
 
     function showErr(id, msg) {
         const el = document.getElementById(id+'-err');

@@ -64,7 +64,7 @@ class AnalyticsController extends Controller
 
             $response = Http::withToken($token)
                 ->withHeaders(['developer-token' => $devToken])
-                ->post("https://googleads.googleapis.com/v17/customers/{$customerId}/googleAds:searchStream", [
+                ->post("https://googleads.googleapis.com/v22/customers/{$customerId}/googleAds:searchStream", [
                     'query' => $query,
                 ]);
 
