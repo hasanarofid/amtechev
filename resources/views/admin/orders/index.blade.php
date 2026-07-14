@@ -117,6 +117,7 @@
                             <th>Amount</th>
                             <th>Payment</th>
                             <th>Order Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -163,10 +164,13 @@
                                     <span class="badge badge-pending">Pending</span>
                                 @endif
                             </td>
+                            <td>
+                                <a href="{{ route('admin.orders.show', $order->id) }}" class="text-[11px] font-bold text-[#63b3ed] hover:text-[#4299e1] underline px-2 py-1 bg-[#63b3ed]/10 rounded-md">View Details</a>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" style="text-align:center; padding:30px; color:#aaa;">No checkouts found matching criteria.</td>
+                            <td colspan="8" style="text-align:center; padding:30px; color:#aaa;">No checkouts found matching criteria.</td>
                         </tr>
                         @endforelse
                     </tbody>
