@@ -68,6 +68,15 @@ class AnalyticsController extends Controller
                     'query' => $query,
                 ]);
 
+            if (!$response->ok()) {
+                $errorData = $response->json();
+                $specificError = $errorData[0]['error']['details'][0]['errors'][0]['message'] ?? null;
+                $genericError = $errorData[0]['error']['message'] ?? $response->body();
+                
+                $errorMessage = $specificError ? "{$genericError}: {$specificError}" : $genericError;
+                throw new \Exception($errorMessage);
+            }
+
             return response()->json($response->json());
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
