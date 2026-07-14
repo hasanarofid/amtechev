@@ -168,6 +168,7 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::post('bookings/generate-dummy', [App\Http\Controllers\Admin\BookingController::class, 'generateDummy'])->name('bookings.generate-dummy');
         Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
         Route::resource('installation-packages', App\Http\Controllers\Admin\InstallationPackageController::class);
+        Route::resource('orders', App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show']);
         
         Route::post('slots/update-global', [App\Http\Controllers\Admin\SlotController::class, 'updateGlobal'])->name('slots.update-global');
         Route::resource('slots', App\Http\Controllers\Admin\SlotController::class);

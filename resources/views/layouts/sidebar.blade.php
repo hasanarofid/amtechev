@@ -106,6 +106,19 @@
             </div>
         </div>
 
+        <!-- Group: Sales & Checkouts -->
+        <div class="mt-2">
+            <button @click="toggleGroup('sales')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
+                <span>Sales & Checkouts</span>
+                <svg class="w-3 h-3 transition-transform duration-300" :class="activeGroup === 'sales' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div x-show="activeGroup === 'sales'" x-collapse class="flex flex-col gap-1 mt-1">
+                <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }} scale-95 origin-left">
+                    All Checkouts
+                </a>
+            </div>
+        </div>
+
         <!-- Group: Affiliate Management -->
         <div class="mt-2">
             <button @click="toggleGroup('affiliate')" class="w-full flex items-center justify-between px-4 py-2 text-[10px] uppercase tracking-widest text-text-muted font-black hover:text-main transition-colors group">
