@@ -28,6 +28,8 @@
     <meta name="keywords"
         content="@yield('meta_keywords', 'EV charger installation, Home EV charger installation, Home wallbox installation, EV charger installer, Residential EV charger installation, Wallbox charger installation, Home EV charging, Type 2 EV charger, 7kW EV charger, 11kW EV charger, 22kW EV charger, BYD charger installation, Tesla charger installation, Proton e.MAS charger installation, XPENG charger installation, Mercedes EV charger installation, BMW EV charger installation, EV charger installation Malaysia, EV charger installation Selangor, EV charger installation Kuala Lumpur, EV charger installation Johor, EV charger installation Penang, EV charger installation Negeri Sembilan, EV charger installation Melaka, EV charger installation Perak, Home EV charging solution')">
     <meta name="author" content="AMTECH EV Specialist">
+    <meta name="geo.region" content="MY">
+    <meta name="geo.placename" content="Malaysia">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph / Facebook -->
@@ -197,6 +199,26 @@
 
     <!-- Flatpickr -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if the URL contains Google Ads info (gclid or utm_source=google)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('gclid') || urlParams.get('utm_source') === 'google') {
+                // Change all WhatsApp button hrefs to include the Google Ads specific message
+                const waButtons = document.querySelectorAll('a[href^="https://wa.me"]');
+                waButtons.forEach(btn => {
+                    try {
+                        let url = new URL(btn.href);
+                        url.searchParams.set('text', 'Hi, I interested to install ev charger from Google Ads.');
+                        btn.href = url.toString();
+                    } catch (e) {
+                        console.error('Error parsing WA URL', e);
+                    }
+                });
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>
