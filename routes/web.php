@@ -163,6 +163,7 @@ Route::post('/contact', [App\Http\Controllers\Frontend\ContactInquiryController:
         Route::resource('quality-brands', App\Http\Controllers\Admin\QualityBrandController::class);
         Route::resource('gallery-items', App\Http\Controllers\Admin\GalleryItemController::class);
         Route::resource('video-testimonials', App\Http\Controllers\Admin\VideoTestimonialController::class);
+        Route::resource('tiktok-videos', App\Http\Controllers\Admin\TiktokVideoController::class);
         
         Route::get('bookings/calendar', [App\Http\Controllers\Admin\BookingController::class, 'calendar'])->name('bookings.calendar');
         Route::post('bookings/generate-dummy', [App\Http\Controllers\Admin\BookingController::class, 'generateDummy'])->name('bookings.generate-dummy');

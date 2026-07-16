@@ -61,6 +61,7 @@
     @include('frontend.brands')
     @include('frontend.testimonials')
     @include('frontend.video-testimonials')
+    @include('frontend.tiktok-videos')
     @include('frontend.blog')
 @endsection
 

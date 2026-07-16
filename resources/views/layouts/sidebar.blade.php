@@ -78,6 +78,9 @@
                 <a href="{{ route('admin.video-testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.video-testimonials.*') ? 'active' : '' }} scale-95 origin-left">
                     Video Feedback
                 </a>
+                <a href="{{ route('admin.tiktok-videos.index') }}" class="nav-link {{ request()->routeIs('admin.tiktok-videos.*') ? 'active' : '' }} scale-95 origin-left">
+                    TikTok Videos
+                </a>
                 <a href="{{ route('admin.blog-posts.index') }}" class="nav-link {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }} scale-95 origin-left">
                     Insights & Blog
                 </a>

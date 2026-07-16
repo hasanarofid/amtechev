@@ -14,6 +14,7 @@ use App\Models\Service;
 use App\Models\GalleryItem;
 use App\Models\QualityBrand;
 use App\Models\VideoTestimonial;
+use App\Models\TiktokVideo;
  
 class LandingPageController extends Controller
 {
@@ -30,6 +31,7 @@ class LandingPageController extends Controller
         $galleryItems = GalleryItem::orderBy('sort_order')->get();
         $qualityBrands = QualityBrand::orderBy('sort_order')->get();
         $videoTestimonials = VideoTestimonial::where('is_published', true)->orderBy('sort_order')->get();
+        $tiktokVideos = TiktokVideo::where('is_active', true)->orderBy('sort_order')->limit(6)->get();
 
         return view('frontend.index', compact(
             'chargers', 
@@ -40,7 +42,8 @@ class LandingPageController extends Controller
             'services',
             'galleryItems',
             'qualityBrands',
-            'videoTestimonials'
+            'videoTestimonials',
+            'tiktokVideos'
         ));
     }
 }
