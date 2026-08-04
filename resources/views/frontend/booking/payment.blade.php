@@ -434,3 +434,32 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+@php
+    $bookingValue = (float) ($totalPrice ?? 0);
+    $bookingValue = $bookingValue > 0 ? $bookingValue : 1;
+@endphp
+<script>
+    (function() {
+        if (typeof ttq !== 'undefined') {
+            ttq.track('InitiateCheckout', {
+                content_type: 'product',
+                value: {{ $bookingValue }},
+                currency: 'MYR',
+                contents: [
+                    @foreach($items as $item)
+                    {
+                        content_id: '{{ $item['id'] ?? 'package' }}',
+                        content_name: @json($item['name'] ?? 'Installation Package'),
+                        quantity: {{ (int) ($item['qty'] ?? 1) }},
+                        price: {{ (float) ($item['price'] ?? 0) }}
+                    },
+                    @endforeach
+                ]
+            });
+        }
+    })();
+</script>
+@endpush
+

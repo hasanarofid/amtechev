@@ -87,6 +87,25 @@
                 }
             });
 
+            // TikTok Pixel Purchase tracking
+            if (typeof ttq !== 'undefined') {
+                ttq.track('CompletePayment', {
+                    content_type: 'product',
+                    value: {{ (float) $booking->total_price }},
+                    currency: 'MYR'
+                });
+                ttq.track('Purchase', {
+                    content_type: 'product',
+                    value: {{ (float) $booking->total_price }},
+                    currency: 'MYR'
+                });
+                ttq.track('PlaceAnOrder', {
+                    content_type: 'product',
+                    value: {{ (float) $booking->total_price }},
+                    currency: 'MYR'
+                });
+            }
+
             // Legacy booking_complete event for existing GTM tags
             if (window.amtechTracking) {
                 window.amtechTracking.pushEvent('booking_complete', {

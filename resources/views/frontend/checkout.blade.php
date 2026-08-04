@@ -273,8 +273,40 @@
 @endsection
 
 @push('scripts')
+@php
+    $checkoutValue = (float) ($total ?? 0);
+    $checkoutValue = $checkoutValue > 0 ? $checkoutValue : 1;
+@endphp
 <script>
+    (function() {
+        function sendInitiateCheckout() {
+            if (typeof ttq !== 'undefined') {
+                ttq.track('InitiateCheckout', {
+                    content_type: 'product',
+                    value: {{ $checkoutValue }},
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($cart as $id => $item)
+                        @php
+                            $itemPrice = (float)str_replace(['RM', ',', ' '], '', $item['price'] ?? 0);
+                            $itemPrice = $itemPrice > 0 ? $itemPrice : 1;
+                        @endphp
+                        {
+                            content_id: '{{ $id }}',
+                            content_name: @json($item['name'] ?? ''),
+                            quantity: {{ (int) ($item['quantity'] ?? 1) }},
+                            price: {{ $itemPrice }}
+                        },
+                        @endforeach
+                    ]
+                });
+            }
+        }
+        sendInitiateCheckout();
+    })();
+
     document.addEventListener('DOMContentLoaded', function() {
+
         const form = document.getElementById('checkout-form');
         const payButton = document.getElementById('pay-now-button');
         

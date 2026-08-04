@@ -83,6 +83,45 @@
                 }
             });
 
+            // TikTok Pixel Purchase tracking
+            if (typeof ttq !== 'undefined') {
+                ttq.track('CompletePayment', {
+                    content_type: 'product',
+                    value: {{ (float) $order->total_price }},
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($order->items as $item)
+                        {
+                            content_id: '{{ $item->id ?? "" }}',
+                            content_name: @json($item->product_name),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) ($item->price ?? ($item->subtotal / max($item->quantity, 1))) }}
+                        },
+                        @endforeach
+                    ]
+                });
+                ttq.track('Purchase', {
+                    content_type: 'product',
+                    value: {{ (float) $order->total_price }},
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($order->items as $item)
+                        {
+                            content_id: '{{ $item->id ?? "" }}',
+                            content_name: @json($item->product_name),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) ($item->price ?? ($item->subtotal / max($item->quantity, 1))) }}
+                        },
+                        @endforeach
+                    ]
+                });
+                ttq.track('PlaceAnOrder', {
+                    content_type: 'product',
+                    value: {{ (float) $order->total_price }},
+                    currency: 'MYR'
+                });
+            }
+
             // Legacy tracking event
             if (window.amtechTracking) {
                 window.amtechTracking.pushEvent('purchase', {

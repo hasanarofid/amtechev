@@ -51,7 +51,7 @@
                 <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-4">{{ $charger->name }}</h1>
                 <p class="text-xl font-bold text-gray-900 dark:text-white mb-8">{{ $charger->price }} MYR</p>
 
-                <form action="{{ route('cart.add', $charger->id) }}" method="POST" class="space-y-6 mb-10">
+                <form action="{{ route('cart.add', $charger->id) }}" method="POST" id="add-to-cart-form" class="space-y-6 mb-10">
                     @csrf
                     <!-- Options -->
                     <div class="space-y-4">
@@ -139,3 +139,45 @@
     </main>
 @endsection
 
+@push('scripts')
+@php
+    $rawPrice = (float) (preg_replace('/[^0-9.]/', '', (string) ($charger->price ?? 0)) ?: 0);
+    $parsedPrice = $rawPrice > 0 ? $rawPrice : 1;
+@endphp
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof ttq !== 'undefined') {
+            ttq.track('ViewContent', {
+                content_type: 'product',
+                contents: [{
+                    content_id: '{{ $charger->id }}',
+                    content_name: @json($charger->name),
+                    quantity: 1,
+                    price: {{ $parsedPrice }}
+                }],
+                value: {{ $parsedPrice }},
+                currency: 'MYR'
+            });
+        }
+
+        const form = document.getElementById('add-to-cart-form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                if (typeof ttq !== 'undefined') {
+                    ttq.track('AddToCart', {
+                        content_type: 'product',
+                        contents: [{
+                            content_id: '{{ $charger->id }}',
+                            content_name: @json($charger->name),
+                            quantity: 1,
+                            price: {{ $parsedPrice }}
+                        }],
+                        value: {{ $parsedPrice }},
+                        currency: 'MYR'
+                    });
+                }
+            });
+        }
+    });
+</script>
+@endpush
