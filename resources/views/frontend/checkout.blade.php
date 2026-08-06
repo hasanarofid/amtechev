@@ -283,6 +283,7 @@
             if (typeof ttq !== 'undefined') {
                 ttq.track('InitiateCheckout', {
                     content_type: 'product',
+                    content_id: '{{ implode(",", array_keys($cart)) }}',
                     value: {{ $checkoutValue }},
                     currency: 'MYR',
                     contents: [

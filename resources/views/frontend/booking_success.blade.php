@@ -91,18 +91,51 @@
             if (typeof ttq !== 'undefined') {
                 ttq.track('CompletePayment', {
                     content_type: 'product',
+                    content_id: '{{ $booking->order_number }}',
                     value: {{ (float) $booking->total_price }},
-                    currency: 'MYR'
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($booking->items as $item)
+                        {
+                            content_id: '{{ $item->installation_package_id ?? $booking->order_number }}',
+                            content_name: @json($item->installationPackage->name ?? "Package"),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) $item->price_at_booking }}
+                        },
+                        @endforeach
+                    ]
                 });
                 ttq.track('Purchase', {
                     content_type: 'product',
+                    content_id: '{{ $booking->order_number }}',
                     value: {{ (float) $booking->total_price }},
-                    currency: 'MYR'
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($booking->items as $item)
+                        {
+                            content_id: '{{ $item->installation_package_id ?? $booking->order_number }}',
+                            content_name: @json($item->installationPackage->name ?? "Package"),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) $item->price_at_booking }}
+                        },
+                        @endforeach
+                    ]
                 });
                 ttq.track('PlaceAnOrder', {
                     content_type: 'product',
+                    content_id: '{{ $booking->order_number }}',
                     value: {{ (float) $booking->total_price }},
-                    currency: 'MYR'
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($booking->items as $item)
+                        {
+                            content_id: '{{ $item->installation_package_id ?? $booking->order_number }}',
+                            content_name: @json($item->installationPackage->name ?? "Package"),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) $item->price_at_booking }}
+                        },
+                        @endforeach
+                    ]
                 });
             }
 

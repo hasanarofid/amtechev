@@ -87,12 +87,13 @@
             if (typeof ttq !== 'undefined') {
                 ttq.track('CompletePayment', {
                     content_type: 'product',
+                    content_id: '{{ $order->order_number }}',
                     value: {{ (float) $order->total_price }},
                     currency: 'MYR',
                     contents: [
                         @foreach($order->items as $item)
                         {
-                            content_id: '{{ $item->id ?? "" }}',
+                            content_id: '{{ $item->product_id ?? $item->id ?? $order->order_number }}',
                             content_name: @json($item->product_name),
                             quantity: {{ (int) $item->quantity }},
                             price: {{ (float) ($item->price ?? ($item->subtotal / max($item->quantity, 1))) }}
@@ -102,12 +103,13 @@
                 });
                 ttq.track('Purchase', {
                     content_type: 'product',
+                    content_id: '{{ $order->order_number }}',
                     value: {{ (float) $order->total_price }},
                     currency: 'MYR',
                     contents: [
                         @foreach($order->items as $item)
                         {
-                            content_id: '{{ $item->id ?? "" }}',
+                            content_id: '{{ $item->product_id ?? $item->id ?? $order->order_number }}',
                             content_name: @json($item->product_name),
                             quantity: {{ (int) $item->quantity }},
                             price: {{ (float) ($item->price ?? ($item->subtotal / max($item->quantity, 1))) }}
@@ -117,8 +119,19 @@
                 });
                 ttq.track('PlaceAnOrder', {
                     content_type: 'product',
+                    content_id: '{{ $order->order_number }}',
                     value: {{ (float) $order->total_price }},
-                    currency: 'MYR'
+                    currency: 'MYR',
+                    contents: [
+                        @foreach($order->items as $item)
+                        {
+                            content_id: '{{ $item->product_id ?? $item->id ?? $order->order_number }}',
+                            content_name: @json($item->product_name),
+                            quantity: {{ (int) $item->quantity }},
+                            price: {{ (float) ($item->price ?? ($item->subtotal / max($item->quantity, 1))) }}
+                        },
+                        @endforeach
+                    ]
                 });
             }
 
