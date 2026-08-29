@@ -28,15 +28,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Price (RM)</label>
-                        <input type="number" name="price" value="{{ old('price') }}" required class="premium-input" placeholder="e.g. 898">
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Single Phase Price (RM)</label>
+                        <input type="number" step="0.01" name="price" value="{{ old('price') }}" required class="premium-input" placeholder="e.g. 1498">
                         @error('price') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                     </div>
                     <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">3 Phase Price (22kW) (Optional RM)</label>
+                        <input type="number" step="0.01" name="price_3phase" value="{{ old('price_3phase') }}" class="premium-input" placeholder="e.g. 1598">
+                        @error('price_3phase') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
                         <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3">Price Unit (Optional)</label>
-                        <input type="text" name="price_unit" value="{{ old('price_unit') }}" class="premium-input" placeholder="e.g. meter, hole, run">
+                        <input type="text" name="price_unit" value="{{ old('price_unit') }}" class="premium-input" placeholder="e.g. meter, unit">
                         @error('price_unit') <p class="mt-2 text-[10px] text-red-500 font-bold uppercase">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -61,6 +66,35 @@
                     </div>
                     <button type="button" @click="features.push('')" class="mt-4 text-[10px] font-black uppercase tracking-widest text-ev-green hover:underline">
                         + Add Feature
+                    </button>
+                </div>
+
+                <div x-data="{ addons: [] }">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-text-muted">Package Specific Add-ons & Cable Upgrades (Optional)</label>
+                    </div>
+                    <div class="space-y-3">
+                        <template x-for="(addon, index) in addons" :key="index">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center bg-black/20 p-3 rounded-xl border border-glass-border">
+                                <div class="md:col-span-5">
+                                    <input type="text" :name="'addons['+index+'][name]'" x-model="addon.name" class="premium-input text-xs" placeholder="e.g. 10mm Mega Cable Upgrade">
+                                </div>
+                                <div class="md:col-span-3">
+                                    <input type="number" step="0.01" :name="'addons['+index+'][price]'" x-model="addon.price" class="premium-input text-xs" placeholder="Single Phase Price (RM)">
+                                </div>
+                                <div class="md:col-span-3">
+                                    <input type="number" step="0.01" :name="'addons['+index+'][price_3phase]'" x-model="addon.price_3phase" class="premium-input text-xs" placeholder="3 Phase Price (Opt RM)">
+                                </div>
+                                <div class="md:col-span-1 flex justify-end">
+                                    <button type="button" @click="addons.splice(index, 1)" class="text-red-500/50 hover:text-red-500 p-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="addons.push({ name: '', price: '', price_3phase: '' })" class="mt-4 text-[10px] font-black uppercase tracking-widest text-ev-green hover:underline">
+                        + Add Package Add-on / Cable Upgrade
                     </button>
                 </div>
 

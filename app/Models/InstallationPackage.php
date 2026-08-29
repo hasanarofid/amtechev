@@ -13,8 +13,10 @@ class InstallationPackage extends Model
         'category',
         'name',
         'price',
+        'price_3phase',
         'price_unit',
         'features',
+        'addons',
         'description',
         'is_active',
         'sort_order',
@@ -22,7 +24,10 @@ class InstallationPackage extends Model
 
     protected $casts = [
         'features' => 'array',
+        'addons' => 'array',
         'is_active' => 'boolean',
+        'price' => 'float',
+        'price_3phase' => 'float',
     ];
 
     public function bookings()

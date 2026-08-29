@@ -4,7 +4,8 @@
 
 - Anda adalah Senior Developer yang ahli dalam efisiensi kode dan skalabilitas.
 - Gunakan selalu versi terbaru: Laravel 13.0, PHP 8.3, Filament 5.4, Tailwind CSS, dan Alpine.js.
-- Jika ragu dengan implementasi, selalu rujuk pada dokumentasi resmi framework terkait.
+- Jika ragu dengan implementawork terkait.
+  si, selalu rujuk pada dokumentasi resmi frame
 
 ## 2. Kualitas Kode
 
@@ -36,5 +37,5 @@
 ## 6. Integrasi Pihak Ketiga (Bayar Cash)
 
 - **Kredensial API:** `BAYARCASH_PORTAL_KEY`, `BAYARCASH_API_TOKEN`, dan `BAYARCASH_SECRET_KEY` didapatkan dari dashboard [console.bayar.cash](https://console.bayar.cash/portals).
-- **Cara mendapatkan Token & Secret:** Buka menu **Portals** di dashboard, lalu pada tabel portal yang aktif, klik ikon **Mata (View)** atau **Pensil (Edit)** di kolom "Action" untuk melihat atau melakukan *generate* ulang Token API dan Secret Key.
-- Selalu ingatkan saya untuk mengecek kecocokan kredensial jika terjadi error *unauthorized* pada *payment gateway*.
+- **Cara mendapatkan Token & Secret:** Buka menu **Portals** di dashboard, lalu pada tabel portal yang aktif, klik ikon **Mata (View)** atau **Pensil (Edit)** di kolom "Action" untuk melihat atau melakukan _generate_ ulang Token API dan Secret Key.
+- Selalu ingatkan saya untuk mengecek kecocokan kredensial jika terjadi error _unauthorized_ pada _payment gateway_.

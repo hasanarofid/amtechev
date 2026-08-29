@@ -27,7 +27,12 @@
                             <div class="glass-card p-6 flex flex-col group h-full border-l-2 {{ $package->is_active ? 'border-ev-green/50' : 'border-red-500/50' }}">
                                 <div class="flex justify-between items-start mb-4">
                                     <h4 class="text-lg font-bold uppercase tracking-tight text-main">{{ $package->name }}</h4>
-                                    <span class="text-xs font-black text-ev-green">RM{{ number_format($package->price, 0) }}</span>
+                                    <div class="text-right">
+                                        <span class="text-xs font-black text-ev-green block">RM{{ number_format($package->price, 0) }} <span class="text-[9px] text-text-muted font-normal">(1P)</span></span>
+                                        @if($package->price_3phase)
+                                            <span class="text-xs font-black text-ev-green block">RM{{ number_format($package->price_3phase, 0) }} <span class="text-[9px] text-text-muted font-normal">(3P)</span></span>
+                                        @endif
+                                    </div>
                                 </div>
                                 
                                 <p class="text-[10px] text-text-muted uppercase tracking-widest mb-4">
@@ -35,7 +40,7 @@
                                 </p>
 
                                 @if($package->features)
-                                    <ul class="text-[10px] space-y-2 mb-6 text-text-muted flex-1">
+                                    <ul class="text-[10px] space-y-2 mb-4 text-text-muted flex-1">
                                         @foreach($package->features as $feature)
                                             <li class="flex items-center gap-2">
                                                 <svg class="w-3 h-3 text-ev-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -43,6 +48,25 @@
                                             </li>
                                         @endforeach
                                     </ul>
+                                @endif
+
+                                @if($package->addons && count($package->addons) > 0)
+                                    <div class="mb-6 pt-3 border-t border-glass-border">
+                                        <p class="text-[9px] font-bold uppercase tracking-widest text-ev-green mb-2">Package Add-ons / Variations:</p>
+                                        <ul class="text-[10px] space-y-1.5 text-text-muted">
+                                            @foreach($package->addons as $addon)
+                                                <li class="flex justify-between items-center bg-black/20 p-1.5 rounded">
+                                                    <span>{{ $addon['name'] }}</span>
+                                                    <span class="font-bold text-main">
+                                                        +RM{{ number_format($addon['price'] ?? 0, 0) }}
+                                                        @if(!empty($addon['price_3phase']))
+                                                            <span class="text-[8px] text-text-muted font-normal">(1P)</span> / +RM{{ number_format($addon['price_3phase'], 0) }} <span class="text-[8px] text-text-muted font-normal">(3P)</span>
+                                                        @endif
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 @endif
 
                                 <div class="flex gap-4 pt-4 border-t border-glass-border mt-auto">

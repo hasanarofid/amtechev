@@ -54,6 +54,8 @@ class BookingController extends Controller
             'items'          => 'required|array|min:1',
             'items.*.id'     => 'required|exists:installation_packages,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.selected_phase' => 'nullable|string',
+            'items.*.selected_addon' => 'nullable|string',
         ]);
 
         // Resolve full package info for the session
@@ -63,12 +65,34 @@ class BookingController extends Controller
             $pkg = InstallationPackage::find($item['id']);
             if (!$pkg) continue;
             $qty   = (int) $item['quantity'];
-            $price = (float) $pkg->price;
+            $selectedPhase = $item['selected_phase'] ?? '1phase';
+            $selectedAddonName = $item['selected_addon'] ?? null;
+
+            $price = ($selectedPhase === '3phase' && $pkg->price_3phase) ? (float) $pkg->price_3phase : (float) $pkg->price;
+            
+            $itemName = $pkg->name;
+            if ($pkg->price_3phase) {
+                $itemName .= ($selectedPhase === '3phase') ? ' (3 Phase 22kW)' : ' (Single Phase)';
+            }
+
+            if ($selectedAddonName && !empty($pkg->addons)) {
+                foreach ($pkg->addons as $ad) {
+                    if (($ad['name'] ?? '') === $selectedAddonName) {
+                        $addonPrice = ($selectedPhase === '3phase' && !empty($ad['price_3phase'])) ? (float) $ad['price_3phase'] : (float) ($ad['price'] ?? 0);
+                        $price += $addonPrice;
+                        $itemName .= ' + ' . $selectedAddonName;
+                        break;
+                    }
+                }
+            }
+
             $resolvedItems[] = [
-                'id'       => $pkg->id,
-                'name'     => $pkg->name,
-                'price'    => $price,
-                'quantity' => $qty,
+                'id'             => $pkg->id,
+                'name'           => $itemName,
+                'price'          => $price,
+                'quantity'       => $qty,
+                'selected_phase' => $selectedPhase,
+                'selected_addon' => $selectedAddonName,
             ];
             $totalPrice += $price * $qty;
         }
@@ -131,6 +155,8 @@ class BookingController extends Controller
                 Rule::exists('installation_packages', 'id')->whereNull('deleted_at'),
             ],
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.selected_phase' => 'nullable|string',
+            'items.*.selected_addon' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
 
@@ -158,12 +184,29 @@ class BookingController extends Controller
         $totalPrice = 0;
         foreach ($validated['items'] as $itemData) {
             $package = InstallationPackage::find($itemData['id']);
-            $price = $package->price * $itemData['quantity'];
+            if (!$package) continue;
+
+            $selectedPhase = $itemData['selected_phase'] ?? '1phase';
+            $selectedAddonName = $itemData['selected_addon'] ?? null;
+
+            $unitPrice = ($selectedPhase === '3phase' && $package->price_3phase) ? (float) $package->price_3phase : (float) $package->price;
+            
+            if ($selectedAddonName && !empty($package->addons)) {
+                foreach ($package->addons as $ad) {
+                    if (($ad['name'] ?? '') === $selectedAddonName) {
+                        $addonPrice = ($selectedPhase === '3phase' && !empty($ad['price_3phase'])) ? (float) $ad['price_3phase'] : (float) ($ad['price'] ?? 0);
+                        $unitPrice += $addonPrice;
+                        break;
+                    }
+                }
+            }
+
+            $price = $unitPrice * $itemData['quantity'];
             
             $booking->items()->create([
                 'installation_package_id' => $package->id,
                 'quantity' => $itemData['quantity'],
-                'price_at_booking' => $package->price,
+                'price_at_booking' => $unitPrice,
             ]);
             
             $totalPrice += $price;
