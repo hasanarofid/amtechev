@@ -380,16 +380,19 @@
 
             getDisplayFeatures(pkgId) {
                 const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.features) return [];
+                if (!pkg || !Array.isArray(pkg.features)) return [];
                 
                 const phase = this.getPhase(pkgId);
                 const addons = this.getAddons(pkgId);
-                const addonNames = addons.map(a => a.name);
+                const addonNames = addons.map(a => (a && a.name) ? String(a.name) : '');
 
-                return pkg.features.map(feat => {
-                    let text = feat;
+                return pkg.features.filter(feat => feat !== null && feat !== undefined).map(feat => {
+                    let text = String(feat || '');
+                    if (!text) return '';
 
-                    if (text.toLowerCase().includes('cable') && !text.toLowerCase().includes('installation')) {
+                    const lower = text.toLowerCase();
+
+                    if (lower.includes('cable') && !lower.includes('installation')) {
                         if (addonNames.some(n => n.includes('10mm Mega Cable'))) {
                             return '10mm Heavy-Duty Mega Cable (SIRIM & JKR Approved)';
                         } else if (addonNames.some(n => n.includes('6mm Mega Cable'))) {
