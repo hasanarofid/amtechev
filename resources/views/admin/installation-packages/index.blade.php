@@ -28,7 +28,12 @@
                                 <div class="flex justify-between items-start mb-4">
                                     <h4 class="text-lg font-bold uppercase tracking-tight text-main">{{ $package->name }}</h4>
                                     <div class="text-right">
-                                        <span class="text-xs font-black text-ev-green block">RM{{ number_format($package->price, 0) }} <span class="text-[9px] text-text-muted font-normal">(1P)</span></span>
+                                        <span class="text-xs font-black text-ev-green block">
+                                            RM{{ number_format($package->price, 0) }}
+                                            @if($package->price_3phase)
+                                                <span class="text-[9px] text-text-muted font-normal">(1P)</span>
+                                            @endif
+                                        </span>
                                         @if($package->price_3phase)
                                             <span class="text-xs font-black text-ev-green block">RM{{ number_format($package->price_3phase, 0) }} <span class="text-[9px] text-text-muted font-normal">(3P)</span></span>
                                         @endif

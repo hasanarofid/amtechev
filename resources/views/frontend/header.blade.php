@@ -27,7 +27,7 @@
                 Home
             </a>
             <a href="{{ route('booking.index') }}" class="transition-all duration-300 {{ request()->routeIs('booking.index') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
-                Price Estimator
+                Pricing
             </a>
             <a href="{{ route('check-slot.index') }}" class="transition-all duration-300 {{ request()->routeIs('check-slot.index') ? 'px-5 py-2 border border-ev-green text-ev-green rounded-full font-bold' : 'hover:text-ev-green' }}">
                 Check & Book Slot
@@ -153,7 +153,7 @@
                     Home
                 </a>
                 <a href="{{ route('booking.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('booking.index') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
-                    Price Estimator
+                    Pricing
                 </a>
                 <a href="{{ route('check-slot.index') }}" @click="mobileMenuOpen = false" class="text-xl font-medium tracking-tight {{ request()->routeIs('check-slot.index') ? 'text-ev-green' : 'text-gray-900 dark:text-white' }}">
                     Check & Book Slot
