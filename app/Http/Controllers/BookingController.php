@@ -76,13 +76,17 @@ class BookingController extends Controller
             }
 
             if ($selectedAddonName && !empty($pkg->addons)) {
+                $addonList = is_array($selectedAddonName) ? $selectedAddonName : array_map('trim', explode(',', $selectedAddonName));
+                $addedAddonNames = [];
                 foreach ($pkg->addons as $ad) {
-                    if (($ad['name'] ?? '') === $selectedAddonName) {
+                    if (in_array($ad['name'] ?? '', $addonList)) {
                         $addonPrice = ($selectedPhase === '3phase' && !empty($ad['price_3phase'])) ? (float) $ad['price_3phase'] : (float) ($ad['price'] ?? 0);
                         $price += $addonPrice;
-                        $itemName .= ' + ' . $selectedAddonName;
-                        break;
+                        $addedAddonNames[] = $ad['name'];
                     }
+                }
+                if (!empty($addedAddonNames)) {
+                    $itemName .= ' + ' . implode(', ', $addedAddonNames);
                 }
             }
 
@@ -192,11 +196,11 @@ class BookingController extends Controller
             $unitPrice = ($selectedPhase === '3phase' && $package->price_3phase) ? (float) $package->price_3phase : (float) $package->price;
             
             if ($selectedAddonName && !empty($package->addons)) {
+                $addonList = is_array($selectedAddonName) ? $selectedAddonName : array_map('trim', explode(',', $selectedAddonName));
                 foreach ($package->addons as $ad) {
-                    if (($ad['name'] ?? '') === $selectedAddonName) {
+                    if (in_array($ad['name'] ?? '', $addonList)) {
                         $addonPrice = ($selectedPhase === '3phase' && !empty($ad['price_3phase'])) ? (float) $ad['price_3phase'] : (float) ($ad['price'] ?? 0);
                         $unitPrice += $addonPrice;
-                        break;
                     }
                 }
             }

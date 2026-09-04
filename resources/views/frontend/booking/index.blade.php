@@ -249,8 +249,9 @@
 
 @section('content')
 <script>
-    function bookingForm() {
+    function createBookingForm(packagesData) {
         return {
+            packages: packagesData || {},
             selectedItems: [],
             totalPrice: 0,
             selectedDate: '',
@@ -260,6 +261,8 @@
             currentMonth: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+            packagePhases: {},
+            packageAddons: {},
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
@@ -276,6 +279,10 @@
 
                 this.buildCalendar();
                 this.fetchAvailability();
+            },
+
+            getPackage(id) {
+                return this.packages[id] || null;
             },
 
             formatYMD(date) {
@@ -312,7 +319,6 @@
 
                 for (let i = 1; i <= lastDay.getDate(); i++) {
                     const d = new Date(this.currentYear, this.currentMonth, i);
-                    // Disable today and past dates to match server validation (after:today)
                     days.push({ 
                         dateStr: this.formatYMD(d), 
                         dayNum: i, 
@@ -359,133 +365,154 @@
             isFull(d)  { return !!this.availability[d]?.is_full; },
 
             isSelected(id) {
-                return this.selectedItems.some(i => i.id === id);
+                return (this.selectedItems || []).some(i => i.id === id);
             },
 
             getQty(id) {
-                const item = this.selectedItems.find(i => i.id === id);
+                const item = (this.selectedItems || []).find(i => i.id === id);
                 return item ? item.quantity : 0;
             },
 
-            packagePhases: {},
-            packageAddons: {},
             getPhase(id) { return this.packagePhases[id] || '1phase'; },
-            getAddon(id) { return this.packageAddons[id] || null; },
+            getAddons(id) { return this.packageAddons[id] || []; },
 
             isAddonSelected(pkgId, addonName) {
-                const current = this.getAddon(pkgId);
-                return current ? current.name === addonName : false;
+                const addons = this.getAddons(pkgId);
+                return addons.some(a => a.name === addonName);
             },
 
-            ensurePackageSelected(pkg) {
+            ensurePackageSelected(pkgId) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg) return;
+                const addons = this.getAddons(pkg.id);
+                const phase = this.getPhase(pkg.id);
+                const price = this.getPackageTotalPrice(pkg.id);
+                const addonNamesStr = addons.map(a => a.name).join(', ');
+                let name = pkg.name;
+                if (pkg.price_3phase) {
+                    name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
+                }
+                if (addons.length > 0) {
+                    name += ' + ' + addonNamesStr;
+                }
+
                 if (!this.isSelected(pkg.id)) {
-                    const phase = this.getPhase(pkg.id);
-                    const addon = this.getAddon(pkg.id);
-                    const price = this.getPackageTotalPrice(pkg);
-                    let name = pkg.name;
-                    if (pkg.price_3phase) {
-                        name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
-                    }
-                    if (addon) {
-                        name += ' + ' + addon.name;
-                    }
                     this.selectedItems.push({
                         id: pkg.id,
                         name: name,
                         price: price,
                         selected_phase: phase,
-                        selected_addon: addon ? addon.name : null,
+                        selected_addon: addonNamesStr,
                         quantity: 1
                     });
                     this.calculateTotal();
                 } else {
-                    this.updateSelectedPackageState(pkg);
+                    this.updateSelectedPackageState(pkg.id);
                 }
             },
 
-            setPhase(pkg, phase) {
-                this.packagePhases = { ...this.packagePhases, [pkg.id]: phase };
-                this.ensurePackageSelected(pkg);
+            setPhase(pkgId, phase) {
+                this.packagePhases = { ...this.packagePhases, [pkgId]: phase };
+                this.ensurePackageSelected(pkgId);
             },
 
-            togglePackageAddon(pkg, addon) {
-                const current = this.getAddon(pkg.id);
-                if (current && current.name === addon.name) {
-                    this.packageAddons = { ...this.packageAddons, [pkg.id]: null };
+            togglePackageAddon(pkgId, addonName) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg || !pkg.addons) return;
+                const addon = pkg.addons.find(a => a.name === addonName);
+                if (!addon) return;
+
+                let currentAddons = [...this.getAddons(pkgId)];
+                const idx = currentAddons.findIndex(a => a.name === addonName);
+                if (idx > -1) {
+                    currentAddons.splice(idx, 1);
                 } else {
-                    this.packageAddons = { ...this.packageAddons, [pkg.id]: addon };
+                    currentAddons.push(addon);
                 }
-                this.ensurePackageSelected(pkg);
+                this.packageAddons = { ...this.packageAddons, [pkgId]: currentAddons };
+                this.ensurePackageSelected(pkgId);
             },
 
-            getPackageTotalPrice(pkg) {
+            getPackageTotalPrice(pkgId) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg) return 0;
                 const phase = this.getPhase(pkg.id);
                 let price = (phase === '3phase' && pkg.price_3phase) ? parseFloat(pkg.price_3phase) : parseFloat(pkg.price);
-                const addon = this.getAddon(pkg.id);
-                if (addon) {
+                const addons = this.getAddons(pkg.id);
+                addons.forEach(addon => {
                     const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
                         ? parseFloat(addon.price_3phase)
                         : parseFloat(addon.price || 0);
                     price += addonPrice;
-                }
+                });
                 return price;
             },
 
-            getItemPriceDisplay(pkg) {
-                const p = this.getPackageTotalPrice(pkg);
+            getItemPriceDisplay(pkgId) {
+                const p = this.getPackageTotalPrice(pkgId);
                 return p.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
-            getAddonPriceDisplay(pkg, addon) {
-                const phase = this.getPhase(pkg.id);
+            getAddonPriceDisplay(pkgId, addonName) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg || !pkg.addons) return '0';
+                const addon = pkg.addons.find(a => a.name === addonName);
+                if (!addon) return '0';
+                const phase = this.getPhase(pkgId);
                 const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
                     ? parseFloat(addon.price_3phase)
                     : parseFloat(addon.price || 0);
                 return addonPrice.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
-            updateSelectedPackageState(pkg) {
-                const item = this.selectedItems.find(i => i.id === pkg.id);
+            updateSelectedPackageState(pkgId) {
+                const item = this.selectedItems.find(i => i.id === pkgId);
                 if (!item) return;
-                const phase = this.getPhase(pkg.id);
-                const addon = this.getAddon(pkg.id);
+                const pkg = this.getPackage(pkgId);
+                if (!pkg) return;
+                const phase = this.getPhase(pkgId);
+                const addons = this.getAddons(pkgId);
+                const addonNamesStr = addons.map(a => a.name).join(', ');
                 item.selected_phase = phase;
-                item.selected_addon = addon ? addon.name : null;
-                item.price = this.getPackageTotalPrice(pkg);
+                item.selected_addon = addonNamesStr;
+                item.price = this.getPackageTotalPrice(pkgId);
                 
                 let name = pkg.name;
                 if (pkg.price_3phase) {
                     name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
                 }
-                if (addon) {
-                    name += ' + ' + addon.name;
+                if (addons.length > 0) {
+                    name += ' + ' + addonNamesStr;
                 }
                 item.name = name;
                 this.calculateTotal();
                 this.selectedItems = [...this.selectedItems];
             },
 
-            togglePackage(pkg) {
-                const idx = this.selectedItems.findIndex(i => i.id === pkg.id);
+            togglePackage(pkgId) {
+                const idx = this.selectedItems.findIndex(i => i.id === pkgId);
                 if (idx > -1) {
                     this.selectedItems.splice(idx, 1);
                 } else {
+                    const pkg = this.getPackage(pkgId);
+                    if (!pkg) return;
                     const phase = this.getPhase(pkg.id);
-                    const addon = this.getAddon(pkg.id);
-                    const price = this.getPackageTotalPrice(pkg);
+                    const addons = this.getAddons(pkg.id);
+                    const price = this.getPackageTotalPrice(pkg.id);
+                    const addonNamesStr = addons.map(a => a.name).join(', ');
                     let name = pkg.name;
                     if (pkg.price_3phase) {
                         name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
                     }
-                    if (addon) {
-                        name += ' + ' + addon.name;
+                    if (addons.length > 0) {
+                        name += ' + ' + addonNamesStr;
                     }
                     this.selectedItems.push({
                         id: pkg.id,
                         name: name,
                         price: price,
                         selected_phase: phase,
-                        selected_addon: addon ? addon.name : null,
+                        selected_addon: addonNamesStr,
                         quantity: 1
                     });
                 }
@@ -499,7 +526,7 @@
             },
 
             calculateTotal() {
-                this.totalPrice = this.selectedItems.reduce((s, i) => s + i.price * i.quantity, 0);
+                this.totalPrice = (this.selectedItems || []).reduce((s, i) => s + i.price * i.quantity, 0);
             },
 
             formatDate(d) {
@@ -512,11 +539,20 @@
             get monthLabel() {
                 return `${this.monthNames[this.currentMonth]} ${this.currentYear}`;
             }
-        }
+        };
+    }
+
+    window.bookingForm = createBookingForm;
+    if (window.Alpine) {
+        window.Alpine.data('bookingForm', createBookingForm);
+    } else {
+        document.addEventListener('alpine:init', () => {
+            window.Alpine.data('bookingForm', createBookingForm);
+        });
     }
 </script>
 
-<div class="booking-page px-4 md:px-6 lg:px-10" x-data="bookingForm()">
+<div class="booking-page px-4 md:px-6 lg:px-10" x-data="bookingForm(@json($packages->keyBy('id')))">
     <div class="max-w-7xl mx-auto">
 
         {{-- ── Page Header ──────────────────────────────────────── --}}
@@ -583,7 +619,7 @@
                         @foreach($packages->where('category', 'Standard Package') as $package)
                         <div class="pkg-item relative select-none"
                             :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''"
-                            @click="togglePackage({{ json_encode($package) }})">
+                            @click="togglePackage({{ $package->id }})">
                             <div class="flex items-start gap-3">
                                 <div class="check-circle mt-0.5"
                                     :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
@@ -595,7 +631,7 @@
                                     <div class="flex items-start justify-between gap-2">
                                         <h3 class="font-bold text-sm leading-tight" style="color: var(--text-main);">{{ $package->name }}</h3>
                                         <div class="text-base font-black shrink-0" style="color: var(--accent);">
-                                            RM<span x-text="getItemPriceDisplay({{ json_encode($package) }})"></span>
+                                            RM<span x-text="getItemPriceDisplay({{ $package->id }})"></span>
                                         </div>
                                     </div>
                                     @if($package->features)
@@ -614,15 +650,17 @@
                                         <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
                                         <div class="inline-flex rounded-xl p-1 gap-1 w-full sm:w-auto" style="background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);">
                                             <button type="button" 
-                                                @click.stop="setPhase({{ json_encode($package) }}, '1phase')"
+                                                @click.stop="setPhase({{ $package->id }}, '1phase')"
                                                 class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center"
-                                                :class="getPhase({{ $package->id }}) === '1phase' ? 'bg-ev-green text-black font-black shadow-md' : 'text-text-muted hover:text-white'">
+                                                :style="getPhase({{ $package->id }}) === '1phase' ? 'background: var(--accent); color: #000; font-weight: 900;' : 'color: var(--text-muted);'"
+                                                :class="getPhase({{ $package->id }}) === '1phase' ? 'shadow-md' : 'hover:text-white'">
                                                 Single Phase (7kW)
                                             </button>
                                             <button type="button" 
-                                                @click.stop="setPhase({{ json_encode($package) }}, '3phase')"
+                                                @click.stop="setPhase({{ $package->id }}, '3phase')"
                                                 class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center"
-                                                :class="getPhase({{ $package->id }}) === '3phase' ? 'bg-ev-green text-black font-black shadow-md' : 'text-text-muted hover:text-white'">
+                                                :style="getPhase({{ $package->id }}) === '3phase' ? 'background: var(--accent); color: #000; font-weight: 900;' : 'color: var(--text-muted);'"
+                                                :class="getPhase({{ $package->id }}) === '3phase' ? 'shadow-md' : 'hover:text-white'">
                                                 3 Phase (22kW)
                                             </button>
                                         </div>
@@ -635,17 +673,19 @@
                                         <div class="space-y-2">
                                             @foreach($package->addons as $addon)
                                             <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none"
-                                                :class="isAddonSelected({{ $package->id }}, {!! json_encode($addon['name']) !!}) ? 'bg-ev-green/15 border-2 border-ev-green shadow-sm' : 'bg-black/30 border border-glass-border hover:border-glass-border/80'"
-                                                @click.stop="togglePackageAddon({{ json_encode($package) }}, {{ json_encode($addon) }})">
+                                                :style="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}') ? 'background: rgba(0,166,81,0.12); border: 1.5px solid var(--accent);' : 'background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);'"
+                                                @click.stop="togglePackageAddon({{ $package->id }}, '{{ addslashes($addon['name']) }}')">
                                                 <div class="flex items-center gap-2.5 min-w-0 pr-2">
-                                                    <div class="w-4 h-4 rounded-full flex items-center justify-center border transition-all shrink-0"
-                                                        :class="isAddonSelected({{ $package->id }}, {!! json_encode($addon['name']) !!}) ? 'bg-ev-green border-ev-green' : 'border-glass-border bg-black/40'">
-                                                        <div x-show="isAddonSelected({{ $package->id }}, {!! json_encode($addon['name']) !!})" class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                                                    <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
+                                                        :style="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}') ? 'background: var(--accent); border-color: var(--accent);' : 'background: rgba(0,0,0,0.4); border-color: var(--glass-border);'">
+                                                        <svg x-show="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}')" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                        </svg>
                                                     </div>
                                                     <span class="font-medium text-[11px] leading-tight" style="color: var(--text-main);">{{ $addon['name'] }}</span>
                                                 </div>
                                                 <span class="font-black text-[11px] shrink-0" style="color: var(--accent);">
-                                                    +RM<span x-text="getAddonPriceDisplay({{ json_encode($package) }}, {{ json_encode($addon) }})"></span>
+                                                    +RM<span x-text="getAddonPriceDisplay({{ $package->id }}, '{{ addslashes($addon['name']) }}')"></span>
                                                 </span>
                                             </div>
                                             @endforeach
@@ -680,14 +720,14 @@
 
                                     <div class="addon-check"
                                         :class="isSelected({{ $item->id }}) ? 'addon-check--checked' : ''"
-                                        @click="togglePackage({{ json_encode($item) }})"
+                                        @click="togglePackage({{ $item->id }})"
                                         style="cursor:pointer;">
                                         <svg x-show="isSelected({{ $item->id }})" class="w-2.5 h-2.5" viewBox="0 0 20 20" fill="#000">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
 
-                                    <div class="flex-1 min-w-0 cursor-pointer" @click="togglePackage({{ json_encode($item) }})">
+                                    <div class="flex-1 min-w-0 cursor-pointer" @click="togglePackage({{ $item->id }})">
                                         <p class="font-semibold text-xs leading-tight" style="color: var(--text-main);">{{ $item->name }}</p>
                                         <p class="text-[10px] font-black mt-0.5" style="color: var(--accent);">
                                             RM{{ number_format($item->price, 0) }} {{ $item->price_unit ? '/ '.$item->price_unit : '' }}
