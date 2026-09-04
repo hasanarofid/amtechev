@@ -378,6 +378,41 @@
             getPhase(id) { return this.packagePhases[id] || '1phase'; },
             getAddons(id) { return this.packageAddons[id] || []; },
 
+            getDisplayFeatures(pkgId) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg || !pkg.features) return [];
+                
+                const phase = this.getPhase(pkgId);
+                const addons = this.getAddons(pkgId);
+                const addonNames = addons.map(a => a.name);
+
+                return pkg.features.map(feat => {
+                    let text = feat;
+
+                    if (text.toLowerCase().includes('cable') && !text.toLowerCase().includes('installation')) {
+                        if (addonNames.some(n => n.includes('10mm Mega Cable'))) {
+                            return '10mm Heavy-Duty Mega Cable (SIRIM & JKR Approved)';
+                        } else if (addonNames.some(n => n.includes('6mm Mega Cable'))) {
+                            return '6mm Heavy-Duty Mega Cable (SIRIM & JKR Approved)';
+                        } else if (addonNames.some(n => n.includes('10mm SIRIM Cable'))) {
+                            return '10mm SIRIM Approved Cable (Upgraded)';
+                        }
+                    }
+
+                    if (phase === '3phase') {
+                        if (text.includes('MCB') && !text.includes('4-Pole')) {
+                            text = text.replace('MCB', '4-Pole MCB (3 Phase)');
+                        } else if (text.includes('RCCB') && !text.includes('4-Pole')) {
+                            text = text.replace('RCCB', '4-Pole RCCB (3 Phase)');
+                        } else if (text.includes('Isolator') && !text.includes('4-Pole')) {
+                            text = text.replace('Isolator', '63A 4-Pole Isolator (3 Phase)');
+                        }
+                    }
+
+                    return text;
+                });
+            },
+
             isAddonSelected(pkgId, addonName) {
                 const addons = this.getAddons(pkgId);
                 return addons.some(a => a.name === addonName);
@@ -638,12 +673,12 @@
                                     </div>
                                     @if($package->features)
                                     <ul class="mt-2 space-y-1">
-                                        @foreach($package->features as $feature)
-                                        <li class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted);">
-                                            <span class="w-1 h-1 rounded-full shrink-0" style="background: var(--accent);"></span>
-                                            {{ $feature }}
-                                        </li>
-                                        @endforeach
+                                        <template x-for="(feat, fIdx) in getDisplayFeatures({{ $package->id }})" :key="fIdx">
+                                            <li class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted);">
+                                                <span class="w-1 h-1 rounded-full shrink-0" style="background: var(--accent);"></span>
+                                                <span x-text="feat"></span>
+                                            </li>
+                                        </template>
                                     </ul>
                                     @endif
 
