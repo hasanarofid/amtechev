@@ -269,6 +269,14 @@
             init() {
                 this.todayStr = this.formatYMD(new Date());
 
+                // Pre-initialize phase & addons map for all packages so Alpine tracks them reactively
+                if (this.packages) {
+                    Object.keys(this.packages).forEach(id => {
+                        this.packagePhases[id] = '1phase';
+                        this.packageAddons[id] = [];
+                    });
+                }
+
                 // Pre-fill date from URL query param
                 const params = new URLSearchParams(window.location.search);
                 const urlDate = params.get('date');
@@ -375,8 +383,13 @@
                 return item ? item.quantity : 0;
             },
 
-            getPhase(id) { return this.packagePhases[id] || '1phase'; },
-            getAddons(id) { return this.packageAddons[id] || []; },
+            getPhase(id) {
+                return (this.packagePhases && this.packagePhases[id]) ? this.packagePhases[id] : '1phase';
+            },
+
+            getAddons(id) {
+                return (this.packageAddons && this.packageAddons[id]) ? this.packageAddons[id] : [];
+            },
 
             getDisplayFeatures(pkgId) {
                 const pkg = this.getPackage(pkgId);
@@ -421,7 +434,7 @@
                 if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return false;
                 const addon = pkg.addons[addonIndex];
                 const addons = this.getAddons(pkgId);
-                return addons.some(a => a.name === addon.name);
+                return addons.some(a => a && a.name === addon.name);
             },
 
             ensurePackageSelected(pkgId) {
@@ -456,7 +469,8 @@
             },
 
             setPhase(pkgId, phase) {
-                this.packagePhases = { ...this.packagePhases, [pkgId]: phase };
+                this.packagePhases[pkgId] = phase;
+                this.packagePhases = Object.assign({}, this.packagePhases);
                 this.ensurePackageSelected(pkgId);
             },
 
@@ -465,14 +479,15 @@
                 if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return;
                 const addon = pkg.addons[addonIndex];
 
-                let currentAddons = [...this.getAddons(pkgId)];
-                const idx = currentAddons.findIndex(a => a.name === addon.name);
+                let currentAddons = [...(this.getAddons(pkgId))];
+                const idx = currentAddons.findIndex(a => a && a.name === addon.name);
                 if (idx > -1) {
                     currentAddons.splice(idx, 1);
                 } else {
                     currentAddons.push(addon);
                 }
-                this.packageAddons = { ...this.packageAddons, [pkgId]: currentAddons };
+                this.packageAddons[pkgId] = currentAddons;
+                this.packageAddons = Object.assign({}, this.packageAddons);
                 this.ensurePackageSelected(pkgId);
             },
 
