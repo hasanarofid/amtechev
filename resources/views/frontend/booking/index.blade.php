@@ -249,9 +249,11 @@
 
 @section('content')
 <script>
-    function createBookingForm(packagesData) {
+    window.packagesData = @json($packages->keyBy('id'));
+
+    function createBookingForm() {
         return {
-            packages: packagesData || {},
+            packages: window.packagesData || {},
             selectedItems: [],
             totalPrice: 0,
             selectedDate: '',
@@ -552,7 +554,7 @@
     }
 </script>
 
-<div class="booking-page px-4 md:px-6 lg:px-10" x-data="bookingForm(@json($packages->keyBy('id')))">
+<div class="booking-page px-4 md:px-6 lg:px-10" x-data="bookingForm()">
     <div class="max-w-7xl mx-auto">
 
         {{-- ── Page Header ──────────────────────────────────────── --}}
