@@ -367,11 +367,11 @@
             isFull(d)  { return !!this.availability[d]?.is_full; },
 
             isSelected(id) {
-                return (this.selectedItems || []).some(i => i.id === id);
+                return (this.selectedItems || []).some(i => String(i.id) === String(id));
             },
 
             getQty(id) {
-                const item = (this.selectedItems || []).find(i => i.id === id);
+                const item = (this.selectedItems || []).find(i => String(i.id) === String(id));
                 return item ? item.quantity : 0;
             },
 
@@ -416,9 +416,12 @@
                 });
             },
 
-            isAddonSelected(pkgId, addonName) {
+            isAddonSelected(pkgId, addonIndex) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return false;
+                const addon = pkg.addons[addonIndex];
                 const addons = this.getAddons(pkgId);
-                return addons.some(a => a.name === addonName);
+                return addons.some(a => a.name === addon.name);
             },
 
             ensurePackageSelected(pkgId) {
@@ -445,6 +448,7 @@
                         selected_addon: addonNamesStr,
                         quantity: 1
                     });
+                    this.selectedItems = [...this.selectedItems];
                     this.calculateTotal();
                 } else {
                     this.updateSelectedPackageState(pkg.id);
@@ -456,14 +460,13 @@
                 this.ensurePackageSelected(pkgId);
             },
 
-            togglePackageAddon(pkgId, addonName) {
+            togglePackageAddon(pkgId, addonIndex) {
                 const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.addons) return;
-                const addon = pkg.addons.find(a => a.name === addonName);
-                if (!addon) return;
+                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return;
+                const addon = pkg.addons[addonIndex];
 
                 let currentAddons = [...this.getAddons(pkgId)];
-                const idx = currentAddons.findIndex(a => a.name === addonName);
+                const idx = currentAddons.findIndex(a => a.name === addon.name);
                 if (idx > -1) {
                     currentAddons.splice(idx, 1);
                 } else {
@@ -493,11 +496,10 @@
                 return p.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
-            getAddonPriceDisplay(pkgId, addonName) {
+            getAddonPriceDisplay(pkgId, addonIndex) {
                 const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.addons) return '0';
-                const addon = pkg.addons.find(a => a.name === addonName);
-                if (!addon) return '0';
+                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return '0';
+                const addon = pkg.addons[addonIndex];
                 const phase = this.getPhase(pkgId);
                 const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
                     ? parseFloat(addon.price_3phase)
@@ -506,7 +508,7 @@
             },
 
             updateSelectedPackageState(pkgId) {
-                const item = this.selectedItems.find(i => i.id === pkgId);
+                const item = this.selectedItems.find(i => String(i.id) === String(pkgId));
                 if (!item) return;
                 const pkg = this.getPackage(pkgId);
                 if (!pkg) return;
@@ -530,7 +532,7 @@
             },
 
             togglePackage(pkgId) {
-                const idx = this.selectedItems.findIndex(i => i.id === pkgId);
+                const idx = this.selectedItems.findIndex(i => String(i.id) === String(pkgId));
                 if (idx > -1) {
                     this.selectedItems.splice(idx, 1);
                 } else {
@@ -555,12 +557,13 @@
                         selected_addon: addonNamesStr,
                         quantity: 1
                     });
+                    this.selectedItems = [...this.selectedItems];
                 }
                 this.calculateTotal();
             },
 
             updateQty(id, delta) {
-                const item = this.selectedItems.find(i => i.id === id);
+                const item = this.selectedItems.find(i => String(i.id) === String(id));
                 if (item) item.quantity = Math.max(1, item.quantity + delta);
                 this.calculateTotal();
             },
@@ -711,21 +714,21 @@
                                     <div class="mt-4 pt-3 space-y-2" style="border-top: 1px solid var(--glass-border);" @click.stop>
                                         <span class="block text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Package Add-ons & Cable Upgrades:</span>
                                         <div class="space-y-2">
-                                            @foreach($package->addons as $addon)
+                                            @foreach($package->addons as $addonIndex => $addon)
                                             <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none"
-                                                :style="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}') ? 'background: rgba(0,166,81,0.12); border: 1.5px solid var(--accent);' : 'background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);'"
-                                                @click.stop="togglePackageAddon({{ $package->id }}, '{{ addslashes($addon['name']) }}')">
+                                                :style="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'background: rgba(0,166,81,0.12); border: 1.5px solid var(--accent);' : 'background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);'"
+                                                @click.stop="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
                                                 <div class="flex items-center gap-2.5 min-w-0 pr-2">
                                                     <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
-                                                        :style="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}') ? 'background: var(--accent); border-color: var(--accent);' : 'background: rgba(0,0,0,0.4); border-color: var(--glass-border);'">
-                                                        <svg x-show="isAddonSelected({{ $package->id }}, '{{ addslashes($addon['name']) }}')" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
+                                                        :style="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'background: var(--accent); border-color: var(--accent);' : 'background: rgba(0,0,0,0.4); border-color: var(--glass-border);'">
+                                                        <svg x-show="isAddonSelected({{ $package->id }}, {{ $addonIndex }})" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                                         </svg>
                                                     </div>
                                                     <span class="font-medium text-[11px] leading-tight" style="color: var(--text-main);">{{ $addon['name'] }}</span>
                                                 </div>
                                                 <span class="font-black text-[11px] shrink-0" style="color: var(--accent);">
-                                                    +RM<span x-text="getAddonPriceDisplay({{ $package->id }}, '{{ addslashes($addon['name']) }}')"></span>
+                                                    +RM<span x-text="getAddonPriceDisplay({{ $package->id }}, {{ $addonIndex }})"></span>
                                                 </span>
                                             </div>
                                             @endforeach
