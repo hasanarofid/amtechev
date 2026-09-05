@@ -244,9 +244,7 @@
     .phase-btn-active {
         background-color: var(--accent) !important;
         color: #000000 !important;
-        font-weight: 900 !important;
-        box-shadow: 0 4px 12px rgba(0,166,81,0.3) !important;
-    }
+}
     .phase-btn-inactive {
         color: var(--text-muted) !important;
         background-color: transparent !important;
@@ -283,7 +281,7 @@
 </style>
 @endpush
 
-@section('content')
+@push('head')
 <script>
     window.packagesData = @json($packages->keyBy('id'));
 
@@ -594,16 +592,22 @@
         };
     }
 
+    window.createBookingForm = createBookingForm;
     window.bookingForm = createBookingForm;
     if (window.Alpine) {
+        window.Alpine.data('createBookingForm', createBookingForm);
         window.Alpine.data('bookingForm', createBookingForm);
-    } else {
-        document.addEventListener('alpine:init', () => {
-            window.Alpine.data('bookingForm', createBookingForm);
-        });
     }
+    document.addEventListener('alpine:init', () => {
+        if (window.Alpine) {
+            window.Alpine.data('createBookingForm', createBookingForm);
+            window.Alpine.data('bookingForm', createBookingForm);
+        }
+    });
 </script>
+@endpush
 
+@section('content')
 <div class="booking-page px-4 md:px-6 lg:px-10" x-data="bookingForm()">
     <div class="max-w-7xl mx-auto">
 
