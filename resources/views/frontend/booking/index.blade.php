@@ -668,10 +668,11 @@
                     <div class="space-y-3">
                         @foreach($packages->where('category', 'Standard Package') as $package)
                         <div class="pkg-item relative select-none cursor-pointer"
-                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''">
+                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''"
+                            @click="togglePackageCheck({{ $package->id }})">
                             
-                            {{-- Header Section (Klik area ini untuk toggle card) --}}
-                            <div class="flex items-start gap-3" @click="togglePackageCheck({{ $package->id }})">
+                            {{-- Header Section (klik @click.stop agar tidak double-toggle dari parent) --}}
+                            <div class="flex items-start gap-3" @click.stop="togglePackageCheck({{ $package->id }})">
                                 {{-- Circle Checkbox --}}
                                 <div class="check-circle mt-0.5 cursor-pointer"
                                     :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
@@ -702,7 +703,7 @@
 
                             {{-- Options Section: Phase & Add-ons --}}
                             @if($package->price_3phase || ($package->addons && count($package->addons) > 0))
-                            <div class="mt-4 pt-3 space-y-3" style="border-top: 1px solid var(--glass-border);">
+                            <div class="mt-4 pt-3 space-y-3" style="border-top: 1px solid var(--glass-border);" @click.stop>
                                 @if($package->price_3phase)
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
