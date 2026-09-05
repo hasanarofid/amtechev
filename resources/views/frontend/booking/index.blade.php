@@ -299,16 +299,16 @@
             currentMonth: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+            activePhase: {},
+            activeAddons: {},
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
 
                 if (this.packages) {
                     Object.keys(this.packages).forEach(id => {
-                        if (this.packages[id]) {
-                            this.packages[id].selected_phase = '1phase';
-                            this.packages[id].selected_addons = [];
-                        }
+                        this.activePhase[id] = '1phase';
+                        this.activeAddons[id] = [];
                     });
                 }
 
@@ -418,24 +418,68 @@
                 return item ? item.quantity : 0;
             },
 
-            getPhase(id) {
-                const pkg = this.getPackage(id);
-                return (pkg && pkg.selected_phase) ? pkg.selected_phase : '1phase';
+            setPhase(pkgId, phase) {
+                this.activePhase[pkgId] = phase;
+                this.syncSelectedPackage(pkgId);
             },
 
-            getAddons(id) {
-                const pkg = this.getPackage(id);
-                if (!pkg || !Array.isArray(pkg.selected_addons) || !Array.isArray(pkg.addons)) return [];
-                return pkg.addons.filter((_, idx) => pkg.selected_addons.includes(idx));
+            togglePackageAddon(pkgId, addonIndex) {
+                const list = [...(this.activeAddons[pkgId] || [])];
+                const idxNum = Number(addonIndex);
+                const pos = list.indexOf(idxNum);
+                if (pos > -1) {
+                    list.splice(pos, 1);
+                } else {
+                    list.push(idxNum);
+                }
+                this.activeAddons[pkgId] = list;
+                this.syncSelectedPackage(pkgId);
+            },
+
+            getPackageTotalPrice(pkgId) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg) return 0;
+                const phase = this.activePhase[pkgId] || '1phase';
+                let price = (phase === '3phase' && pkg.price_3phase) ? parseFloat(pkg.price_3phase) : parseFloat(pkg.price);
+                const addonIndices = this.activeAddons[pkgId] || [];
+                if (pkg.addons && Array.isArray(pkg.addons)) {
+                    addonIndices.forEach(idx => {
+                        const addon = pkg.addons[idx];
+                        if (addon) {
+                            const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
+                                ? parseFloat(addon.price_3phase)
+                                : parseFloat(addon.price || 0);
+                            price += addonPrice;
+                        }
+                    });
+                }
+                return price;
+            },
+
+            getPackagePriceDisplay(pkgId) {
+                const p = this.getPackageTotalPrice(pkgId);
+                return p.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            },
+
+            getAddonPriceDisplay(pkgId, addonIndex) {
+                const pkg = this.getPackage(pkgId);
+                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return '0';
+                const addon = pkg.addons[addonIndex];
+                const phase = this.activePhase[pkgId] || '1phase';
+                const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
+                    ? parseFloat(addon.price_3phase)
+                    : parseFloat(addon.price || 0);
+                return addonPrice.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
             getDisplayFeatures(pkgId) {
                 const pkg = this.getPackage(pkgId);
                 if (!pkg || !Array.isArray(pkg.features)) return [];
                 
-                const phase = this.getPhase(pkgId);
-                const addons = this.getAddons(pkgId);
-                const addonNames = addons.map(a => (a && a.name) ? String(a.name) : '');
+                const phase = this.activePhase[pkgId] || '1phase';
+                const addonIndices = this.activeAddons[pkgId] || [];
+                const selectedAddons = (pkg.addons || []).filter((_, idx) => addonIndices.includes(idx));
+                const addonNames = selectedAddons.map(a => (a && a.name) ? String(a.name) : '');
 
                 return pkg.features.filter(feat => feat !== null && feat !== undefined).map(feat => {
                     let text = String(feat || '');
@@ -467,34 +511,31 @@
                 });
             },
 
-            isAddonSelected(pkgId, addonIndex) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg || !Array.isArray(pkg.selected_addons)) return false;
-                return pkg.selected_addons.includes(Number(addonIndex));
-            },
-
-            ensurePackageSelected(pkgId) {
+            syncSelectedPackage(pkgId) {
                 const pkg = this.getPackage(pkgId);
                 if (!pkg) return;
 
-                if (!pkg.selected_phase) pkg.selected_phase = '1phase';
-                if (!Array.isArray(pkg.selected_addons)) pkg.selected_addons = [];
-
-                const phase = pkg.selected_phase;
-                const addons = this.getAddons(pkg.id);
-                const addonNamesStr = addons.map(a => a.name).join(', ');
-                const price = this.getPackageTotalPrice(pkg.id);
+                const phase = this.activePhase[pkgId] || '1phase';
+                const addonIndices = this.activeAddons[pkgId] || [];
+                const selectedAddons = (pkg.addons || []).filter((_, idx) => addonIndices.includes(idx));
+                const addonNamesStr = selectedAddons.map(a => a.name).join(', ');
+                const price = this.getPackageTotalPrice(pkgId);
 
                 let name = pkg.name;
                 if (pkg.price_3phase) {
                     name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
                 }
-                if (addons.length > 0) {
+                if (selectedAddons.length > 0) {
                     name += ' + ' + addonNamesStr;
                 }
 
                 const existingIdx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkg.id));
-                if (existingIdx === -1) {
+                if (existingIdx > -1) {
+                    this.selectedItems[existingIdx].name = name;
+                    this.selectedItems[existingIdx].price = price;
+                    this.selectedItems[existingIdx].selected_phase = phase;
+                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
+                } else {
                     this.selectedItems.push({
                         id: pkg.id,
                         name: name,
@@ -503,76 +544,15 @@
                         selected_addon: addonNamesStr,
                         quantity: 1
                     });
-                } else {
-                    this.selectedItems[existingIdx].name = name;
-                    this.selectedItems[existingIdx].price = price;
-                    this.selectedItems[existingIdx].selected_phase = phase;
-                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
                 }
 
                 this.selectedItems = [...this.selectedItems];
                 this.calculateTotal();
             },
 
-            setPhase(pkgId, phase) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return;
-                pkg.selected_phase = phase;
-                this.packages = Object.assign({}, this.packages);
-                this.ensurePackageSelected(pkgId);
-            },
-
-            togglePackageAddon(pkgId, addonIndex) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return;
-                if (!Array.isArray(pkg.selected_addons)) {
-                    pkg.selected_addons = [];
-                }
-                const idxNum = Number(addonIndex);
-                const pos = pkg.selected_addons.indexOf(idxNum);
-                if (pos > -1) {
-                    pkg.selected_addons.splice(pos, 1);
-                } else {
-                    pkg.selected_addons.push(idxNum);
-                }
-                this.packages = Object.assign({}, this.packages);
-                this.ensurePackageSelected(pkgId);
-            },
-
-            getPackageTotalPrice(pkgId) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return 0;
-                const phase = this.getPhase(pkg.id);
-                let price = (phase === '3phase' && pkg.price_3phase) ? parseFloat(pkg.price_3phase) : parseFloat(pkg.price);
-                const addons = this.getAddons(pkg.id);
-                addons.forEach(addon => {
-                    const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
-                        ? parseFloat(addon.price_3phase)
-                        : parseFloat(addon.price || 0);
-                    price += addonPrice;
-                });
-                return price;
-            },
-
-            getItemPriceDisplay(pkgId) {
-                const p = this.getPackageTotalPrice(pkgId);
-                return p.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-            },
-
-            getAddonPriceDisplay(pkgId, addonIndex) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return '0';
-                const addon = pkg.addons[addonIndex];
-                const phase = this.getPhase(pkgId);
-                const addonPrice = (phase === '3phase' && addon.price_3phase !== undefined && addon.price_3phase !== null && addon.price_3phase !== '')
-                    ? parseFloat(addon.price_3phase)
-                    : parseFloat(addon.price || 0);
-                return addonPrice.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-            },
-
             handleCardClick(pkgId) {
                 if (!this.isSelected(pkgId)) {
-                    this.ensurePackageSelected(pkgId);
+                    this.syncSelectedPackage(pkgId);
                 }
             },
 
@@ -583,7 +563,7 @@
                     this.selectedItems = [...this.selectedItems];
                     this.calculateTotal();
                 } else {
-                    this.ensurePackageSelected(pkgId);
+                    this.syncSelectedPackage(pkgId);
                 }
             },
 
@@ -706,7 +686,7 @@
                                     <div class="flex items-start justify-between gap-2">
                                         <h3 class="font-bold text-sm leading-tight" style="color: var(--text-main);">{{ $package->name }}</h3>
                                         <div class="text-base font-black shrink-0" style="color: var(--accent);">
-                                            RM<span x-text="getItemPriceDisplay({{ $package->id }})"></span>
+                                            RM<span x-text="getPackagePriceDisplay({{ $package->id }})"></span>
                                         </div>
                                     </div>
                                     @if($package->features)
@@ -732,13 +712,13 @@
                                         <button type="button" 
                                             @click.stop="setPhase({{ $package->id }}, '1phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
-                                            :class="getPhase({{ $package->id }}) === '1phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
+                                            :class="activePhase[{{ $package->id }}] === '1phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             Single Phase (7kW)
                                         </button>
                                         <button type="button" 
                                             @click.stop="setPhase({{ $package->id }}, '3phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
-                                            :class="getPhase({{ $package->id }}) === '3phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
+                                            :class="activePhase[{{ $package->id }}] === '3phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             3 Phase (22kW)
                                         </button>
                                     </div>
@@ -751,12 +731,12 @@
                                     <div class="space-y-2">
                                         @foreach($package->addons as $addonIndex => $addon)
                                         <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none border"
-                                            :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'addon-row-active' : 'addon-row-inactive'"
+                                            :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-row-active' : 'addon-row-inactive'"
                                             @click.stop="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
                                             <div class="flex items-center gap-2.5 min-w-0 pr-2">
                                                 <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
-                                                    :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'addon-box-active' : 'addon-box-inactive'">
-                                                    <svg x-show="isAddonSelected({{ $package->id }}, {{ $addonIndex }})" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
+                                                    :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-box-active' : 'addon-box-inactive'">
+                                                    <svg x-show="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }})" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                                     </svg>
                                                 </div>
