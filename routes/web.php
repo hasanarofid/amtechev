@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Artisan;
 
  Route::get('/clear-cache', function() {
     Artisan::call('optimize:clear');
-    return "Cache cleared!";
+    if (function_exists('opcache_reset')) {
+        @opcache_reset();
+    }
+    return "Cache and OPcache cleared successfully!";
 });
 
 Route::get('/fix-blog-paths', function() {

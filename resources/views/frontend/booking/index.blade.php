@@ -419,7 +419,7 @@
             },
 
             setPhase(pkgId, phase) {
-                this.activePhase[pkgId] = phase;
+                this.activePhase = { ...this.activePhase, [pkgId]: phase };
                 this.syncSelectedPackage(pkgId);
             },
 
@@ -432,7 +432,7 @@
                 } else {
                     list.push(idxNum);
                 }
-                this.activeAddons[pkgId] = list;
+                this.activeAddons = { ...this.activeAddons, [pkgId]: list };
                 this.syncSelectedPackage(pkgId);
             },
 
