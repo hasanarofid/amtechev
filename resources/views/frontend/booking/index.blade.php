@@ -416,13 +416,10 @@
                 return item ? item.quantity : 0;
             },
 
+            // ── PERBAIKAN LOGIKA SELEKSI & OPTION ──────────────────
             setPhase(pkgId, phase) {
                 this.activePhase = { ...this.activePhase, [pkgId]: phase };
-                if (!this.isSelected(pkgId)) {
-                    this.selectPackage(pkgId);
-                } else {
-                    this.syncSelectedPackage(pkgId);
-                }
+                this.syncOrSelectPackage(pkgId);
             },
 
             togglePackageAddon(pkgId, addonIndex) {
@@ -437,15 +434,11 @@
                 }
                 
                 this.activeAddons = { ...this.activeAddons, [pkgId]: list };
-                
-                if (!this.isSelected(pkgId)) {
-                    this.selectPackage(pkgId);
-                } else {
-                    this.syncSelectedPackage(pkgId);
-                }
+                this.syncOrSelectPackage(pkgId);
             },
 
-            selectPackage(pkgId) {
+            // Fungsi tunggal untuk menangani tambah baru ATAU update item terpilih
+            syncOrSelectPackage(pkgId) {
                 const pkg = this.getPackage(pkgId);
                 if (!pkg) return;
 
@@ -463,16 +456,28 @@
                     name += ' + ' + addonNamesStr;
                 }
 
-                this.selectedItems.push({
-                    id: pkg.id,
-                    name: name,
-                    price: price,
-                    selected_phase: phase,
-                    selected_addon: addonNamesStr,
-                    quantity: 1
-                });
+                const existingIdx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkg.id));
+                
+                if (existingIdx > -1) {
+                    // Update item yang sudah ada
+                    this.selectedItems[existingIdx].name = name;
+                    this.selectedItems[existingIdx].price = price;
+                    this.selectedItems[existingIdx].selected_phase = phase;
+                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
+                } else {
+                    // Masukkan sebagai item baru jika belum ada
+                    this.selectedItems.push({
+                        id: pkg.id,
+                        name: name,
+                        price: price,
+                        selected_phase: phase,
+                        selected_addon: addonNamesStr,
+                        quantity: 1
+                    });
+                }
 
-                this.selectedItems = [...this.selectedItems];
+                // Paksa reaktivitas Alpine
+                this.selectedItems = JSON.parse(JSON.stringify(this.selectedItems));
                 this.calculateTotal();
             },
 
@@ -551,36 +556,8 @@
                 });
             },
 
-            syncSelectedPackage(pkgId) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return;
-
-                const phase = this.activePhase[pkgId] || '1phase';
-                const addonIndices = this.activeAddons[pkgId] || [];
-                const selectedAddons = (pkg.addons || []).filter((_, idx) => addonIndices.includes(idx));
-                const addonNamesStr = selectedAddons.map(a => a.name).join(', ');
-                const price = this.getPackageTotalPrice(pkgId);
-
-                let name = pkg.name;
-                if (pkg.price_3phase) {
-                    name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
-                }
-                if (selectedAddons.length > 0) {
-                    name += ' + ' + addonNamesStr;
-                }
-
-                const existingIdx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkg.id));
-                if (existingIdx > -1) {
-                    this.selectedItems[existingIdx].name = name;
-                    this.selectedItems[existingIdx].price = price;
-                    this.selectedItems[existingIdx].selected_phase = phase;
-                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
-                    this.selectedItems = [...this.selectedItems];
-                    this.calculateTotal();
-                }
-            },
-
             handleCardClick(pkgId, event) {
+                // Abaikan jika klik berasal dari kontrol interaktif internal
                 if (event && (event.target.closest('button') || event.target.closest('.addon-row-active') || event.target.closest('.addon-row-inactive') || event.target.closest('.check-circle'))) {
                     return;
                 }
@@ -591,10 +568,10 @@
                 const idx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkgId));
                 if (idx > -1) {
                     this.selectedItems.splice(idx, 1);
-                    this.selectedItems = [...this.selectedItems];
+                    this.selectedItems = JSON.parse(JSON.stringify(this.selectedItems));
                     this.calculateTotal();
                 } else {
-                    this.selectPackage(pkgId);
+                    this.syncOrSelectPackage(pkgId);
                 }
             },
 
