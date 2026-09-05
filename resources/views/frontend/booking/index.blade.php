@@ -288,8 +288,7 @@
     function createBookingForm() {
         return {
             packages: window.packagesData || {},
-            selectedItems: [],
-            totalPrice: 0,
+            selectedPackageIds: {},
             selectedDate: '',
             availability: {},
             calendarDays: [],
@@ -299,6 +298,7 @@
             monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
             activePhase: {},
             activeAddons: {},
+            quantities: {},
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
@@ -307,6 +307,8 @@
                     Object.keys(this.packages).forEach(id => {
                         this.activePhase[id] = '1phase';
                         this.activeAddons[id] = [];
+                        this.quantities[id] = 1;
+                        this.selectedPackageIds[id] = false;
                     });
                 }
 
@@ -321,6 +323,45 @@
 
                 this.buildCalendar();
                 this.fetchAvailability();
+            },
+
+            // ── COMPUTED PROPERTIES (Otomatis Sync & Reaktif) ──────────
+            get selectedItems() {
+                const items = [];
+                Object.keys(this.selectedPackageIds).forEach(id => {
+                    if (this.selectedPackageIds[id]) {
+                        const pkg = this.getPackage(id);
+                        if (!pkg) return;
+
+                        const phase = this.activePhase[id] || '1phase';
+                        const addonIndices = this.activeAddons[id] || [];
+                        const selectedAddons = (pkg.addons || []).filter((_, idx) => addonIndices.includes(idx));
+                        const addonNamesStr = selectedAddons.map(a => a.name).join(', ');
+                        const price = this.getPackageTotalPrice(id);
+
+                        let name = pkg.name;
+                        if (pkg.price_3phase) {
+                            name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
+                        }
+                        if (selectedAddons.length > 0) {
+                            name += ' + ' + addonNamesStr;
+                        }
+
+                        items.push({
+                            id: pkg.id,
+                            name: name,
+                            price: price,
+                            selected_phase: phase,
+                            selected_addon: addonNamesStr,
+                            quantity: this.quantities[id] || 1
+                        });
+                    }
+                });
+                return items;
+            },
+
+            get totalPrice() {
+                return this.selectedItems.reduce((s, i) => s + (i.price * i.quantity), 0);
             },
 
             getPackage(id) {
@@ -408,18 +449,25 @@
             isFull(d)  { return !!this.availability[d]?.is_full; },
 
             isSelected(id) {
-                return (this.selectedItems || []).some(i => String(i.id) === String(id));
+                return !!this.selectedPackageIds[id];
             },
 
             getQty(id) {
-                const item = (this.selectedItems || []).find(i => String(i.id) === String(id));
-                return item ? item.quantity : 0;
+                return this.quantities[id] || 1;
             },
 
-            // ── PERBAIKAN LOGIKA SELEKSI & OPTION ──────────────────
+            // ── ACTION HANDLERS SANGAT SEDERHANA & STABIL ────────────
+            togglePackageCheck(pkgId) {
+                this.selectedPackageIds[pkgId] = !this.selectedPackageIds[pkgId];
+            },
+
+            togglePackage(pkgId) {
+                this.togglePackageCheck(pkgId);
+            },
+
             setPhase(pkgId, phase) {
-                this.activePhase = { ...this.activePhase, [pkgId]: phase };
-                this.syncOrSelectPackage(pkgId);
+                this.activePhase[pkgId] = phase;
+                this.selectedPackageIds[pkgId] = true;
             },
 
             togglePackageAddon(pkgId, addonIndex) {
@@ -433,52 +481,8 @@
                     list.push(idxNum);
                 }
                 
-                this.activeAddons = { ...this.activeAddons, [pkgId]: list };
-                this.syncOrSelectPackage(pkgId);
-            },
-
-            // Fungsi tunggal untuk menangani tambah baru ATAU update item terpilih
-            syncOrSelectPackage(pkgId) {
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return;
-
-                const phase = this.activePhase[pkgId] || '1phase';
-                const addonIndices = this.activeAddons[pkgId] || [];
-                const selectedAddons = (pkg.addons || []).filter((_, idx) => addonIndices.includes(idx));
-                const addonNamesStr = selectedAddons.map(a => a.name).join(', ');
-                const price = this.getPackageTotalPrice(pkgId);
-
-                let name = pkg.name;
-                if (pkg.price_3phase) {
-                    name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
-                }
-                if (selectedAddons.length > 0) {
-                    name += ' + ' + addonNamesStr;
-                }
-
-                const existingIdx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkg.id));
-                
-                if (existingIdx > -1) {
-                    // Update item yang sudah ada
-                    this.selectedItems[existingIdx].name = name;
-                    this.selectedItems[existingIdx].price = price;
-                    this.selectedItems[existingIdx].selected_phase = phase;
-                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
-                } else {
-                    // Masukkan sebagai item baru jika belum ada
-                    this.selectedItems.push({
-                        id: pkg.id,
-                        name: name,
-                        price: price,
-                        selected_phase: phase,
-                        selected_addon: addonNamesStr,
-                        quantity: 1
-                    });
-                }
-
-                // Paksa reaktivitas Alpine
-                this.selectedItems = JSON.parse(JSON.stringify(this.selectedItems));
-                this.calculateTotal();
+                this.activeAddons[pkgId] = list;
+                this.selectedPackageIds[pkgId] = true;
             },
 
             getPackageTotalPrice(pkgId) {
@@ -556,37 +560,9 @@
                 });
             },
 
-            handleCardClick(pkgId, event) {
-                // Abaikan jika klik berasal dari kontrol interaktif internal
-                if (event && (event.target.closest('button') || event.target.closest('.addon-row-active') || event.target.closest('.addon-row-inactive') || event.target.closest('.check-circle'))) {
-                    return;
-                }
-                this.togglePackageCheck(pkgId);
-            },
-
-            togglePackageCheck(pkgId) {
-                const idx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkgId));
-                if (idx > -1) {
-                    this.selectedItems.splice(idx, 1);
-                    this.selectedItems = JSON.parse(JSON.stringify(this.selectedItems));
-                    this.calculateTotal();
-                } else {
-                    this.syncOrSelectPackage(pkgId);
-                }
-            },
-
-            togglePackage(pkgId) {
-                this.togglePackageCheck(pkgId);
-            },
-
             updateQty(id, delta) {
-                const item = (this.selectedItems || []).find(i => String(i.id) === String(id));
-                if (item) item.quantity = Math.max(1, item.quantity + delta);
-                this.calculateTotal();
-            },
-
-            calculateTotal() {
-                this.totalPrice = (this.selectedItems || []).reduce((s, i) => s + i.price * i.quantity, 0);
+                const current = this.quantities[id] || 1;
+                this.quantities[id] = Math.max(1, current + delta);
             },
 
             formatDate(d) {
@@ -684,15 +660,13 @@
                     <div class="space-y-3">
                         @foreach($packages->where('category', 'Standard Package') as $package)
                         <div class="pkg-item relative select-none cursor-pointer"
-                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''"
-                            @click="handleCardClick({{ $package->id }}, $event)">
+                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''">
                             
-                            {{-- Header Section --}}
-                            <div class="flex items-start gap-3">
+                            {{-- Header Section (Klik area ini untuk toggle card) --}}
+                            <div class="flex items-start gap-3" @click="togglePackageCheck({{ $package->id }})">
                                 {{-- Circle Checkbox --}}
                                 <div class="check-circle mt-0.5 cursor-pointer"
-                                    :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''"
-                                    @click.stop="togglePackageCheck({{ $package->id }})">
+                                    :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
                                     <svg x-show="isSelected({{ $package->id }})" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" fill="#000"/>
                                     </svg>
@@ -726,13 +700,13 @@
                                     <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
                                     <div class="inline-flex rounded-xl p-1 gap-1 w-full sm:w-auto" style="background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);">
                                         <button type="button" 
-                                            @click.stop="setPhase({{ $package->id }}, '1phase')"
+                                            @click="setPhase({{ $package->id }}, '1phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
                                             :class="activePhase[{{ $package->id }}] === '1phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             Single Phase (7kW)
                                         </button>
                                         <button type="button" 
-                                            @click.stop="setPhase({{ $package->id }}, '3phase')"
+                                            @click="setPhase({{ $package->id }}, '3phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
                                             :class="activePhase[{{ $package->id }}] === '3phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             3 Phase (22kW)
@@ -748,7 +722,7 @@
                                         @foreach($package->addons as $addonIndex => $addon)
                                         <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none border"
                                             :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-row-active' : 'addon-row-inactive'"
-                                            @click.stop="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
+                                            @click="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
                                             <div class="flex items-center gap-2.5 min-w-0 pr-2">
                                                 <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
                                                     :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-box-active' : 'addon-box-inactive'">
