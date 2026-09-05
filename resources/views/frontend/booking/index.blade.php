@@ -582,35 +582,25 @@
                 this.selectedItems = [...this.selectedItems];
             },
 
-            togglePackage(pkgId) {
+            handleCardClick(pkgId) {
+                if (!this.isSelected(pkgId)) {
+                    this.ensurePackageSelected(pkgId);
+                }
+            },
+
+            togglePackageCheck(pkgId) {
                 const idx = this.selectedItems.findIndex(i => String(i.id) === String(pkgId));
                 if (idx > -1) {
                     this.selectedItems.splice(idx, 1);
-                } else {
-                    const pkg = this.getPackage(pkgId);
-                    if (!pkg) return;
-                    const phase = this.getPhase(pkg.id);
-                    const addons = this.getAddons(pkg.id);
-                    const price = this.getPackageTotalPrice(pkg.id);
-                    const addonNamesStr = addons.map(a => a.name).join(', ');
-                    let name = pkg.name;
-                    if (pkg.price_3phase) {
-                        name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
-                    }
-                    if (addons.length > 0) {
-                        name += ' + ' + addonNamesStr;
-                    }
-                    this.selectedItems.push({
-                        id: pkg.id,
-                        name: name,
-                        price: price,
-                        selected_phase: phase,
-                        selected_addon: addonNamesStr,
-                        quantity: 1
-                    });
                     this.selectedItems = [...this.selectedItems];
+                    this.calculateTotal();
+                } else {
+                    this.ensurePackageSelected(pkgId);
                 }
-                this.calculateTotal();
+            },
+
+            togglePackage(pkgId) {
+                this.togglePackageCheck(pkgId);
             },
 
             updateQty(id, delta) {
@@ -713,12 +703,13 @@
                         @foreach($packages->where('category', 'Standard Package') as $package)
                         <div class="pkg-item relative select-none cursor-pointer"
                             :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''"
-                            @click="togglePackage({{ $package->id }})">
+                            @click="handleCardClick({{ $package->id }})">
                             
                             {{-- Header Section --}}
                             <div class="flex items-start gap-3">
-                                <div class="check-circle mt-0.5"
-                                    :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
+                                <div class="check-circle mt-0.5 cursor-pointer"
+                                    :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''"
+                                    @click.stop="togglePackageCheck({{ $package->id }})">
                                     <svg x-show="isSelected({{ $package->id }})" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" fill="#000"/>
                                     </svg>
