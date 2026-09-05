@@ -299,21 +299,19 @@
             currentMonth: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-            packagePhases: {},
-            packageAddons: {},
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
 
-                // Pre-initialize phase & addons map for all packages so Alpine tracks them reactively
                 if (this.packages) {
                     Object.keys(this.packages).forEach(id => {
-                        this.packagePhases[id] = '1phase';
-                        this.packageAddons[id] = [];
+                        if (this.packages[id]) {
+                            this.packages[id].selected_phase = '1phase';
+                            this.packages[id].selected_addons = [];
+                        }
                     });
                 }
 
-                // Pre-fill date from URL query param
                 const params = new URLSearchParams(window.location.search);
                 const urlDate = params.get('date');
                 if (urlDate) {
@@ -328,7 +326,8 @@
             },
 
             getPackage(id) {
-                return this.packages[id] || null;
+                if (!this.packages) return null;
+                return this.packages[id] || this.packages[String(id)] || this.packages[Number(id)] || null;
             },
 
             formatYMD(date) {
@@ -420,11 +419,14 @@
             },
 
             getPhase(id) {
-                return (this.packagePhases && this.packagePhases[id]) ? this.packagePhases[id] : '1phase';
+                const pkg = this.getPackage(id);
+                return (pkg && pkg.selected_phase) ? pkg.selected_phase : '1phase';
             },
 
             getAddons(id) {
-                return (this.packageAddons && this.packageAddons[id]) ? this.packageAddons[id] : [];
+                const pkg = this.getPackage(id);
+                if (!pkg || !Array.isArray(pkg.selected_addons) || !Array.isArray(pkg.addons)) return [];
+                return pkg.addons.filter((_, idx) => pkg.selected_addons.includes(idx));
             },
 
             getDisplayFeatures(pkgId) {
@@ -467,19 +469,22 @@
 
             isAddonSelected(pkgId, addonIndex) {
                 const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return false;
-                const addon = pkg.addons[addonIndex];
-                const addons = this.getAddons(pkgId);
-                return addons.some(a => a && a.name === addon.name);
+                if (!pkg || !Array.isArray(pkg.selected_addons)) return false;
+                return pkg.selected_addons.includes(Number(addonIndex));
             },
 
             ensurePackageSelected(pkgId) {
                 const pkg = this.getPackage(pkgId);
                 if (!pkg) return;
+
+                if (!pkg.selected_phase) pkg.selected_phase = '1phase';
+                if (!Array.isArray(pkg.selected_addons)) pkg.selected_addons = [];
+
+                const phase = pkg.selected_phase;
                 const addons = this.getAddons(pkg.id);
-                const phase = this.getPhase(pkg.id);
-                const price = this.getPackageTotalPrice(pkg.id);
                 const addonNamesStr = addons.map(a => a.name).join(', ');
+                const price = this.getPackageTotalPrice(pkg.id);
+
                 let name = pkg.name;
                 if (pkg.price_3phase) {
                     name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
@@ -488,7 +493,8 @@
                     name += ' + ' + addonNamesStr;
                 }
 
-                if (!this.isSelected(pkg.id)) {
+                const existingIdx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkg.id));
+                if (existingIdx === -1) {
                     this.selectedItems.push({
                         id: pkg.id,
                         name: name,
@@ -497,31 +503,39 @@
                         selected_addon: addonNamesStr,
                         quantity: 1
                     });
-                    this.selectedItems = [...this.selectedItems];
-                    this.calculateTotal();
                 } else {
-                    this.updateSelectedPackageState(pkg.id);
+                    this.selectedItems[existingIdx].name = name;
+                    this.selectedItems[existingIdx].price = price;
+                    this.selectedItems[existingIdx].selected_phase = phase;
+                    this.selectedItems[existingIdx].selected_addon = addonNamesStr;
                 }
+
+                this.selectedItems = [...this.selectedItems];
+                this.calculateTotal();
             },
 
             setPhase(pkgId, phase) {
-                this.packagePhases[pkgId] = phase;
+                const pkg = this.getPackage(pkgId);
+                if (!pkg) return;
+                pkg.selected_phase = phase;
+                this.packages = Object.assign({}, this.packages);
                 this.ensurePackageSelected(pkgId);
             },
 
             togglePackageAddon(pkgId, addonIndex) {
                 const pkg = this.getPackage(pkgId);
-                if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return;
-                const addon = pkg.addons[addonIndex];
-
-                let currentAddons = [...(this.getAddons(pkgId))];
-                const idx = currentAddons.findIndex(a => a && a.name === addon.name);
-                if (idx > -1) {
-                    currentAddons.splice(idx, 1);
-                } else {
-                    currentAddons.push(addon);
+                if (!pkg) return;
+                if (!Array.isArray(pkg.selected_addons)) {
+                    pkg.selected_addons = [];
                 }
-                this.packageAddons[pkgId] = currentAddons;
+                const idxNum = Number(addonIndex);
+                const pos = pkg.selected_addons.indexOf(idxNum);
+                if (pos > -1) {
+                    pkg.selected_addons.splice(pos, 1);
+                } else {
+                    pkg.selected_addons.push(idxNum);
+                }
+                this.packages = Object.assign({}, this.packages);
                 this.ensurePackageSelected(pkgId);
             },
 
@@ -556,30 +570,6 @@
                 return addonPrice.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
-            updateSelectedPackageState(pkgId) {
-                const item = this.selectedItems.find(i => String(i.id) === String(pkgId));
-                if (!item) return;
-                const pkg = this.getPackage(pkgId);
-                if (!pkg) return;
-                const phase = this.getPhase(pkgId);
-                const addons = this.getAddons(pkgId);
-                const addonNamesStr = addons.map(a => a.name).join(', ');
-                item.selected_phase = phase;
-                item.selected_addon = addonNamesStr;
-                item.price = this.getPackageTotalPrice(pkgId);
-                
-                let name = pkg.name;
-                if (pkg.price_3phase) {
-                    name += (phase === '3phase' ? ' (3 Phase 22kW)' : ' (Single Phase)');
-                }
-                if (addons.length > 0) {
-                    name += ' + ' + addonNamesStr;
-                }
-                item.name = name;
-                this.calculateTotal();
-                this.selectedItems = [...this.selectedItems];
-            },
-
             handleCardClick(pkgId) {
                 if (!this.isSelected(pkgId)) {
                     this.ensurePackageSelected(pkgId);
@@ -587,7 +577,7 @@
             },
 
             togglePackageCheck(pkgId) {
-                const idx = this.selectedItems.findIndex(i => String(i.id) === String(pkgId));
+                const idx = (this.selectedItems || []).findIndex(i => String(i.id) === String(pkgId));
                 if (idx > -1) {
                     this.selectedItems.splice(idx, 1);
                     this.selectedItems = [...this.selectedItems];
@@ -602,7 +592,7 @@
             },
 
             updateQty(id, delta) {
-                const item = this.selectedItems.find(i => String(i.id) === String(id));
+                const item = (this.selectedItems || []).find(i => String(i.id) === String(id));
                 if (item) item.quantity = Math.max(1, item.quantity + delta);
                 this.calculateTotal();
             },
