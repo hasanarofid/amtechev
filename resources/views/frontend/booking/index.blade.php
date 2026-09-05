@@ -456,9 +456,12 @@
                 return this.quantities[id] || 1;
             },
 
-            // ── ACTION HANDLERS SANGAT SEDERHANA & STABIL ────────────
+            // ── ACTION HANDLERS DENGAN SPREAD OPERATOR REAKTIF ────────
             togglePackageCheck(pkgId) {
-                this.selectedPackageIds[pkgId] = !this.selectedPackageIds[pkgId];
+                this.selectedPackageIds = {
+                    ...this.selectedPackageIds,
+                    [pkgId]: !this.selectedPackageIds[pkgId]
+                };
             },
 
             togglePackage(pkgId) {
@@ -466,8 +469,9 @@
             },
 
             setPhase(pkgId, phase) {
-                this.activePhase[pkgId] = phase;
-                this.selectedPackageIds[pkgId] = true;
+                this.activePhase = { ...this.activePhase, [pkgId]: phase };
+                // Otomatis pilih paket
+                this.selectedPackageIds = { ...this.selectedPackageIds, [pkgId]: true };
             },
 
             togglePackageAddon(pkgId, addonIndex) {
@@ -481,8 +485,9 @@
                     list.push(idxNum);
                 }
                 
-                this.activeAddons[pkgId] = list;
-                this.selectedPackageIds[pkgId] = true;
+                this.activeAddons = { ...this.activeAddons, [pkgId]: list };
+                // Otomatis pilih paket
+                this.selectedPackageIds = { ...this.selectedPackageIds, [pkgId]: true };
             },
 
             getPackageTotalPrice(pkgId) {
@@ -562,7 +567,10 @@
 
             updateQty(id, delta) {
                 const current = this.quantities[id] || 1;
-                this.quantities[id] = Math.max(1, current + delta);
+                this.quantities = {
+                    ...this.quantities,
+                    [id]: Math.max(1, current + delta)
+                };
             },
 
             formatDate(d) {
@@ -700,13 +708,13 @@
                                     <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
                                     <div class="inline-flex rounded-xl p-1 gap-1 w-full sm:w-auto" style="background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);">
                                         <button type="button" 
-                                            @click="setPhase({{ $package->id }}, '1phase')"
+                                            @click.stop="setPhase({{ $package->id }}, '1phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
                                             :class="activePhase[{{ $package->id }}] === '1phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             Single Phase (7kW)
                                         </button>
                                         <button type="button" 
-                                            @click="setPhase({{ $package->id }}, '3phase')"
+                                            @click.stop="setPhase({{ $package->id }}, '3phase')"
                                             class="flex-1 px-3 py-1.5 text-[10px] rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
                                             :class="activePhase[{{ $package->id }}] === '3phase' ? 'phase-btn-active' : 'phase-btn-inactive'">
                                             3 Phase (22kW)
@@ -722,7 +730,7 @@
                                         @foreach($package->addons as $addonIndex => $addon)
                                         <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none border"
                                             :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-row-active' : 'addon-row-inactive'"
-                                            @click="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
+                                            @click.stop="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
                                             <div class="flex items-center gap-2.5 min-w-0 pr-2">
                                                 <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
                                                     :class="(activeAddons[{{ $package->id }}] || []).includes({{ $addonIndex }}) ? 'addon-box-active' : 'addon-box-inactive'">
