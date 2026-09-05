@@ -43,6 +43,7 @@
         background: linear-gradient(135deg, rgba(0,166,81,0.06), transparent);
         opacity: 0;
         transition: opacity 0.25s ease;
+        pointer-events: none; /* Jangan blokir klik ke elemen anak */
     }
     .pkg-item:hover { border-color: rgba(0,166,81,0.4); }
     .pkg-item:hover::before { opacity: 1; }
