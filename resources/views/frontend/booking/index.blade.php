@@ -506,7 +506,6 @@
 
             setPhase(pkgId, phase) {
                 this.packagePhases[pkgId] = phase;
-                this.packagePhases = Object.assign({}, this.packagePhases);
                 this.ensurePackageSelected(pkgId);
             },
 
@@ -523,7 +522,6 @@
                     currentAddons.push(addon);
                 }
                 this.packageAddons[pkgId] = currentAddons;
-                this.packageAddons = Object.assign({}, this.packageAddons);
                 this.ensurePackageSelected(pkgId);
             },
 
@@ -736,7 +734,7 @@
 
                             {{-- Options Section: Phase and Add-ons --}}
                             @if($package->price_3phase || ($package->addons && count($package->addons) > 0))
-                            <div class="mt-4 pt-3 space-y-3" style="border-top: 1px solid var(--glass-border);" @click.stop>
+                            <div class="mt-4 pt-3 space-y-3" style="border-top: 1px solid var(--glass-border);">
                                 @if($package->price_3phase)
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
