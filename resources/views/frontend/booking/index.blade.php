@@ -676,9 +676,11 @@
                     <div class="space-y-3">
                         @foreach($packages->where('category', 'Standard Package') as $package)
                         <div class="pkg-item relative select-none"
-                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''"
-                            @click="togglePackage({{ $package->id }})">
-                            <div class="flex items-start gap-3">
+                            :class="isSelected({{ $package->id }}) ? 'pkg-item--selected' : ''">
+                            
+                            {{-- Header Section: Clicking selects/unselects package --}}
+                            <div class="flex items-start gap-3 cursor-pointer"
+                                @click="togglePackage({{ $package->id }})">
                                 <div class="check-circle mt-0.5"
                                     :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
                                     <svg x-show="isSelected({{ $package->id }})" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 20 20" fill="currentColor">
@@ -702,54 +704,59 @@
                                         </template>
                                     </ul>
                                     @endif
-
-                                    @if($package->price_3phase)
-                                    <div class="mt-4 pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2" style="border-top: 1px solid var(--glass-border);" @click.stop>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
-                                        <div class="inline-flex rounded-xl p-1 gap-1 w-full sm:w-auto" style="background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);">
-                                            <button type="button" 
-                                                @click.stop="setPhase({{ $package->id }}, '1phase')"
-                                                class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
-                                                :class="getPhase({{ $package->id }}) === '1phase' ? 'bg-[#00a651] text-black font-black shadow-md' : 'text-gray-400 hover:text-white'">
-                                                Single Phase (7kW)
-                                            </button>
-                                            <button type="button" 
-                                                @click.stop="setPhase({{ $package->id }}, '3phase')"
-                                                class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
-                                                :class="getPhase({{ $package->id }}) === '3phase' ? 'bg-[#00a651] text-black font-black shadow-md' : 'text-gray-400 hover:text-white'">
-                                                3 Phase (22kW)
-                                            </button>
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                    @if($package->addons && count($package->addons) > 0)
-                                    <div class="mt-4 pt-3 space-y-2" style="border-top: 1px solid var(--glass-border);" @click.stop>
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Package Add-ons & Cable Upgrades:</span>
-                                        <div class="space-y-2">
-                                            @foreach($package->addons as $addonIndex => $addon)
-                                            <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none border"
-                                                :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'bg-[#00a651]/15 border-[#00a651]' : 'bg-black/30 border-white/10 hover:border-white/20'"
-                                                @click.stop="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
-                                                <div class="flex items-center gap-2.5 min-w-0 pr-2">
-                                                    <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
-                                                        :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'bg-[#00a651] border-[#00a651]' : 'bg-black/40 border-white/20'">
-                                                        <svg x-show="isAddonSelected({{ $package->id }}, {{ $addonIndex }})" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                        </svg>
-                                                    </div>
-                                                    <span class="font-medium text-[11px] leading-tight" style="color: var(--text-main);">{{ $addon['name'] }}</span>
-                                                </div>
-                                                <span class="font-black text-[11px] shrink-0" style="color: var(--accent);">
-                                                    +RM<span x-text="getAddonPriceDisplay({{ $package->id }}, {{ $addonIndex }})"></span>
-                                                </span>
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    @endif
                                 </div>
                             </div>
+
+                            {{-- Options Section: Phase and Add-ons --}}
+                            @if($package->price_3phase || ($package->addons && count($package->addons) > 0))
+                            <div class="mt-4 pt-3 space-y-3" style="border-top: 1px solid var(--glass-border);">
+                                @if($package->price_3phase)
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color: var(--text-muted);">Phase Option:</span>
+                                    <div class="inline-flex rounded-xl p-1 gap-1 w-full sm:w-auto" style="background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);">
+                                        <button type="button" 
+                                            @click="setPhase({{ $package->id }}, '1phase')"
+                                            class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
+                                            :class="getPhase({{ $package->id }}) === '1phase' ? 'bg-[#00a651] text-black font-black shadow-md' : 'text-gray-400 hover:text-white'">
+                                            Single Phase (7kW)
+                                        </button>
+                                        <button type="button" 
+                                            @click="setPhase({{ $package->id }}, '3phase')"
+                                            class="flex-1 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all duration-200 whitespace-nowrap text-center cursor-pointer"
+                                            :class="getPhase({{ $package->id }}) === '3phase' ? 'bg-[#00a651] text-black font-black shadow-md' : 'text-gray-400 hover:text-white'">
+                                            3 Phase (22kW)
+                                        </button>
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if($package->addons && count($package->addons) > 0)
+                                <div class="space-y-2">
+                                    <span class="block text-[10px] font-bold uppercase tracking-wider" style="color: var(--text-muted);">Package Add-ons & Cable Upgrades:</span>
+                                    <div class="space-y-2">
+                                        @foreach($package->addons as $addonIndex => $addon)
+                                        <div class="flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 text-xs select-none border"
+                                            :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'bg-[#00a651]/15 border-[#00a651]' : 'bg-black/30 border-white/10 hover:border-white/20'"
+                                            @click="togglePackageAddon({{ $package->id }}, {{ $addonIndex }})">
+                                            <div class="flex items-center gap-2.5 min-w-0 pr-2">
+                                                <div class="w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0"
+                                                    :class="isAddonSelected({{ $package->id }}, {{ $addonIndex }}) ? 'bg-[#00a651] border-[#00a651]' : 'bg-black/40 border-white/20'">
+                                                    <svg x-show="isAddonSelected({{ $package->id }}, {{ $addonIndex }})" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-black" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-medium text-[11px] leading-tight" style="color: var(--text-main);">{{ $addon['name'] }}</span>
+                                            </div>
+                                            <span class="font-black text-[11px] shrink-0" style="color: var(--accent);">
+                                                +RM<span x-text="getAddonPriceDisplay({{ $package->id }}, {{ $addonIndex }})"></span>
+                                            </span>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                            @endif
                         </div>
                         @endforeach
                     </div>
