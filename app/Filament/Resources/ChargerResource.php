@@ -16,13 +16,13 @@ use Filament\Actions\DeleteBulkAction;
 class ChargerResource extends Resource
 {
     protected static ?string $model = Charger::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bolt';
 
     public static function form(Schema $form): Schema
     {
         return $form->schema([
             Forms\Components\TextInput::make('name')->required(),
-            Forms\Components\TextInput::make('price'),
+            Forms\Components\TextInput::make('price')->numeric()->prefix('RM'),
             Forms\Components\FileUpload::make('image_url')->image()->disk('public'),
             Forms\Components\Textarea::make('description'),
             Forms\Components\Toggle::make('is_featured')->default(true),
