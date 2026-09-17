@@ -97,8 +97,50 @@
     <section class="contact-info-section">
         <div class="max-w-7xl mx-auto px-6 lg:px-14">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
-                <div class="hidden lg:block">
-                    <!-- Space or Image -->
+                <div class="space-y-4">
+                    {{-- Google Business Card & Map Container --}}
+                    <div class="rounded-3xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl p-2">
+                        {{-- GMB Profile Header --}}
+                        <div class="p-4 flex items-center justify-between gap-3 border-b border-white/5 bg-black/40 rounded-2xl mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                                    <svg class="w-6 h-6 text-[#4285F4]" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-white leading-tight">Amtech EV Charger Specialist</h4>
+                                    <div class="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
+                                        <span class="text-yellow-400 font-bold flex items-center gap-0.5">
+                                            5.0 ★★★★★
+                                        </span>
+                                        <span class="text-[10px] text-gray-500">· Google Business Profile</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="{{ $settings['google_maps_url'] ?? 'https://maps.google.com/?q=Menara+Dquince+Damansara+Perdana+Jalan+PJU+8/8+47820+Petaling+Jaya+Selangor' }}" target="_blank" class="text-xs bg-ev-green/10 hover:bg-ev-green text-ev-green hover:text-black font-bold px-3 py-1.5 rounded-full border border-ev-green/30 transition-all shrink-0">
+                                Directions
+                            </a>
+                        </div>
+
+                        {{-- Embedded Google Map --}}
+                        <div class="w-full h-80 rounded-2xl overflow-hidden relative">
+                            @if(isset($settings['google_map_embed']) && $settings['google_map_embed'])
+                                {!! $settings['google_map_embed'] !!}
+                            @else
+                                <iframe 
+                                    src="https://maps.google.com/maps?q={{ urlencode($settings['google_maps_query'] ?? 'Menara Dquince Damansara Perdana Jalan PJU 8/8 47820 Petaling Jaya Selangor') }}&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    class="w-full h-full">
+                                </iframe>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <h2 class="text-4xl font-black mb-8 leading-tight">How to Reach Us</h2>
@@ -110,8 +152,14 @@
                         <div>
                             <p class="text-ev-green font-bold mb-2">Address</p>
                             <p class="text-gray-300 leading-relaxed">
-                                {!! nl2br(e($settings['contact_address'] ?? "13A 22 Go Wise Box Menara Dquince Damansara Perdana\n47820 Selangor")) !!}
+                                {!! nl2br(e($settings['contact_address'] ?? "Menara Dquince, 13A Go Wise Box, Tower A\nJalan PJU 8/8, Damansara Perdana\n47820 Petaling Jaya, Selangor")) !!}
                             </p>
+                            <a href="{{ $settings['google_maps_url'] ?? 'https://maps.google.com/?q=Menara+Dquince+Damansara+Perdana+Jalan+PJU+8/8+47820+Petaling+Jaya+Selangor' }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-ev-green font-bold hover:underline mt-2">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                Open in Google Maps
+                            </a>
                         </div>
                         <div>
                             <p class="text-ev-green font-bold mb-2">Email</p>

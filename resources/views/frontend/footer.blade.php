@@ -30,8 +30,17 @@
             </div>
             <div>
                 <h4 class="text-white font-bold uppercase tracking-widest mb-8">Get Connected</h4>
-                <p class="text-sm text-gray-400 mb-6">{{ $settings['contact_address'] ?? 'No 1, Jalan Amtech EV, 50000 Kuala Lumpur' }}</p>
-                <a href="mailto:{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}" class="text-ev-green font-bold text-center">{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}</a>
+                <p class="text-sm text-gray-400 mb-3">{{ $settings['contact_address'] ?? 'Menara Dquince, 13A Go Wise Box, Tower A, Jalan PJU 8/8, Damansara Perdana, 47820 Petaling Jaya, Selangor' }}</p>
+                <a href="{{ $settings['google_maps_url'] ?? 'https://maps.google.com/?q=Menara+Dquince+Damansara+Perdana+Jalan+PJU+8/8+47820+Petaling+Jaya+Selangor' }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-ev-green hover:underline font-bold mb-5">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span>View on Google Maps</span>
+                </a>
+                <div>
+                    <a href="mailto:{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}" class="text-ev-green font-bold">{{ $settings['contact_email'] ?? 'hello@amtechev.com' }}</a>
+                </div>
             </div>
         </div>
         <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
