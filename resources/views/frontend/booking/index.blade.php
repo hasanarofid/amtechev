@@ -300,6 +300,7 @@
             activePhase: {},
             activeAddons: {},
             quantities: {},
+            countdown: { hours: '00', minutes: '00', seconds: '00' },
 
             init() {
                 this.todayStr = this.formatYMD(new Date());
@@ -324,6 +325,7 @@
 
                 this.buildCalendar();
                 this.fetchAvailability();
+                this.startCountdown();
             },
 
             // ── COMPUTED PROPERTIES (Otomatis Sync & Reaktif) ──────────
@@ -363,6 +365,19 @@
 
             get totalPrice() {
                 return this.selectedItems.reduce((s, i) => s + (i.price * i.quantity), 0);
+            },
+
+            get totalSavings() {
+                let count = 0;
+                Object.keys(this.selectedPackageIds).forEach(id => {
+                    if (this.selectedPackageIds[id]) {
+                        const pkg = this.getPackage(id);
+                        if (pkg && pkg.category === 'Standard Package') {
+                            count += (this.quantities[id] || 1);
+                        }
+                    }
+                });
+                return count * 300;
             },
 
             getPackage(id) {
@@ -516,6 +531,33 @@
                 return p.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             },
 
+            getPackageOriginalPriceDisplay(pkgId) {
+                const p = this.getPackageTotalPrice(pkgId);
+                const markup = 300;
+                return (p + markup).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            },
+
+            startCountdown() {
+                const updateTimer = () => {
+                    const now = new Date();
+                    // Rolling countdown until end of tomorrow (12:00 AM / 23:59:59)
+                    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59);
+                    const diff = target - now;
+                    if (diff <= 0) {
+                        this.countdown = { hours: '00', minutes: '00', seconds: '00' };
+                        return;
+                    }
+                    const totalHours = Math.floor(diff / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    this.countdown.hours = String(totalHours).padStart(2, '0');
+                    this.countdown.minutes = String(m).padStart(2, '0');
+                    this.countdown.seconds = String(s).padStart(2, '0');
+                };
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            },
+
             getAddonPriceDisplay(pkgId, addonIndex) {
                 const pkg = this.getPackage(pkgId);
                 if (!pkg || !pkg.addons || !pkg.addons[addonIndex]) return '0';
@@ -659,12 +701,34 @@
 
                 {{-- Main Packages --}}
                 <div class="book-card">
-                    <h2 class="text-base font-black uppercase tracking-widest mb-5 flex items-center gap-2" style="color: var(--text-main);">
-                        <svg class="w-4 h-4" style="color: var(--accent);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                        Select Package
-                    </h2>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                        <h2 class="text-base font-black uppercase tracking-widest flex items-center gap-2" style="color: var(--text-main);">
+                            <svg class="w-4 h-4" style="color: var(--accent);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            Select Package
+                        </h2>
+                    </div>
+
+                    {{-- Promo Urgency Banner --}}
+                    <div class="mb-4 p-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-950/40 via-yellow-950/20 to-black flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+                        <div class="flex items-center gap-2">
+                            <span class="relative flex h-2.5 w-2.5 shrink-0">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                            </span>
+                            <div>
+                                <span class="text-xs font-black uppercase tracking-wider text-red-400">Limited-Time Promo Price</span>
+                                <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">· Valid until tomorrow 12:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 text-xs font-mono font-bold text-white bg-black/70 px-2.5 py-1 rounded-lg border border-white/10">
+                            <span class="text-[9px] uppercase font-sans text-gray-400 mr-1">Ends in:</span>
+                            <span class="text-yellow-400 font-black" x-text="countdown.hours">00</span><span class="text-gray-500">:</span>
+                            <span class="text-yellow-400 font-black" x-text="countdown.minutes">00</span><span class="text-gray-500">:</span>
+                            <span class="text-yellow-400 font-black" x-text="countdown.seconds">00</span>
+                        </div>
+                    </div>
 
                     <div class="space-y-3">
                         @foreach($packages->where('category', 'Standard Package') as $package)
@@ -675,7 +739,7 @@
                             {{-- Header Section: biarkan event bubble ke .pkg-item untuk toggle --}}
                             <div class="flex items-start gap-3">
                                 {{-- Circle Checkbox --}}
-                                <div class="check-circle mt-0.5 cursor-pointer"
+                                <div class="check-circle mt-0.5 cursor-pointer shrink-0"
                                     :class="isSelected({{ $package->id }}) ? 'check-circle--checked' : ''">
                                     <svg x-show="isSelected({{ $package->id }})" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" fill="#000"/>
@@ -684,9 +748,24 @@
                                 
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-start justify-between gap-2">
-                                        <h3 class="font-bold text-sm leading-tight" style="color: var(--text-main);">{{ $package->name }}</h3>
-                                        <div class="text-base font-black shrink-0" style="color: var(--accent);">
-                                            RM<span x-text="getPackagePriceDisplay({{ $package->id }})"></span>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <h3 class="font-bold text-sm leading-tight" style="color: var(--text-main);">{{ $package->name }}</h3>
+                                            <span class="bg-red-500/20 text-red-400 text-[9px] font-black px-1.5 py-0.5 rounded border border-red-500/30 uppercase tracking-wider">
+                                                PROMO
+                                            </span>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <div class="flex items-center justify-end gap-1 mb-0.5">
+                                                <span class="text-[10px] line-through text-gray-500 font-medium">
+                                                    RM<span x-text="getPackageOriginalPriceDisplay({{ $package->id }})"></span>
+                                                </span>
+                                                <span class="text-red-400 text-[9px] font-black">
+                                                    -RM300
+                                                </span>
+                                            </div>
+                                            <div class="text-base font-black" style="color: var(--accent);">
+                                                RM<span x-text="getPackagePriceDisplay({{ $package->id }})"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     @if($package->features)
@@ -905,7 +984,15 @@
                         <div class="pt-3 mb-4" style="border-top: 1px solid var(--glass-border);">
                             <p class="text-[9px] font-black uppercase tracking-widest mb-1" style="color: var(--text-muted);">Estimated Total</p>
                             <p class="text-3xl font-black leading-none" style="color: var(--accent);">RM<span x-text="totalPrice.toLocaleString()"></span></p>
-                            <p class="text-[9px] mt-1 italic font-bold" style="color: var(--text-muted);">Inc. SST</p>
+                            <div x-show="totalSavings > 0" class="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-[11px]">
+                                <span class="text-emerald-400 font-bold flex items-center gap-1">
+                                    🎉 Promo Savings:
+                                </span>
+                                <span class="text-emerald-400 font-black">
+                                    -RM<span x-text="totalSavings.toLocaleString()"></span>
+                                </span>
+                            </div>
+                            <p class="text-[9px] mt-1.5 italic font-bold" style="color: var(--text-muted);">Inc. SST</p>
                         </div>
 
                         <div x-show="selectedDate" class="pt-3" style="border-top: 1px solid var(--glass-border);">
