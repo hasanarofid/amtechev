@@ -90,15 +90,16 @@ class DefaultSiteDataSeeder extends Seeder
 
         // Quality Brands
         $qualityBrands = [
+            ['brand' => 'HIMEL', 'desc' => 'Value-engineered, international standards-compliant, and affordable products backed with decades of historic expertise to ensure 100% safety.', 'logo' => 'brands/himel.png'],
             ['brand' => 'Terasaki', 'desc' => 'Precision engineering and reliable electronics for safety.', 'logo' => 'brands/terasaki.png'],
             ['brand' => 'Schneider', 'desc' => 'Innovative electrical components and global safety standards.', 'logo' => 'brands/schneider.png'],
-            ['brand' => 'ABB', 'desc' => 'High-performance connectivity and industrial-grade durability.', 'logo' => 'brands/abb.png'],
+            ['brand' => 'CHINT', 'desc' => 'Leading global smart energy solutions provider offering safe, high-reliability electrical protection and components.', 'logo' => 'brands/chnt.png'],
         ];
 
         foreach ($qualityBrands as $index => $qb) {
-            \App\Models\QualityBrand::firstOrCreate(
+            \App\Models\QualityBrand::updateOrCreate(
                 ['name' => $qb['brand']],
-                ['description' => $qb['desc'], 'logo' => $qb['logo'], 'sort_order' => $index]
+                ['description' => $qb['desc'], 'logo' => $qb['logo'], 'sort_order' => $index + 1]
             );
         }
 

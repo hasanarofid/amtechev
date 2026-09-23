@@ -10,6 +10,38 @@
         color: #ffffff;
         position: relative;
     }
+    .article-content table {
+        width: 100%;
+        margin: 2rem 0;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 0.95rem;
+    }
+    .article-content th, .article-content td {
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: left;
+    }
+    .article-content th {
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+    }
+    .article-content tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .article-content blockquote {
+        border-left: 4px solid #22c55e;
+        padding: 1rem 1.5rem;
+        background: rgba(34, 197, 94, 0.05);
+        border-radius: 0 16px 16px 0;
+        margin: 2rem 0;
+        font-style: italic;
+    }
 </style>
 @endpush
 
@@ -18,6 +50,34 @@
 
 @push('head')
     <meta property="og:type" content="article">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{ addslashes($post->title) }}",
+      "description": "{{ addslashes(Str::limit(strip_tags($post->excerpt ?? $post->content), 160)) }}",
+      "image": "{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url))) : asset('logo/amtech-removebg.png') }}",
+      "author": {
+        "@type": "Organization",
+        "name": "Amtech EV Specialist",
+        "url": "https://amtechev.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Amtech EV",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ asset('logo.png') }}"
+        }
+      },
+      "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
+      "dateModified": "{{ $post->updated_at->toIso8601String() }}",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ route('blog.show', $post->slug) }}"
+      }
+    }
+    </script>
 @endpush
 
 @section('content')
@@ -25,16 +85,18 @@
     <header class="blog-header">
         <div class="max-w-4xl mx-auto px-6 lg:px-14">
             <div class="flex items-center gap-3 text-ev-green font-bold text-xs uppercase tracking-[0.2em] mb-6">
-                <span>{{ $post->category ?? 'Insights' }}</span>
+                <span>{{ $post->category ?? 'EV Guide' }}</span>
                 <span class="w-1 h-1 bg-white/20 rounded-full"></span>
-                <span class="text-white/40 uppercase">{{ $post->published_at ? $post->published_at->format('M d, Y') : '' }}</span>
+                <span class="text-white/40 uppercase">{{ $post->published_at ? $post->published_at->format('M d, Y') : ($post->created_at ? $post->created_at->format('M d, Y') : '') }}</span>
+                <span class="w-1 h-1 bg-white/20 rounded-full"></span>
+                <span class="text-white/40">{{ max(4, round(str_word_count(strip_tags($post->content)) / 200)) }} min read</span>
             </div>
             <h1 class="text-4xl lg:text-6xl font-black mb-8 leading-tight">{{ $post->title }}</h1>
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full bg-ev-green/20 flex items-center justify-center text-ev-green font-bold text-xs">A</div>
                 <div class="text-sm font-medium">
-                    <p class="text-white">Admin</p>
-                    <p class="text-white/40">Expert in EV Solutions</p>
+                    <p class="text-white">{{ $post->author_name ?? 'Amtech Technical Team' }}</p>
+                    <p class="text-white/40">Certified EV Electrical Specialist</p>
                 </div>
             </div>
         </div>
@@ -55,24 +117,38 @@
             <div class="flex gap-4 mb-10">
                 <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-ev-green text-black' : 'bg-white/10 text-white/50'" class="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all">English</button>
                 @if($post->content_ms)
-                <button @click="lang = 'ms'" :class="lang === 'ms' ? 'bg-ev-green text-black' : 'bg-white/10 text-white/50'" class="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all">Malaysia</button>
+                <button @click="lang = 'ms'" :class="lang === 'ms' ? 'bg-ev-green text-black' : 'bg-white/10 text-white/50'" class="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all">Bahasa Melayu</button>
                 @endif
             </div>
 
-            <div x-show="lang === 'en'" class="animate-fade-in">
-                <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green dark:prose-invert">
+            <div x-show="lang === 'en'" class="animate-fade-in article-content">
+                <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green dark:prose-invert leading-relaxed">
                     {!! $post->content !!}
                 </article>
             </div>
 
             @if($post->content_ms)
-            <div x-show="lang === 'ms'" x-cloak class="animate-fade-in">
-                <h1 class="text-4xl lg:text-5xl font-black mb-8 leading-tight dark:text-white">{{ $post->title_ms ?? $post->title }}</h1>
-                <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green dark:prose-invert">
+            <div x-show="lang === 'ms'" x-cloak class="animate-fade-in article-content">
+                <h2 class="text-3xl lg:text-4xl font-black mb-8 leading-tight dark:text-white">{{ $post->title_ms ?? $post->title }}</h2>
+                <article class="prose prose-lg max-w-none prose-green prose-headings:font-black prose-headings:tracking-tight prose-a:text-ev-green dark:prose-invert leading-relaxed">
                     {!! $post->content_ms !!}
                 </article>
             </div>
             @endif
+        </div>
+
+        <!-- Conversion CTA Box -->
+        <div class="my-16 p-8 md:p-10 rounded-[28px] bg-gradient-to-br from-[#121212] to-[#1a2e1d] border border-ev-green/20 shadow-2xl relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-ev-green font-bold mb-2 block">Professional Installation</span>
+                    <h3 class="text-2xl font-black text-white mb-2">Need Certified EV Charger Installation in Malaysia?</h3>
+                    <p class="text-gray-300 text-sm max-w-lg">Get Suruhanjaya Tenaga compliant wallbox installation, site inspection, and TNB meter consultation from certified Amtech EV engineers.</p>
+                </div>
+                <a href="{{ route('booking.index') }}" class="px-8 py-4 bg-ev-green hover:bg-[#16a34a] text-black font-black text-xs uppercase tracking-widest rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 shadow-xl shadow-ev-green/20">
+                    Book Site Inspection
+                </a>
+            </div>
         </div>
 
         <!-- Share Buttons -->
@@ -135,4 +211,3 @@
         @endif
     </main>
 @endsection
-

@@ -596,11 +596,15 @@
 
                     if (phase === '3phase') {
                         if (text.includes('MCB') && !text.includes('4-Pole')) {
-                            text = text.replace('MCB', '4-Pole MCB (3 Phase)');
+                            text = text.replace(/MCB/g, '4-Pole MCB (3 Phase)');
                         } else if (text.includes('RCCB') && !text.includes('4-Pole')) {
-                            text = text.replace('RCCB', '4-Pole RCCB (3 Phase)');
+                            text = text.replace(/RCCB/g, '4-Pole RCCB (3 Phase)');
                         } else if (text.includes('Isolator') && !text.includes('4-Pole')) {
-                            text = text.replace('Isolator', '63A 4-Pole Isolator (3 Phase)');
+                            if (/63A\s+Isolator/i.test(text)) {
+                                text = text.replace(/63A\s+Isolator/i, '63A 4-Pole Isolator (3 Phase)');
+                            } else {
+                                text = text.replace(/Isolator/i, '63A 4-Pole Isolator (3 Phase)');
+                            }
                         }
                     }
 
@@ -711,21 +715,21 @@
                     </div>
 
                     {{-- Promo Urgency Banner --}}
-                    <div class="mb-4 p-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-950/40 via-yellow-950/20 to-black flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+                    <div class="mb-4 p-3 rounded-xl border border-red-500/30 bg-red-500/10 dark:bg-gradient-to-r dark:from-red-950/40 dark:via-yellow-950/20 dark:to-black flex flex-wrap items-center justify-between gap-2.5 shadow-sm">
                         <div class="flex items-center gap-2">
                             <span class="relative flex h-2.5 w-2.5 shrink-0">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                             </span>
                             <div>
-                                <span class="text-xs font-black uppercase tracking-wider text-red-400">Limited-Time Promo Price</span>
-                                <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">· Valid until tomorrow 12:00 AM</span>
+                                <span class="text-xs font-black uppercase tracking-wider text-red-600 dark:text-red-400">Limited-Time Promo Price</span>
+                                <span class="text-[10px] text-gray-600 dark:text-gray-400 block sm:inline sm:ml-1">· Valid until tomorrow 12:00 AM</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1 text-xs font-mono font-bold text-white bg-black/70 px-2.5 py-1 rounded-lg border border-white/10">
-                            <span class="text-[9px] uppercase font-sans text-gray-400 mr-1">Ends in:</span>
-                            <span class="text-yellow-400 font-black" x-text="countdown.hours">00</span><span class="text-gray-500">:</span>
-                            <span class="text-yellow-400 font-black" x-text="countdown.minutes">00</span><span class="text-gray-500">:</span>
+                        <div class="flex items-center gap-1 text-xs font-mono font-bold text-white bg-neutral-900 dark:bg-black/80 px-2.5 py-1 rounded-lg border border-neutral-800 dark:border-white/10 shadow-sm">
+                            <span class="text-[9px] uppercase font-sans text-gray-300 dark:text-gray-400 mr-1">Ends in:</span>
+                            <span class="text-yellow-400 font-black" x-text="countdown.hours">00</span><span class="text-gray-400 dark:text-gray-500">:</span>
+                            <span class="text-yellow-400 font-black" x-text="countdown.minutes">00</span><span class="text-gray-400 dark:text-gray-500">:</span>
                             <span class="text-yellow-400 font-black" x-text="countdown.seconds">00</span>
                         </div>
                     </div>
@@ -750,7 +754,7 @@
                                     <div class="flex items-start justify-between gap-2">
                                         <div class="flex items-center gap-1.5 flex-wrap">
                                             <h3 class="font-bold text-sm leading-tight" style="color: var(--text-main);">{{ $package->name }}</h3>
-                                            <span class="bg-red-500/20 text-red-400 text-[9px] font-black px-1.5 py-0.5 rounded border border-red-500/30 uppercase tracking-wider">
+                                            <span class="bg-red-500/20 text-red-600 dark:text-red-400 text-[9px] font-black px-1.5 py-0.5 rounded border border-red-500/30 uppercase tracking-wider">
                                                 PROMO
                                             </span>
                                         </div>
@@ -759,7 +763,7 @@
                                                 <span class="text-[10px] line-through text-gray-500 font-medium">
                                                     RM<span x-text="getPackageOriginalPriceDisplay({{ $package->id }})"></span>
                                                 </span>
-                                                <span class="text-red-400 text-[9px] font-black">
+                                                <span class="text-red-600 dark:text-red-400 text-[9px] font-black">
                                                     -RM300
                                                 </span>
                                             </div>
@@ -985,10 +989,10 @@
                             <p class="text-[9px] font-black uppercase tracking-widest mb-1" style="color: var(--text-muted);">Estimated Total</p>
                             <p class="text-3xl font-black leading-none" style="color: var(--accent);">RM<span x-text="totalPrice.toLocaleString()"></span></p>
                             <div x-show="totalSavings > 0" class="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-[11px]">
-                                <span class="text-emerald-400 font-bold flex items-center gap-1">
+                                <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
                                     🎉 Promo Savings:
                                 </span>
-                                <span class="text-emerald-400 font-black">
+                                <span class="text-emerald-600 dark:text-emerald-400 font-black">
                                     -RM<span x-text="totalSavings.toLocaleString()"></span>
                                 </span>
                             </div>

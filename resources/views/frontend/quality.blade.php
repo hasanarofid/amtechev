@@ -7,11 +7,11 @@
                 {{ $settings['quality_title'] ?? 'Built with Quality & Safety in Mind' }}
             </h2>
             <p class="text-gray-400 text-lg leading-relaxed font-light">
-                {{ $settings['quality_content'] ?? 'We use premium-grade components from trusted brands in Japan, France, and Switzerland — ensuring every installation is safe, reliable, and built to last.' }}
+                {{ $settings['quality_content'] ?? 'We use premium-grade components from trusted brands in Japan, France, Switzerland and China — ensuring every installation is safe, reliable, and built to last.' }}
             </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             @foreach($qualityBrands as $qb)
             <div class="p-8 rounded-3xl bg-black/40 border border-white/5 hover:border-ev-green/20 transition-all group flex items-start justify-between">
                 <div class="flex-1 pr-4">
