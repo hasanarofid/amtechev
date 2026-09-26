@@ -16,7 +16,7 @@ Artisan::command('inspire', function () {
 | using Gemini AI to maintain high content quality for Google AdSense & SEO.
 */
 Schedule::command('blog:generate-content --auto --count=1')
-    ->days([2, 5])
-    ->at('08:00')
+    ->dailyAt('08:00')
     ->withoutOverlapping()
     ->runInBackground();
+
