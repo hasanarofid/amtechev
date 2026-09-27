@@ -8,15 +8,22 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     protected ?string $apiKey;
+    protected ?string $lastError = null;
     protected array $models = [
-        'gemini-3.5-flash',
+        'gemini-flash-latest',
+        'gemini-3.7-flash',
         'gemini-3.5-flash-lite',
-        'gemini-2.5-pro',
+        'gemini-3.1-flash-lite',
     ];
 
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key') ?? env('GEMINI_API_KEY');
+    }
+
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
     }
 
     /**
@@ -28,8 +35,11 @@ class GeminiService
      */
     public function generateContent(string $topic, ?string $category = 'EV Charging'): ?array
     {
+        $this->lastError = null;
+
         if (!$this->apiKey) {
-            Log::error('GeminiService: GEMINI_API_KEY is not configured in .env / services.php');
+            $this->lastError = 'GEMINI_API_KEY is not configured in .env / services.php on server';
+            Log::error('GeminiService: ' . $this->lastError);
             return null;
         }
 
@@ -94,14 +104,21 @@ Output format MUST be strict JSON with the following schema:
                         }
                     }
                 } else {
-                    Log::warning("GeminiService: Model '{$model}' returned HTTP {$response->status()}: " . substr($response->body(), 0, 200));
+                    $errorMsg = "Model '{$model}' HTTP {$response->status()}: " . substr($response->body(), 0, 300);
+                    $this->lastError = $errorMsg;
+                    Log::warning("GeminiService: " . $errorMsg);
                 }
             } catch (\Exception $e) {
-                Log::warning("GeminiService: Exception with model '{$model}': " . $e->getMessage());
+                $errorMsg = "Exception with model '{$model}': " . $e->getMessage();
+                $this->lastError = $errorMsg;
+                Log::warning("GeminiService: " . $errorMsg);
             }
         }
 
-        Log::error("GeminiService: Failed to generate content across all models for topic '{$topic}'");
+        if (!$this->lastError) {
+            $this->lastError = "Empty response or invalid JSON received from Gemini API.";
+        }
+        Log::error("GeminiService: Failed for '{$topic}'. Last error: " . $this->lastError);
         return null;
     }
 }

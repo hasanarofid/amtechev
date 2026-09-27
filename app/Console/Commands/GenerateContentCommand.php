@@ -228,6 +228,9 @@ class GenerateContentCommand extends Command
 
             if (!$articleData || empty($articleData['title']) || empty($articleData['content'])) {
                 $this->error("❌ Failed to generate content for: {$topic}");
+                if ($gemini->getLastError()) {
+                    $this->warn("   ⚠️  Reason: " . $gemini->getLastError());
+                }
                 continue;
             }
 

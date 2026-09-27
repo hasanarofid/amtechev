@@ -17,6 +17,6 @@ Artisan::command('inspire', function () {
 */
 Schedule::command('blog:generate-content --auto --count=1')
     ->dailyAt('08:00')
-    ->withoutOverlapping()
-    ->runInBackground();
+    ->timezone('Asia/Kuala_Lumpur')
+    ->withoutOverlapping(60);
 
