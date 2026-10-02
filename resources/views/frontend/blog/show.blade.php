@@ -52,29 +52,29 @@
     <meta property="og:type" content="article">
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
+      "@@context": "https://schema.org",
+      "@@type": "BlogPosting",
       "headline": "{{ addslashes($post->title) }}",
       "description": "{{ addslashes(Str::limit(strip_tags($post->excerpt ?? $post->content), 160)) }}",
       "image": "{{ $post->image_url ? (str_starts_with($post->image_url, 'http') ? $post->image_url : (str_starts_with($post->image_url, 'blog-assets/') ? asset($post->image_url) : asset('storage/' . $post->image_url))) : asset('logo/amtech-removebg.png') }}",
       "author": {
-        "@type": "Organization",
+        "@@type": "Organization",
         "name": "Amtech EV Specialist",
         "url": "https://amtechev.com"
       },
       "publisher": {
-        "@type": "Organization",
+        "@@type": "Organization",
         "name": "Amtech EV",
         "logo": {
-          "@type": "ImageObject",
+          "@@type": "ImageObject",
           "url": "{{ asset('logo.png') }}"
         }
       },
       "datePublished": "{{ $post->published_at ? $post->published_at->toIso8601String() : $post->created_at->toIso8601String() }}",
       "dateModified": "{{ $post->updated_at->toIso8601String() }}",
       "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "{{ route('blog.show', $post->slug) }}"
+        "@@type": "WebPage",
+        "@@id": "{{ route('blog.show', $post->slug) }}"
       }
     }
     </script>

@@ -185,7 +185,8 @@ class GenerateContentCommand extends Command
             foreach ($this->curatedTopics as $item) {
                 $alreadyExists = false;
                 foreach ($existingTitles as $existingTitle) {
-                    if (similar_text(strtolower($item['topic']), strtolower($existingTitle)) > 70) {
+                    similar_text(strtolower($item['topic']), strtolower($existingTitle), $percent);
+                    if ($percent > 70) {
                         $alreadyExists = true;
                         break;
                     }
